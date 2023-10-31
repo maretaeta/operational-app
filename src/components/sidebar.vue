@@ -45,6 +45,10 @@ export default {
             router.push({name: "DataPenjualan"})
         }
 
+        const handleLaporan = () => {
+            router.push({name: "Laporan"})
+        }
+
         return {
             sideBarOpen,
             dropdownComprasOpen,
@@ -56,6 +60,7 @@ export default {
             handlePembelian,
             handlePenjualan,
             handleDataPenjualan,
+            handleLaporan,
         };
 
     },
@@ -81,17 +86,17 @@ export default {
             <p class="pl-4 text-xs font-semibold mb-4 text-gray-600">MENU</p>
             <div @click="handleHome"
                 class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
-                <font-awesome-icon icon="house" />
+                <font-awesome-icon icon="house" class="text-cyan-700" />
                 <span class="text-gray-800 font-medium pl-2">Dashboard</span>
             </div>
              <div @click="handlePembelian"
                     class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
-                    <font-awesome-icon icon="truck" class="text-cyan-500" />
+                    <font-awesome-icon icon="truck" class="text-cyan-700" />
                     <span class="text-gray-800 font-medium pl-2">Pembelian</span>
                 </div>
             <div @click="handleProduct"
                 class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
-                <font-awesome-icon icon="boxes-stacked" />
+                <font-awesome-icon icon="boxes-stacked" class="text-cyan-700" />
                 <span class="text-gray-800 font-medium pl-2">Product</span>
             </div>
             <div class="w-full">
@@ -130,7 +135,7 @@ export default {
         </div>
         <div class="mb-4 px-4 text-gray-800 mt-5">
             <p class="pl-4 text-xs font-semibold mb-4 text-gray-600">MONITORING</p>
-            <div
+            <div @click="handleLaporan"
                 class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
                 <font-awesome-icon icon="chart-line" />
                 <span class="text-gray-800 font-medium pl-2">Laporan</span>

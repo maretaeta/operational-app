@@ -16,6 +16,7 @@ export const useBuyStore = defineStore("buy", {
     ongkos: "",
     currentStep: 0,
     pembelian: [],
+    editPembelian: null,
 
     totalPembelian: 0,
   }),
@@ -96,6 +97,34 @@ export const useBuyStore = defineStore("buy", {
         }
       } catch (error) {
         console.error("Error deleting pembelian : ", error);
+        throw error;
+      }
+    },
+
+     async updatePembelian(updatedData) {
+      try {
+        const response = await axios.put(
+          `http://localhost:4000/api/v1/pembelian/${updatedData.id_productSources}`,
+          updatedData,
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+          );
+
+        if (!response) {
+          throw new Error("Update failed");
+        }
+
+      this.closeEditModal();
+        const data = response.data;
+       
+
+        return data; 
+
+      } catch (error) {
+        console.error("Update error:", error);
         throw error;
       }
     },

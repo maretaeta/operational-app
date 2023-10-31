@@ -8,10 +8,10 @@ import Register from "../views/Register.vue";
 import Users from "../components/Users.vue";
 import Toko from "../components/Toko.vue";
 import Produk from "../components/product.vue";
-import Penjualan from "../components/Penjualan.vue";
-import DataPenjualan from "../components/DataPenjualan.vue";
-import detailPembelian from "../components/Pembelian/detailPembelian.vue";
+import Penjualan from "../components/Penjualan/Penjualan.vue";
+import DataPenjualan from "../components/Penjualan/DataPenjualan.vue";
 import EmptyLayout from "../views/EmptyLayout.vue";
+import Laporan from "../components/Laporan.vue";
 
 const routes = [
   { path: "/", name: "Home", component: Home },
@@ -39,6 +39,7 @@ const routes = [
   { path: "/produk", name: "Produk", component: Produk },
   { path: "/penjualan", name: "Penjualan", component: Penjualan },
   { path: "/dataPenjualan", name: "DataPenjualan", component: DataPenjualan },
+  { path: "/laporan", name: "Laporan", component: Laporan },
 ];
 
 const router = createRouter({

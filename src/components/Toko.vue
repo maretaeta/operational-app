@@ -161,7 +161,7 @@ export default {
       editedToko.value = { ...toko };
     };
 
-    const closeEditModal = () => {
+    const closeEditModal = () => { 
       editedToko.value = null;
     };
 

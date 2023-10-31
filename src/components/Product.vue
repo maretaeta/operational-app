@@ -1,7 +1,6 @@
 <template>
     <div class="pl-0 lg:pl-64 w-full min-h-screen p-6">
     <div class="font-poppins text-sm font-semibold mb-6">
-        <!-- Navigation -->
         <ol class="list-none p-0 pl-3 inline-flex">
             <li class="flex items-center text-purple">
                 <p class="text-gray-700">Home</p>
@@ -22,100 +21,90 @@
             <h3 class=" text-2xl font-medium text-gray-600">Data Produk</h3>
             <p class="text-sm text-gray-400">Ketersedian produk kayu saat ini</p>
         </div>
-        <div  class="flex gap-3 justify-end items-start pb-5">
-             <div class="flex gap-2 bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3">
-                    <vue-feather type="printer" size="17" />
-                    <p class="text-sm">Cetak</p>
-                 </div>
+        <div class="flex gap-3 justify-end items-start pb-5">
+            <div class="flex gap-2 bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3">
+            <vue-feather type="printer" size="17" @click="printProductData" />
+            <p class="text-sm">Cetak</p>
+            </div>
         </div>
 
         <!-- Table -->
         <div class="flex flex-col mb-12 bg-gray-25 rounded-md border">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                    <div class="overflow-hidden sm:rounded-lg">
-                        <table class="min-w-full divide-y divide-gray-200">
+                    <div class="overflow-x-auto sm:rounded-lg">
+                        <table class="min-w-full divide-y divide-gray-200 text-left">
                             <thead>
                                 <tr>
                                     <th
-                                        class="px-5 py-3 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-5 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
                                         ID
                                     </th>
                                     <th
-                                        class="px-6 py-3 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
-                                        Tanggal
-                                    </th>
-                                    <th
-                                        class="px-6 py-3 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                                         Jenis Produk
                                     </th>
                                     <th
-                                        class="px-6 py-3 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                                         Nama Produk
                                     </th>
                                     <th
-                                        class="px-6 py-3 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                                         Ukuran Produk
                                     </th>
                                     <th
-                                        class="px-6 py-3 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                                         Stok Produk
                                     </th>
                                     <th
-                                        class="px-6 py-3 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                                         Harga Per Lembar
                                     </th>
                                     <th
-                                        class="px-6 py-3 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                                         Keuntungan
                                     </th>
                                     <th
-                                        class="px-6 py-3 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                                         Harga Jual
                                     </th>
                                     <th
-                                        class="px-6 py-4 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-5 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
                                         Aksi
                                     </th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 border-t border-gray-300">
-                                <tr v-for="(i, index) in displayedProducts" :key="i.id_product"
-                                    class="border-b border-gray-200">
-                                    <td class="px-5 py-3 whitespace-no-wrap text-center">
-                                        <div class="ml-4">
-                                            <p class="text-sm leading-5 font-medium text-gray-900">{{ i.id_product }}</p>
-                                        </div>
+                                <tr v-for="(i, index) in displayedProducts" :key="i.id_product" class="border-b border-gray-200">
+                                    <td class="px-4 py-4 whitespace-no-wrap text-center">
+                                        <p class="text-sm leading-5 font-medium text-gray-900">{{ i.id_product }}</p>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-no-wrap text-center">
-                                        <div class="text-sm leading-5 font-medium text-gray-900">{{ i.createdAt }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-no-wrap text-center">
+                                    <td class="px-4 py-4 whitespace-no-wrap">
                                         <div class="text-sm leading-5 font-medium text-gray-900">{{ i.jenis_product }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-no-wrap text-center">
+                                    <td class="px-4 py-4 whitespace-no-wrap">
                                         <div class="text-sm leading-5 font-medium text-gray-900">{{ i.nama_product }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-no-wrap text-center">
+                                    <td class="px-4 py-4 whitespace-no-wrap  ">
                                         <div class="text-sm leading-5 font-medium text-gray-900">{{ i.ukuran_product }}
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-no-wrap text-center">
+                                    <td class="px-4 py-4 whitespace-no-wrap  ">
                                         <div class="text-sm leading-5 font-medium text-gray-900">{{ i.stok_product }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-no-wrap text-center">
+                                    <td class="px-4 py-4 whitespace-no-wrap  ">
                                         <div class="text-sm leading-5 font-medium text-gray-900">{{
                                             formatHarga(i.harga_product) }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-no-wrap text-center">
+                                    <td class="px-4 py-4 whitespace-no-wrap  ">
                                         <div class="text-sm leading-5 font-medium text-gray-900">{{
                                             formatHarga(i.keuntungan) }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-no-wrap text-center">
+                                    <td class="px-4 py-4 whitespace-no-wrap  ">
                                         <div class="text-sm leading-5 font-medium text-gray-900">{{ formatHarga(i.hargaJual)
                                         }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-no-wrap text-center flex gap-3">
+                                    <td class="px-4 py-4 whitespace-no-wrap text-center flex gap-3">
                                         <vue-feather type="edit" size="20" stroke="green" @click="openEditModal(i)" />
                                         <vue-feather type="trash-2" size="20" stroke="red"
                                             @click="deleteProduct(i.id_product)" />
@@ -177,6 +166,8 @@ import { ProdukStore } from "../store/product";
 import VueFeather from "vue-feather";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 export default {
     setup() {
@@ -186,7 +177,7 @@ export default {
         const itemsPerPage = 5;
         const currentPage = ref(1);
 
-        // Function to fetch and update products
+        // Get Product
         async function getProduct() {
             try {
                 const response = await produkStore.getProduct();
@@ -200,41 +191,34 @@ export default {
             }
         }
 
-        // Computed property to slice the displayed products
         const displayedProducts = computed(() => {
             const startIndex = (currentPage.value - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
             return produk.value.slice(startIndex, endIndex);
         });
 
-        // Computed property to calculate the total number of pages
         const totalPages = computed(() => Math.ceil(produk.value.length / itemsPerPage));
 
-        // Method to change the current page to the next page
         const nextPage = () => {
             if (currentPage.value < totalPages.value) {
                 currentPage.value++;
             }
         };
 
-        // Method to change the current page to the previous page
         const prevPage = () => {
             if (currentPage.value > 1) {
                 currentPage.value--;
             }
         };
 
-        // Function to open the edit modal
         const openEditModal = (product) => {
             editedProduct.value = { ...product };
         };
 
-        // Function to close the edit modal
         const closeEditModal = () => {
             editedProduct.value = null;
         };
 
-        // Function to submit the edited product
         const submitEdit = async () => {
             if (editedProduct.value) {
                 const hargaProduct = parseFloat(editedProduct.value.harga_product);
@@ -249,7 +233,7 @@ export default {
             }
         };
 
-        // Function to delete a product
+        // Delete
         const deleteProduct = async (id) => {
             try {
                 await produkStore.deleteProduct(id);
@@ -258,7 +242,7 @@ export default {
             }
         };
 
-        // Function to display a success toast for keuntungan creation
+        // Notif Keuntungan
         const keuntunganNotif = () => {
             toast.success("Keuntungan berhasil dibuat", {
                 position: 'top-right',
@@ -266,7 +250,7 @@ export default {
             });
         }
 
-        // Function to format a number to Indonesian Rupiah
+        // Format Rupiah
         function formatToRupiah(number) {
             return new Intl.NumberFormat("id-ID", {
                 style: "currency",
@@ -274,12 +258,51 @@ export default {
             }).format(number);
         }
 
-        // Function to format harga in Indonesian Rupiah
         function formatHarga(harga) {
             return formatToRupiah(harga);
         }
 
-        // Fetch products when the component is mounted
+        const printProductData = () => {
+            const doc = new jsPDF({ orientation: 'landscape' });
+
+            const tableData = [];
+            const columns = [
+                'ID',
+                'Jenis Produk',
+                'Nama Produk',
+                'Ukuran Produk',
+                'Stok Produk',
+                'Harga Per Lembar',
+                'Keuntungan',
+                'Harga Jual',
+            ];
+
+            tableData.push(columns);
+
+            // Data tabel
+            produk.value.forEach((product) => {
+                tableData.push([
+                    product.id_product,
+                    product.jenis_product,
+                    product.nama_product,
+                    product.ukuran_product,
+                    product.stok_product,
+                    formatHarga(product.harga_product),
+                    formatHarga(product.keuntungan),
+                    formatHarga(product.hargaJual),
+                ]);
+            });
+
+            doc.autoTable({
+                head: [tableData[0]],  
+                body: tableData.slice(1),  
+                startY: 20,
+            });
+
+            doc.save('produk.pdf');
+        };
+
+
         onMounted(() => {
             getProduct();
         });
@@ -298,6 +321,7 @@ export default {
             prevPage,
             formatHarga,
             keuntunganNotif,
+            printProductData, 
         };
     },
     components: {

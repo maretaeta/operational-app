@@ -1,36 +1,35 @@
 <template>
     <div id="home" class="pl-0 lg:pl-64 w-full min-h-screen p-6">
-        <nav class=" font-poppins text-sm font-semibold mb-6">
+        <nav class="font-poppins text-sm font-semibold mb-6">
             <ol class="list-none p-0 pl-3 inline-flex">
                 <li class="flex items-center text-purple">
-                    <a href="/" class="text-gray-700">Home</a>
+                    <router-link to="/">Home</router-link>
                     <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                         <path
                             d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
                     </svg>
                 </li>
                 <li class="flex items-center">
-                    <a href="/dashboard" class="text-gray-600">Dashboard</a>
+                    <router-link to="">Dashboard</router-link>
                 </li>
             </ol>
         </nav>
 
         <div class="lg:flex justify-between items-center mb-6 p-2">
             <p class="text-2xl font-semibold mb-2 lg:mb-0 text-gray-800">Selamat datang, Admin!</p>
-            <button
-                class="bg-purple hover:bg-purple-light focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow duration-150">Lihat Laporan</button>
+            <button @click="handleLaporan"
+                class="bg-purple hover:bg-purple-light focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow duration-150">
+                Lihat Laporan
+            </button>
         </div>
-        
 
         <!-- Cards -->
         <div class="flex flex-wrap -mx-3 mb-16 p-2">
-
             <div class="w-1/2 xl:w-1/4 px-3">
                 <div class="w-full bg-white border rounded-lg flex items-center p-0 mb-6 xl:mb-0">
                     <div class="px-3 py-10 lg:px-5 lg:py-5 bg-pink text-white rounded-l-lg">
                         <font-awesome-icon icon="cube" class="w-8 h-8 fill-current mx-auto hidden lg:block" />
                     </div>
-
                     <div class="text-gray-700 ml-6 leading-6">
                         <p class="font-semibold text-2xl">{{ store.totalProduct }}</p>
                         <p class="text-sm text-gray-600">Total Barang</p>
@@ -43,24 +42,22 @@
                     <div class="px-3 py-10 lg:px-5 lg:py-5 bg-purple text-white rounded-l-lg">
                         <font-awesome-icon icon="cart-shopping" class="w-8 h-8 fill-current mx-auto hidden lg:block" />
                     </div>
-                <div class="text-gray-700 ml-6 leading-6">
-                    <p class="font-semibold text-2xl">{{ pembelian.totalPembelian }}</p>
-                    <p class="text-sm text-gray-600">Pembelian Barang</p>
+                    <div class="text-gray-700 ml-6 leading-6">
+                        <p class="font-semibold text-2xl">{{ pembelian.totalPembelian }}</p>
+                        <p class="text-sm text-gray-600">Pembelian Kayu</p>
+                    </div>
                 </div>
-        </div>
             </div>
 
             <div class="w-1/2 xl:w-1/4 px-3">
-                <div class="w-full bg-white border rounded-lg flex items-center p-0  mb-6 xl:mb-0">
+                <div class="w-full bg-white border rounded-lg flex items-center p-0 mb-6 xl:mb-0">
                     <div class="px-3 py-10 lg:px-5 lg:py-5 bg-orange text-white rounded-l-lg">
                         <font-awesome-icon icon="truck-fast" class="w-8 h-8 fill-current mx-auto hidden lg:block" />
                     </div>
-
                     <div class="text-gray-700 ml-6 leading-6">
                         <p class="font-semibold text-2xl">{{ penjualan.totalPenjualan }}</p>
-                        <p class="text-sm text-gray-600">Produk Terjual</p>
+                        <p class="text-sm text-gray-600">Penjualan Kayu</p>
                     </div>
-
                 </div>
             </div>
 
@@ -69,195 +66,183 @@
                     <div class="px-3 py-10 lg:px-5 lg:py-5 bg-green text-white rounded-l-lg">
                         <font-awesome-icon icon="sack-dollar" class="w-8 h-8 fill-current mx-auto hidden lg:block" />
                     </div>
-
                     <div class="text-gray-700 ml-6 leading-6">
                         <p class="font-semibold text-2xl">1,906</p>
-                        <p class="text-sm text-gray-600">Pendapatan</p>
+                        <p class="text-sm text-gray-600">Pendapatan Bersih</p>
                     </div>
-
                 </div>
             </div>
-
         </div>
 
-        
         <!-- charts -->
-        <div class="flex flex-wrap -mx-3">
-
-            <div class="w-full xl:w-1/3 px-3">
-                <p class="text-xl font-semibold mb-4 text-gray-700">Recent Sales</p>
-
+        <div class="flex flex-wrap -mx-6 p-6">
+            <div class="w-full xl:w-1/2 px-3">
+                <p class="text-xl font-semibold mb-4 text-gray-700">Recent Purchases</p>
                 <div class="w-full bg-white border rounded-lg p-4 mb-8 xl:mb-0">
-                    <canvas id="buyers-chart" width="600" height="400"></canvas>
+                    <select v-model="selectedYear" @change="loadDataBasedOnYear">
+                        <option v-for="year in availableYears" :value="year">{{ year }}</option>
+                    </select>
+                    <canvas ref="chartCanvas"></canvas>
                 </div>
             </div>
-
-            <div class="w-full xl:w-1/3 px-3">
-                <p class="text-xl font-semibold mb-4 text-gray-700">Recent Reviews</p>
-
+            <!-- <div class="w-full xl:w-1/3 px-3">
+                <p class="text-xl font-semibold mb-4 text-gray-700">Recent Product</p>
                 <div class="w-full bg-white border rounded-lg p-4 mb-8 xl:mb-0">
-                    <canvas id="reviews-chart" width="600" height="400"></canvas>
+                           <canvas ref="chartCanvas"></canvas>
                 </div>
-            </div>
-
-            <div class="w-full xl:w-1/3 px-3">
+            </div> -->
+            <div class="w-full xl:w-1/2 px-3">
                 <p class="text-xl font-semibold mb-4 text-gray-700">Recent Transactions</p>
                 <div class="w-full bg-white border rounded-lg p-4">
-
-                    <div class="w-full bg-gray-100 border rounded-lg flex justify-between items-center px-4 py-2 mb-4">
+                    <div v-for="(transaction, index) in top3Transactions" :key="index" class="w-full bg-slate-100 border rounded-lg flex justify-between items-center px-4 py-2 mb-4">
                         <div>
-                            <p class="font-semibold text-base text-gray-700">Tata</p>
-                            <p class="text-sm text-gray-700">Product XYZ-92</p>
+                            <p class="font-semibold text-base text-cyan-800">{{ transaction.nama_toko }}</p>
+                            <p class="text-sm text-cyan-600">{{ transaction.totalHarga }}</p>
                         </div>
-                        <span class="text-green-600 font-semibold text-lg">$25.00</span>
+                        <span :class="transaction.totalHarga > 0 ? 'text-green-500' : 'text-pink'" class="font-semibold text-lg">{{ formatHarga(transaction.totalHarga)}}</span>
                     </div>
-
-                    <div class="w-full bg-gray-100 border rounded-lg flex justify-between items-center px-4 py-2 mb-4">
-                        <div>
-                            <p class="font-semibold text-base text-gray-700">Yaya</p>
-                            <p class="text-sm text-gray-700">Product XYZ-92</p>
-                        </div>
-                        <span class="text-pink font-semibold text-lg">$74.99</span>
-                    </div>
-
-                    <div class="w-full bg-gray-100 border rounded-lg flex justify-between items-center px-4 py-2 mb-4">
-                        <div>
-                            <p class="font-semibold text-base text-gray-700">Rara</p>
-                            <p class="text-sm text-gray-700">Product XYZ-92</p>
-                        </div>
-                        <span class="text-green-600 font-semibold text-lg">$182.00</span>
-                    </div>
-
                 </div>
             </div>
-
         </div>
-
     </div>
 </template>
 
-<!-- <script>
-import { Chart } from 'chart.js/auto';
-
-export default {
-    name: 'DashboardHome',
-    data() {
-        return {
-            buyersData: {
-                type: 'line',
-                data: {
-                    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-                    datasets: [{
-                        backgroundColor: "rgba(70,20,237,0.4)",
-                        strokeColor: "#63b3ed",
-                        pointColor: "#fff",
-                        pointStrokeColor: "#63b3ed",
-                        data: [203, 156, 99, 251, 305, 247, 256]
-                    },
-                    {
-                        backgroundColor: "rgba(60,60,248,0.4)",
-                        strokeColor: "#f7fafc",
-                        pointColor: "#fff",
-                        pointStrokeColor: "#f7fafc",
-                        data: [86, 97, 144, 114, 94, 108, 156]
-                    }]
-                },
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        yAxes: [{
-                            gridLines: {
-                                display: false
-                            },
-                            ticks: {
-                                display: false
-                            }
-                        }],
-                        xAxes: [{
-                            gridLines: {
-                                display: false
-                            }
-                        }]
-                    }
-                }
-            },
-            reviewsData: {
-                type: 'bar',
-                data: {
-                    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-                    datasets: [{
-                        backgroundColor: "rgba(40,100,255,0.8)",
-                        strokeColor: "#63b3ed",
-                        pointColor: "#fff",
-                        pointStrokeColor: "#63b3ed",
-                        data: [203, 156, 99, 251, 305, 247, 256]
-                    }]
-                },
-                options: {
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        yAxes: [{
-                            gridLines: {
-                                display: false
-                            },
-                            ticks: {
-                                display: false
-                            }
-                        }],
-                        xAxes: [{
-                            gridLines: {
-                                display: false
-                            }
-                        }]
-                    }
-                }
-            }
-        }
-    },
-    mounted() {
-        new Chart(document.getElementById('buyers-chart'), this.buyersData);
-        new Chart(document.getElementById('reviews-chart'), this.reviewsData);
-    }
-}
-</script> -->
 
 <script>
-import { onMounted, ref } from "vue";
-import { ProdukStore } from "../store/product";
+import { ref, onMounted, computed } from "vue";
+import axios from "axios";
 import { useBuyStore } from "../store/pembelian";
-import { penjualanStore} from "../store/penjualan"
+import { penjualanStore } from "../store/penjualan";
+import { ProdukStore } from "../store/product";
+import Chart from "chart.js/auto";
+import { useRouter } from "vue-router";
 
 export default {
     setup() {
+        const router = useRouter()
+
         const store = ProdukStore();
         const pembelian = useBuyStore();
         const penjualan = penjualanStore();
 
+        const recentTransactions = ref([]);
+
+        const handleLaporan = () => {
+            router.push({ name: "Laporan" })
+        }
+
+        const selectedYear = ref(new Date().getFullYear());
+        const availableYears = ref([2022, 2023, 2024]);
+        const chartData = ref({
+            labels: [],
+            datasets: [
+                {
+                    label: "Pembelian Kayu",
+                    backgroundColor: "rgba(0, 172, 193, 0.4)",
+                    borderColor: "#00838F",
+                    data: [],
+                },
+            ],
+        });
+
+        const chartOptions = ref({
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        });
+
+        const fetchChartData = async (year) => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:4000/api/v1/pembelian/sales/${year}`
+                );
+                const data = response.data;
+                chartData.value.labels = [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec",
+                ];
+                chartData.value.datasets[0].data = data;
+            } catch (error) {
+                console.error("Error fetching chart data: ", error);
+            }
+        };
+
+        const loadDataBasedOnYear = () => {
+            fetchChartData(selectedYear.value);
+        };
+
+        const top3Transactions = computed(() => {
+            const sortedTransactions = [...recentTransactions.value].sort((a, b) => b.totalHarga - a.totalHarga);
+            return sortedTransactions.slice(0, 4);
+        });
+
+        const fetchRecentTransactions = async () => {
+            try {
+                const response = await axios.get(`http://localhost:4000/api/v1/penjualan/top`);
+                recentTransactions.value = response.data;
+            } catch (error) {
+                console.error("Error fetching recent transactions: ", error);
+            }
+        };
+
+        // Format Rupiah
+        function formatToRupiah(number) {
+            return new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR"
+            }).format(number);
+        }
+
+        function formatHarga(harga) {
+            return formatToRupiah(harga);
+        }
+
+
         onMounted(async () => {
             await store.getTotalProduct();
-        });
-
-        onMounted(async()=> {
             await pembelian.getTotalPembelian();
-        });
-
-        onMounted(async() => {
             await penjualan.getTotalPenjualan();
+
+            await fetchChartData(selectedYear.value);
+
+            await fetchRecentTransactions();
+
+            const chartCanvas = document.querySelector("canvas");
+            new Chart(chartCanvas, {
+                type: "line",
+                data: chartData.value,
+                options: chartOptions.value,
+            });
         });
 
         return {
             store,
             pembelian,
             penjualan,
+            chartData,
+            chartOptions,
+            selectedYear,
+            availableYears,
+            loadDataBasedOnYear,
+            recentTransactions,
+            fetchRecentTransactions,
+            top3Transactions,
+            formatHarga,
+            handleLaporan,
         };
     },
 };
 </script>
-
-
-
-

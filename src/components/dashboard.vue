@@ -1,8 +1,8 @@
 <script>
 import { useStore } from '../store/store';
 
-import sidebar from './sidebar.vue'
-import navbar from './navbar.vue'
+import sidebar from "../components/sidebar.vue";
+import navbar from "../components/navbar.vue"
 
 export default {
     name: 'Dashboard',
@@ -33,5 +33,3 @@ export default {
         </div>
     </div>
 </template>
-
-

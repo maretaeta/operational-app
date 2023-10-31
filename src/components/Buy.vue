@@ -5,10 +5,15 @@ import VueFeather from "vue-feather";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import ModalUpdatePembelian from "../modals/ModalUpdatePembelian.vue"
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 
 export default {
     setup() {
         const steps = ["step1", "step2"];
+        const selectedPembelianForEdit = ref(null);
+        const showEditModal = ref(false);
         const buyStore = useBuyStore();
 
         const nama_toko = ref('');
@@ -30,8 +35,8 @@ export default {
         };
 
         const editPembelian = (pembelianData) => {
-            selectedPembelian.value = { ...pembelianData };
-            showModal.value = true;
+            selectedPembelianForEdit.value = { ...pembelianData };
+            showEditModal.value = true;
         };
 
         const createPurchase = async () => {
@@ -153,6 +158,54 @@ export default {
             totalPages.value = Math.ceil(pembelian.value.length / itemsPerPage);
         };
 
+        const printPurchaseData = () => {
+            const doc = new jsPDF({ orientation: 'landscape' });
+
+            const tableData = [];
+            const tableColumns = [
+                'Id',
+                'Tanggal',
+                'Nama Toko',
+                'Alamat Toko',
+                'Jenis Produk',
+                'Nama Produk',
+                'Ukuran Produk',
+                'Jumlah',
+                'Harga Beli',
+                'Ongkos',
+                'Total Harga',
+                'Harga PerLembar',
+            ];
+
+            tableData.push(tableColumns);
+
+            pembelian.value.forEach((item) => {
+                tableData.push([
+                    item.id_productSources,
+                    item.createdAt,
+                    item.nama_toko,
+                    item.alamat_toko,
+                    item.jenis_productSources,
+                    item.nama_productSources,
+                    item.ukuran_productSources,
+                    item.jumlah_productSources,
+                    formatHarga(item.pembelian_productSources),
+                    formatHarga(item.ongkosProses_productSources),
+                    formatHarga(item.totalPembelian_productSources),
+                    formatHarga(item.hargaPerLembar),
+                ]);
+            });
+
+            doc.autoTable({
+                head: [tableColumns],
+                body: tableData.slice(1),
+                startY: 20,
+            });
+
+            doc.save('pembelian.pdf');
+        };
+
+
         onMounted(() => {
             getPembelian();
             calculateTotalPages();
@@ -201,6 +254,10 @@ export default {
             closeModal,
             selectedPembelian,
             editPembelian,
+                  editPembelian,
+            showEditModal,
+            selectedPembelianForEdit,
+            printPurchaseData,
         };
     },
     methods: {
@@ -211,7 +268,7 @@ export default {
     },
     components: {
         VueFeather,
-        UpdatePembelian: () => import('../modals/ModalUpdatePembelian.vue'),
+        ModalUpdatePembelian,
 
     }
 
@@ -245,10 +302,10 @@ export default {
                 <vue-feather type="plus" size="17" />
                 <p class="text-sm">Pembelian</p>
             </div>
-            <div class="flex gap-2 bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3">
-                <vue-feather type="printer" size="17" />
-                <p class="text-sm">Cetak</p>
-             </div>
+        <div class="flex gap-2 bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3" @click="printPurchaseData">
+            <vue-feather type="printer" size="17" />
+            <p class="text-sm">Cetak</p>
+        </div>
                 
         </div>
 
@@ -309,7 +366,7 @@ export default {
                                 Harga PerLembar
                         </th>
                         <th
-                            class="px-6 py-4 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-6 py-3 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
                             Aksi
                         </th>
                     </tr>
@@ -356,7 +413,7 @@ export default {
                         <td class="px-6 py-4 whitespace-no-wrap text-center flex gap-3">  
                             <vue-feather type="edit" size="20" stroke="green" @click="editPembelian(pembelianData)" />
                             <vue-feather type="trash-2" size="20" stroke="red" @click="deleteProduct(pembelianData.id_productSources)"  />
-                            <!-- <vue-feather type="list" size="20" stroke="blue" /> -->
+
                         </td>
                     </tr>
                 </tbody>
@@ -375,6 +432,8 @@ export default {
 
 
     </div>
+
+    
 
 <!-- Modal Create Pembelian -->
 <div v-if="showModal" class="fixed inset-0 flex items-center justify-center z-50">
@@ -474,7 +533,11 @@ export default {
     </div>
 </div>
 
- <UpdatePembelian v-if="selectedPembelian" :pembelianData="selectedPembelian" @close="selectedPembelian = null" />
+    <ModalUpdatePembelian
+      v-if="showEditModal"
+      :editedProduct="selectedPembelianForEdit"
+      @close="showEditModal = false"
+    />
 
 
 </template>

@@ -25,9 +25,13 @@
             <!-- Form Penjualan -->
             <form @submit.prevent="submitPenjualan">
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-lg font-bold mb-2">Pilih Produk:</label>
+                    <label class="block text-gray-700 text-lg font-bold">Nama Toko</label>
+                    <input v-model="nama_toko" class="w-full px-3 py-2 border rounded-lg" />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-lg font-bold">Pilih Produk:</label>
                     <div v-for="product in produk" :key="product.id_product">
-                        <label class="block text-gray-700 text-base pt-6 mb-1">
+                        <label class="block text-gray-700 font-medium text-base pt-3 mb-1">
                             {{ product.nama_product }} :
                         </label>
                         <input v-model="product.quantity" type="number" class="w-full px-3 py-2 border rounded-lg" />
@@ -37,7 +41,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-lg font-bold mb-2 ">Diskon :</label>
+                    <label class="block text-gray-700 text-lg font-bold pt-4 mb-2 ">Diskon :</label>
                     <input v-model="diskon" class="w-full px-3 py-2 border rounded-lg" type="number" />
                 </div>
 
@@ -52,17 +56,15 @@
 <script>
 import { ref, onMounted } from "vue";
 import axios from "axios";
-import { ProdukStore } from "../store/product";
+import { ProdukStore } from "../../store/product";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
 export default {
-    // components: {
-    //     Modal, 
-    // },
     setup() {
         const produk = ref([]);
         const produkStore = ProdukStore();
+        const nama_toko = ref()
         const diskon = ref(0);
         const error = ref(null);
         const showModal = ref(false);
@@ -88,6 +90,7 @@ export default {
 
         const submitPenjualan = async () => {
             const postPenjualan = {
+                nama_toko: nama_toko.value,
                 diskon: diskon.value,
             };
 
@@ -122,6 +125,7 @@ export default {
                 duration: 3000,
             });
         }
+        
 
         onMounted(() => {
             getProduk();
@@ -130,6 +134,7 @@ export default {
         return {
             produk,
             diskon,
+            nama_toko,
             submitPenjualan,
             error,
             showModal,
