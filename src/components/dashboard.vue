@@ -1,7 +1,7 @@
 <script>
 import { useStore } from '../store/store';
 
-import sidebar from "../components/sidebar.vue";
+import sidebar from "../components/sidebar.vue"
 import navbar from "../components/navbar.vue"
 
 export default {

@@ -34,9 +34,6 @@ export default {
 };
 </script>
 
-
-
-
  <template>
      <div class="font-poppins w-full mx-auto h-full min-h-screen bg-slate-200 items-center justify-center justify-items-center flex p-5">
              <div class="lg:grid grid-cols-2">

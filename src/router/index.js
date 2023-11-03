@@ -3,9 +3,8 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
-import Buy from "../components/Buy.vue";
+import Buy from "../components/Pembelian/Buy.vue";
 import Register from "../views/Register.vue";
-import Users from "../components/Users.vue";
 import Toko from "../components/Toko.vue";
 import Produk from "../components/product.vue";
 import Penjualan from "../components/Penjualan/Penjualan.vue";
@@ -34,7 +33,6 @@ const routes = [
     },
   },
   { path: "/buy", name: "Buy", component: Buy },
-  { path: "/users", name: "Users", component: Users },
   { path: "/toko", name: "Toko", component: Toko },
   { path: "/produk", name: "Produk", component: Produk },
   { path: "/penjualan", name: "Penjualan", component: Penjualan },

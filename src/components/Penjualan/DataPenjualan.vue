@@ -10,7 +10,7 @@ export default {
         const penjualan = ref([]);
         const usepenjualanStore = penjualanStore();
         const currentPage = ref(1);
-        const itemsPerPage = 5;
+        const itemsPerPage = 8;
 
         async function getPenjualan() {
             try {
@@ -197,37 +197,37 @@ export default {
             <table class="min-w-full divide-y divide-gray-200 text-left">
               <thead>
                   <tr>
-                    <th class="px-4 py-3 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class="px-4 py-5 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
                       ID
                     </th>
-                    <th class="px-10 py-3 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class="px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                       Tanggal
                     </th>
-                    <th class="px-6 py-3 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class="px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                         Nama Toko
                     </th>
-                    <th class="px-10 py-3 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class="px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                       Jenis Produk
                     </th>
-                    <th class=" px-6 py-3 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                       Nama Produk
                     </th>
-                    <th class=" px-6 py-3 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                       Ukuran Produk
                     </th>
-                    <th class=" px-4 py-3 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                       Jumlah
                     </th>
-                    <th class=" px-6 py-3 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                       Harga Produk
                     </th>
-                    <th class=" px-6 py-3 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                       Diskon
                     </th>
-                    <th class=" px-6 py-3 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                       Total Harga
                     </th>
-                    <th class="px-6 py-3 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class="px-6 py-5  bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
                       Aksi
                     </th>
                   </tr>
@@ -238,14 +238,14 @@ export default {
                       <td class="px-6 py-4 whitespace-no-wrap text-center">
                           <p class="text-sm leading-5 font-medium text-gray-900">{{ item.id_penjualan }}</p>
                       </td>
-                      <td class="w-full px-2 whitespace-no-wrap ">
+                      <td class="px-3 py-4 whitespace-no-wrap ">
                           <div class="text-sm leading-5 font-medium text-gray-900">{{ formatDate(item.createdAt) }}</div>
                       </td>
-                      <td class="px-6 py-4 whitespace-no-wrap ">
+                      <td class="px-3 py-4 whitespace-no-wrap ">
                           <div class="text-sm leading-5 font-medium text-gray-900">{{ item.nama_toko }}</div>
                       </td>
-                      <td class="w-full whitespace-no-wrap">
-                        <div class="w-full px-2 text-sm leading-5 font-medium text-gray-900">
+                      <td class=" px-3 py-4 whitespace-no-wrap">
+                        <div class=" text-sm leading-5 font-medium text-gray-900">
                           <ol style="white-space: pre-wrap; margin: 0;">
                             <li>
                               {{ item.penjualanItems.map((item) => item.product.jenis_product).join('\n') }} 
@@ -254,8 +254,8 @@ export default {
                         </div>
                       </td>
 
-                      <td class="w-full whitespace-no-wrap">
-                        <div class="w-full px-2 text-sm leading-5 font-medium text-gray-900">
+                      <td class="px-3 py-4  whitespace-no-wrap">
+                        <div class="text-sm leading-5 font-medium text-gray-900">
                           <ol style="white-space: pre-wrap; margin: 0;">
                             <li>
                               {{ item.penjualanItems.map((item) => item.product.nama_product).join('\n') }}

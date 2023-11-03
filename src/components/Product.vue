@@ -1,5 +1,6 @@
 <template>
-    <div class="pl-0 lg:pl-64 w-full min-h-screen p-6">
+<div class="pl-0 lg:pl-64 w-full min-h-screen p-10 bg-slate-100 relative">
+    <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
     <div class="font-poppins text-sm font-semibold mb-6">
         <ol class="list-none p-0 pl-3 inline-flex">
             <li class="flex items-center text-purple">
@@ -117,6 +118,20 @@
             </div>
         </div>
 
+        <!-- Pagination controls -->
+        <div class="flex justify-end mt-4">
+            <button @click="prevPage" :disabled="currentPage === 1" class="text-xs cursor-pointer bg-gray-300 p-2 w-20 rounded">
+              Previous
+            </button>
+            <div class="mx-2 p-2 text-xs">
+              Page {{ currentPage }} of {{ totalPages }}
+            </div>
+            <button @click="nextPage" :disabled="currentPage === totalPages" class="text-xs cursor-pointer bg-gray-300 p-2 w-20 rounded">
+              Next
+            </button>
+          </div>
+        </div>
+
         <!-- Modal for editing data -->
         <div v-if="editedProduct" class="fixed inset-0 flex items-center justify-center z-50">
             <div class="modal-overlay absolute inset-0 bg-gray-500 opacity-75"></div>
@@ -143,20 +158,9 @@
         </div>
     </div>
 </div>
-
-    <!-- Pagination controls -->
-    <div class="flex justify-end mt-4">
-        <button @click="prevPage" :disabled="currentPage === 1" class="text-xs cursor-pointer bg-gray-300 p-2 w-20 rounded">
-          Previous
-        </button>
-        <div class="mx-2 p-2 text-xs">
-          Page {{ currentPage }} of {{ totalPages }}
-        </div>
-        <button @click="nextPage" :disabled="currentPage === totalPages" class="text-xs cursor-pointer bg-gray-300 p-2 w-20 rounded">
-          Next
-        </button>
-      </div>
     </div>
+
+
 </template>
 
 
@@ -174,7 +178,7 @@ export default {
         const produk = ref([]);
         const produkStore = ProdukStore();
         const editedProduct = ref(null);
-        const itemsPerPage = 5;
+        const itemsPerPage = 8;
         const currentPage = ref(1);
 
         // Get Product

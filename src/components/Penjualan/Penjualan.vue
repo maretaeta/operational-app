@@ -1,5 +1,6 @@
 <template>
-    <div class="pl-0 lg:pl-64 w-full min-h-screen p-6">
+    <div class="pl-0 lg:pl-64 w-full min-h-screen p-10 bg-slate-100 relative">
+        <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
         <!-- Navigasi -->
         <div class="font-poppins text-sm font-semibold mb-6">
             <ol class="list-none p-0 pl-3 inline-flex">
@@ -49,7 +50,7 @@
           </form>
         </div>
       </div>
-      <!-- <Modal :showModal="showModal" @close="showModal = false" /> -->
+    </div>
 </template>
 
 

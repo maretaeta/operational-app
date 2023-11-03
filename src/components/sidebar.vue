@@ -74,7 +74,7 @@ export default {
 
 
 <template>
-    <div class="font-poppins w-1/2 md:w-1/3 lg:w-64 fixed md:top-0 md:left-0 h-screen lg:block bg-slate-50 z-30 transition duration-500 ease-in-out"
+    <div class="font-poppins w-1/2 md:w-1/3 lg:w-64 fixed md:top-0 md:left-0 h-screen lg:block bg-white z-30 transition duration-500 ease-in-out"
         :class="sideBarOpen ? '' : 'hidden'" id="main-nav">
 
         <div  @click="handleHome" class="w-full h-24 flex gap-2 px-5 items-center mb-8 p-5">
@@ -86,17 +86,17 @@ export default {
             <p class="pl-4 text-xs font-semibold mb-4 text-gray-600">MENU</p>
             <div @click="handleHome"
                 class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
-                <font-awesome-icon icon="house" class="text-cyan-700" />
+                <font-awesome-icon icon="house"  />
                 <span class="text-gray-800 font-medium pl-2">Dashboard</span>
             </div>
              <div @click="handlePembelian"
                     class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
-                    <font-awesome-icon icon="truck" class="text-cyan-700" />
+                    <font-awesome-icon icon="truck"  />
                     <span class="text-gray-800 font-medium pl-2">Pembelian</span>
                 </div>
             <div @click="handleProduct"
                 class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
-                <font-awesome-icon icon="boxes-stacked" class="text-cyan-700" />
+                <font-awesome-icon icon="boxes-stacked" />
                 <span class="text-gray-800 font-medium pl-2">Product</span>
             </div>
             <div class="w-full">

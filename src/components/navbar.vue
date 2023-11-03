@@ -1,5 +1,5 @@
 <script>
-import { useStore } from '../store/store';
+import { useStore } from "../store/store"
 import VueFeather from 'vue-feather'
 
 export default {
@@ -28,7 +28,7 @@ export default {
 
 <template>
     <div class="font-poppins sticky top-0 z-40 pl-0 lg:pl-64">
-        <div class="w-full h-20 px-6 bg-slate-50 flex items-center justify-between">
+        <div class="w-full h-20 px-6 bg-white flex items-center justify-between">
             <div class="flex">
                 <div class="lg:hidden flex items-center mr-4 text-gray-700">
                     <button class="hover:text-purple-600 hover:border-white focus:outline-none navbar-burger"
@@ -51,7 +51,7 @@ export default {
                 </div> -->
             </div>
 
-            <div class="flex items-center relative">
+            <div class="flex items-center relative pr-9">
                 <button
                     class="p-1 mr-4 rounded-full text-gray-700 hover:bg-purple-100 hover:text-purple duration-150 focus:outline-none">
                     <div class="flex leading-3 px-0">
@@ -65,10 +65,8 @@ export default {
                     </div>
                 </button>
                 <button class="p-0 focus:outline-none duration-150 flex gap-1" @click="dropDownOpen = !dropDownOpen">
-                    <font-awesome-icon icon="circle-user"  class="w-9 h-9 rounded-full shadow-lg border-2 hover:border-white border-purple-600 duration-150"/>
-                    <!-- <img src="https://images.unsplash.com/photo-1552774021-9ebbb764f03e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80"
-                       > -->
-                       <p class="items-center text-center p-2">Hi, Admin</p>
+                    <font-awesome-icon icon="circle-user"  class="w-8 h-8 rounded-full shadow-lg border-2 hover:border-white border-purple-600 duration-150"/>
+                    <p class="items-center text-center p-2">Hi, Admin</p>
                 </button>
             </div>
         </div>

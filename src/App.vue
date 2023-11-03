@@ -5,7 +5,7 @@
         <sidebar v-if="showSidebarFrame" />
         <div class="w-full" :class="isSideBarOpen ? 'overlay' : ''" >
           <navbar v-if="showNavbar" />
-          <div class="p-6">
+          <div class="">
             <router-view />
           </div>
         </div>
