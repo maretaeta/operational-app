@@ -17,8 +17,8 @@
 <script>
 import { useStore } from "./store/store";
 
-import sidebar from "./components/sidebar.vue";
-import navbar from "./components/navbar.vue";
+import sidebar from "./components/Headers/sidebar.vue"
+import navbar from "./components/Headers/navbar.vue"
 
 export default {
   name: 'App',
@@ -27,10 +27,10 @@ export default {
       return useStore().isSideBarOpen;
     },
     showNavbar() {
-      return !["Login", "Register"].includes(this.$route.name);
+      return !["Login", "Register", "EmptyLayout"].includes(this.$route.name);
     },
     showSidebarFrame() {
-      return !["Login", "Register"].includes(this.$route.name);
+      return !["Login", "Register", "EmptyLayout"].includes(this.$route.name);
     },
   },
   components: {

@@ -1,5 +1,5 @@
 <template>
-    <div id="home" class="pl-0 lg:pl-64 w-full min-h-screen p-10 bg-slate-100 relative">
+   <div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
     <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
         <nav class="font-poppins text-sm font-semibold mb-6">
             <ol class="list-none p-0 pl-3 inline-flex">
@@ -97,8 +97,8 @@
                 <div class="w-full bg-white border rounded-lg p-4">
                     <div v-for="(transaction, index) in top3Transactions" :key="index" class="w-full bg-slate-100 border rounded-lg flex justify-between items-center px-4 py-2 mb-4">
                         <div>
-                            <p class="font-semibold text-base text-cyan-800">{{ transaction.nama_toko }}</p>
-                            <p class="text-sm text-cyan-600">{{ transaction.totalPenjualan }} kayu</p>
+                            <p class="font-medium text-base ">{{ transaction.nama_toko }}</p>
+                            <p class="text-sm text-cyan-800">{{ transaction.totalPenjualan }} kayu</p>
                         </div>
                         <span :class="transaction.totalHarga > 0 ? 'text-green-500' : 'text-pink'" class="font-semibold text-lg">{{ formatHarga(transaction.totalHarga)}}</span>
                     </div>
@@ -169,7 +169,7 @@ export default {
                     "Apr",
                     "May",
                     "Jun",
-                    "Jul",
+                    "Jul",                    
                     "Aug",
                     "Sep",
                     "Oct",

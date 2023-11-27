@@ -1,10 +1,11 @@
 <script>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useBuyStore } from "../../store/pembelian"
 import VueFeather from "vue-feather";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
-import ModalUpdatePembelian from "../../modals/ModalUpdatePembelian.vue"
+import ModalPembelian from "../../modals/pembelian/CreatePembelianModals.vue"
+import ModalUpdatePembelian from '../../modals/pembelian/ModalUpdatePembelian.vue';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
@@ -34,10 +35,7 @@ export default {
             showModal.value = false;
         };
 
-        const editPembelian = (pembelianData) => {
-            selectedPembelianForEdit.value = { ...pembelianData };
-            showEditModal.value = true;
-        };
+
 
         const createPurchase = async () => {
             const purchaseData = {
@@ -50,6 +48,7 @@ export default {
                 jumlah_productSources: jumlah_productSources.value,
                 pembelian_productSources: pembelian_productSources.value,
                 ongkosProses_productSources: ongkosProses_productSources.value,
+                
             };
 
             try {
@@ -105,14 +104,17 @@ export default {
         const deleteProduct = async (id_productSources) => {
             try {
                 await buyStore.deletePembelian(id_productSources);
-                const index = pembelian.value.findIndex((item) => item.id_productSources === id_productSources);
-                if (index !== -1) {
-                    pembelian.value.splice(index, 1);
-                }
             } catch (error) {
                 console.error("Error deleting product:", error);
             }
         };
+
+
+        const editPembelian = (pembelianData) => {
+            selectedPembelianForEdit.value = pembelianData;
+            showEditModal.value = true;
+        };
+
 
         // Format rupiah
         function formatToRupiah(number) {
@@ -128,7 +130,7 @@ export default {
 
         // Pagination variables
         const currentPage = ref(1);
-        const itemsPerPage = 5;
+        const itemsPerPage = 10;
         const totalPages = ref(1);
         const displayPembelian = ref([]);
 
@@ -138,7 +140,7 @@ export default {
             displayPembelian.value = pembelian.value.slice(startIndex, endIndex);
         };
 
-
+        // preview page
         const prevPage = () => {
             if (currentPage.value > 1) {
                 currentPage.value--;
@@ -153,10 +155,22 @@ export default {
             }
         };
 
-
         const calculateTotalPages = () => {
             totalPages.value = Math.ceil(pembelian.value.length / itemsPerPage);
         };
+
+        // format date
+        const formatDate = (dateString) => {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const date = new Date(dateString);
+            return date.toLocaleDateString('id-ID', options);
+        };
+
+        const sortedPembelian = computed(() => {
+            return [...pembelian.value].sort((a, b) => {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            });
+        });
 
         const printPurchaseData = () => {
             const doc = new jsPDF({ orientation: 'landscape' });
@@ -205,6 +219,10 @@ export default {
             doc.save('pembelian.pdf');
         };
 
+        const openBuyModal = () => {
+            showModal.value = true;
+        };
+
 
         onMounted(() => {
             getPembelian();
@@ -232,14 +250,9 @@ export default {
             closeModal,
             pembelian,
             backStep,
-            closeModal(){
-                showModal.value = false;
-                 this.success = false;
-            },
+            editPembelian,
             getPembelian,
-            openBuyModal() {
-                showModal.value = true;
-            },
+            openBuyModal,
             deleteProduct,
             formatHarga,
             notify,
@@ -254,10 +267,12 @@ export default {
             closeModal,
             selectedPembelian,
             editPembelian,
-                  editPembelian,
+            editPembelian,
             showEditModal,
             selectedPembelianForEdit,
             printPurchaseData,
+            formatDate,
+            sortedPembelian,
         };
     },
     methods: {
@@ -269,6 +284,7 @@ export default {
     components: {
         VueFeather,
         ModalUpdatePembelian,
+        ModalPembelian,
 
     }
 
@@ -277,7 +293,7 @@ export default {
 
 
 <template>
-    <div id="home" class="pl-0 lg:pl-64 w-full min-h-screen p-10 bg-slate-100 relative">
+    <div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
     <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
     <div class="font-poppins text-sm font-semibold mb-6 ">
         <ol class="list-none p-0 pl-3 inline-flex">
@@ -298,15 +314,14 @@ export default {
             <h3 class="text-2xl font-medium text-gray-600">Data Pembelian</h3>
             <p class="text-sm text-gray-400 mb-6">Data pembelian kayu dari berbagai toko</p>
         <div  class="flex gap-3 justify-end items-start pb-5">
-            <div class="flex gap-2 bg-cyan-800 text-white w-38 h-10 rounded-xl items-center text-center px-5" @click="openBuyModal">
+            <div @click="openBuyModal" class="flex gap-2 bg-cyan-800 text-white w-38 h-10 rounded-xl items-center text-center px-5" >
                 <vue-feather type="plus" size="17" />
                 <p class="text-sm">Pembelian</p>
             </div>
-        <div class="flex gap-2 bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3" @click="printPurchaseData">
-            <vue-feather type="printer" size="17" />
-            <p class="text-sm">Cetak</p>
-        </div>
-                
+            <div class="flex gap-2 bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3" @click="printPurchaseData">
+                <vue-feather type="printer" size="17" />
+                <p class="text-sm">Cetak</p>
+            </div>      
         </div>
 
     <!-- tabel data pembelian -->
@@ -322,7 +337,7 @@ export default {
                             Id
                         </th>
                         <th
-                            class="px-6 py-3 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-8 py-3 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                             Tanggal
                         </th>
                         <th
@@ -376,8 +391,8 @@ export default {
                         <td class="px-6 py-4 whitespace-no-wrap text-center">
                             <p class="text-sm leading-5 font-medium text-gray-900">{{ pembelianData.id_productSources }}</p>
                         </td>
-                        <td class="px-6 py-4 whitespace-no-wrap"> 
-                            <div class="text-sm leading-5 font-medium text-gray-900">{{ pembelianData.createdAt }}</div>
+                        <td class="px-3 py-3 text-center whitespace-no-wrap"> 
+                            <div class="text-sm leading-5 font-medium text-gray-900">{{ formatDate(pembelianData.createdAt) }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap"> 
                             <div class="text-sm leading-5 font-medium text-gray-900">{{ pembelianData.nama_toko }}</div>
@@ -431,107 +446,16 @@ export default {
       </div>
 
 
-    </div>
-
-    
-
-<!-- Modal Create Pembelian -->
-<div v-if="showModal" class="fixed inset-0 flex items-center justify-center z-50">
-    <div class="bg-white w-[90vw] md:max-w-xl mx-auto rounded shadow-lg z-50 overflow-y-auto">
-        <div class="py-10 text-left px-10">
-            <h2 class="text-2xl text-cyan-800 font-semibold mb-6">Create Pembelian</h2>
-        <div v-if="currentStep === 0">
-            <div class="w-full bg-gray-200 rounded-full">
-                <div class="w-40 p-1 text-xs font-medium leading-none text-center"
-                    :class="{ 'text-white bg-cyan-800 rounded-l-full': currentStep === 0, 'text-white  rounded-r-full': currentStep === 1 }">
-                    Langkah 1
-                </div>
-            </div>
-
-            <div class="mt-4 mb-4">
-                <label class="block text-sm">Nama Toko</label>
-                <input type="text" v-model="nama_toko"
-                     class="w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-cyan-600"
-                    placeholder="Nama Toko" />
-            </div>
-            <div class="mb-4">
-                <label class="block mb-2 text-sm">Alamat Toko</label>
-                <input type="text" v-model="alamat_toko"
-                    class="w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-cyan-600"
-                    placeholder="Alamat Toko" />
-            </div>
-            <div class="flex justify-end gap-7">
-                <button @click="closeModal"
-                    class="px-6 py-2 mt-4 text-sm font-medium leading-5 text-black transition-colors duration-150 bg-slate-100 border border-transparent rounded-lg hover:bg-cyan-400 focus:outline-none">
-                    Cancel
-                </button>
-                <button @click="nextStep"
-                    class="px-6 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-cyan-700 border border-transparent rounded-lg hover:bg-cyan-400 focus:outline-none">
-                    Next
-                </button>
-            </div>
-            </div>
-
-            <!-- Langkah 2 -->
-            <div v-else-if="currentStep === 1">
-               <div class="w-full bg-gray-200 rounded-full">
-                    <div class="ml-36 w-40 p-1 text-xs font-medium leading-none text-center text-white bg-cyan-700 rounded-full">
-                        Langkah 2
-                    </div>
-                </div>
-                <div class="mt-4 mb-4">
-                    <label class="block text-sm">Jenis Kayu</label>
-                    <input type="text" v-model="jenis_productSources"
-                        class="w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                        placeholder="Jenis Kayu" />
-                </div>
-                <div class="mb-4">
-                    <label class="block mb-2 text-sm">Nama Kayu</label>
-                    <input type="text" v-model="nama_productSources"
-                        class="w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                        placeholder="Nama Kayu" />
-                </div>
-                <div class="mb-4">
-                    <label class="block mb-2 text-sm">Ukuran</label>
-                    <input v-model="ukuran_productSources"
-                        class="w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                        placeholder="Ukuran" />
-                </div>
-                <div class="mb-4">
-                    <label class="block mb-2 text-sm">Jumlah</label>
-                    <input v-model="jumlah_productSources"
-                        class="w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                        placeholder="Jumlah" type="number" />
-                </div>
-                <div class="mb-4">
-                    <label class="block mb-2 text-sm">Harga</label>
-                    <input v-model="pembelian_productSources"
-                        class="w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                        placeholder="Harga" type="number" />
-                </div>
-                <div class="mb-4">
-                    <label class="block mb-2 text-sm">Ongkos Kirim</label>
-                    <input v-model="ongkosProses_productSources"
-                        class="w-full px-4 py-2 text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
-                        placeholder="Ongkos Kirim" type="number" />
-                </div>
-                <div @click="backStep" class="flex justify-end gap-7">
-                    <button 
-                    class="px-6 py-2 mt-4 text-sm font-medium leading-5 text-center text-black transition-colors duration-150 bg-slate-200 border border-transparent rounded-lg hover:bg-cyan-600 focus:outline-none">
-                        Back
-                    </button>
-                    <button @click="createPurchase"
-                    class="px-6 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-cyan-700 border border-transparent rounded-lg hover:bg-cyan-600 focus:outline-none">
-                        Buat
-                    </button>
-                </div>
-                </div>
-            </div>
             </div>
         </div>
     </div>
-    </div>
 </div>
+
+    <ModalPembelian
+      :showModal="showModal"
+      @closeModal="closeModal"
+      @createPurchase="createPurchase"
+    />
 
     <ModalUpdatePembelian
       v-if="showEditModal"

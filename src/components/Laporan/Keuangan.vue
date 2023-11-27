@@ -1,5 +1,6 @@
 <template>
-    <div class="pl-0 lg:pl-64 w-full min-h-screen p-6">
+    <div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
+    <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
         <div class="font-poppins text-sm font-semibold mb-6">
             <ol class="list-none p-0 pl-3 inline-flex">
                 <li class="flex items-center text-purple">
@@ -16,6 +17,7 @@
             </ol>
         </div>
     </div>
+</div>
 </template>
 
 <script>

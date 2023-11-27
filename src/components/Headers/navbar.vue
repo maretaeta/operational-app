@@ -1,5 +1,5 @@
 <script>
-import { useStore } from "../store/store"
+import { useStore } from "../../store/store"
 import VueFeather from 'vue-feather'
 
 export default {
@@ -27,8 +27,8 @@ export default {
 
 
 <template>
-    <div class="font-poppins sticky top-0 z-40 pl-0 lg:pl-64">
-        <div class="w-full h-20 px-6 bg-white flex items-center justify-between">
+    <div class="font-poppins sticky top-0 z-40 pl-0 lg:pl-56">
+        <div class="w-full h-24 px-9 bg-white flex items-center justify-between">
             <div class="flex">
                 <div class="lg:hidden flex items-center mr-4 text-gray-700">
                     <button class="hover:text-purple-600 hover:border-white focus:outline-none navbar-burger"
@@ -65,8 +65,8 @@ export default {
                     </div>
                 </button>
                 <button class="p-0 focus:outline-none duration-150 flex gap-1" @click="dropDownOpen = !dropDownOpen">
-                    <font-awesome-icon icon="circle-user"  class="w-8 h-8 rounded-full shadow-lg border-2 hover:border-white border-purple-600 duration-150"/>
-                    <p class="items-center text-center p-2">Hi, Admin</p>
+                    <font-awesome-icon icon="circle-user"  class="w-7 h-7 mt-1 rounded-full shadow-lg border-2 hover:border-white border-purple-600 duration-150"/>
+                    <p class="items-center text-center p-2 text-sm">Hi, Admin</p>
                 </button>
             </div>
         </div>

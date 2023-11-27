@@ -101,28 +101,24 @@ export const useBuyStore = defineStore("buy", {
       }
     },
 
-     async updatePembelian(updatedData) {
+    async updatePembelian(updatedData) {
       try {
         const response = await axios.put(
-          `http://localhost:4000/api/v1/pembelian/${updatedData.id_productSources}`,
+          `http://localhost:4000/api/v1/pembelian/update/${updatedData.id_productSources}`,
           updatedData,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
             },
           }
-          );
+        );
 
         if (!response) {
           throw new Error("Update failed");
         }
 
-      this.closeEditModal();
         const data = response.data;
-       
-
-        return data; 
-
+        return data;
       } catch (error) {
         console.error("Update error:", error);
         throw error;

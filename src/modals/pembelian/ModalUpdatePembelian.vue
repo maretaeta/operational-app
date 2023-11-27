@@ -33,7 +33,7 @@
                         <div class="mb-4">
                             <label for="jumlah_productSources"
                                 class="block text-sm font-medium text-gray-700">Jumlah</label>
-                            <input v-model="editedProduct.jumlah_productSources" class="mt-1 p-2 w-full border rounded" />
+                            <input v-model="editedProduct.jumlah_productSources" class="mt-1 p-2 w-full border rounded" type="number" />
                         </div>
                         <div class="mb-4">
                             <label for="pembelian_productSources" class="block text-sm font-medium text-gray-700">Harga
@@ -50,8 +50,7 @@
                         <div class="mt-6 flex justify-end">
                             <button type="submit" class="bg-cyan-700 px-4 py-3 text-white rounded">Simpan</button>
                             <button @click="closeEditModal" class="px-4 py-2 bg-gray-300 text-gray-700 rounded ml-4">Batal</button>
-                            </div>
-
+                        </div>
                     </form>
                 </div>
             </div>
@@ -60,7 +59,7 @@
 </template>
 
 <script>
-import { useBuyStore } from '../store/pembelian';
+import { useBuyStore } from '../../store/pembelian';
 
 export default {
     props: {
@@ -71,10 +70,10 @@ export default {
     },
     methods: {
         async submitEdit() {
-            console.log("editedProduct:", this.editedProduct);
             try {
                 const store = useBuyStore();
                 const updatedData = {
+                    id_productSources: this.editedProduct.id_productSources,
                     nama_toko: this.editedProduct.nama_toko,
                     alamat_toko: this.editedProduct.alamat_toko,
                     jenis_productSources: this.editedProduct.jenis_productSources,
@@ -84,17 +83,14 @@ export default {
                     pembelian_productSources: this.editedProduct.pembelian_productSources,
                     ongkosProses_productSources: this.editedProduct.ongkosProses_productSources
                 };
-                await store.updatePembelian(updatedData); 
-
+                await store.updatePembelian(updatedData);
                 this.closeEditModal();
             } catch (error) {
                 console.error("Update error:", error);
             }
         },
         closeEditModal() {
-            this.editedProduct = null;
-        },
-        closeEditModal() {
+            // this.editedProduct = null;
             this.$emit("close");
         },
     },

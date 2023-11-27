@@ -17,7 +17,7 @@ export default {
                 const response = await store.login(loginData.value);
 
                 if (response) {
-                    router.push("/");
+                    router.push("/dashboard");
                 } else {
                     console.error("Login failed");
                 }

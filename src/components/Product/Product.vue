@@ -1,5 +1,5 @@
 <template>
-<div class="pl-0 lg:pl-64 w-full min-h-screen p-10 bg-slate-100 relative">
+<div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
     <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
     <div class="font-poppins text-sm font-semibold mb-6">
         <ol class="list-none p-0 pl-3 inline-flex">
@@ -107,8 +107,14 @@
                                     </td>
                                     <td class="px-4 py-4 whitespace-no-wrap text-center flex gap-3">
                                         <vue-feather type="edit" size="20" stroke="green" @click="openEditModal(i)" />
-                                        <vue-feather type="trash-2" size="20" stroke="red"
+                                        <!-- <vue-feather type="trash-2" size="20" stroke="red"
                                             @click="deleteProduct(i.id_product)" />
+                                         -->
+                                         <vue-feather type="trash-2"
+                                            size="20"
+                                            stroke="red"
+                                            @click="deleteProductConfirmation(i.id_product)"
+                                        />
                                     </td>
                                 </tr>
                             </tbody>
@@ -132,7 +138,20 @@
           </div>
         </div>
 
-        <!-- Modal for editing data -->
+      <AlertDelete
+        :showDeleteConfirmation="showDeleteConfirmation"
+        @confirm-delete="confirmDelete"
+        @cancel-delete="cancelDelete"
+      />
+
+        <EditKeuntungan
+        :editedProduct="editedProduct"
+        :openEditModal="openEditModal"
+        :closeEditModal="closeEditModal"
+        :submitEdit="submitEdit"
+      />
+
+        <!-- Modal for editing data
         <div v-if="editedProduct" class="fixed inset-0 flex items-center justify-center z-50">
             <div class="modal-overlay absolute inset-0 bg-gray-500 opacity-75"></div>
             <div class="modal-container bg-white w-96 mx-auto rounded shadow-lg z-50 overflow-y-auto">
@@ -156,7 +175,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
     </div>
 
@@ -166,12 +185,14 @@
 
 <script>
 import { ref, onMounted, computed } from "vue";
-import { ProdukStore } from "../store/product";
+import { ProdukStore } from "../../store/product";
 import VueFeather from "vue-feather";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import AlertDelete from "../../modals/product/AlertDelete.vue";
+import EditKeuntungan from "../../modals/product/EditKeuntungan.vue";
 
 export default {
     setup() {
@@ -180,6 +201,10 @@ export default {
         const editedProduct = ref(null);
         const itemsPerPage = 8;
         const currentPage = ref(1);
+        const showDeleteConfirmation = ref(false);
+        const selectedProductId = ref(null);
+
+        
 
         // Get Product
         async function getProduct() {
@@ -236,15 +261,38 @@ export default {
                 getProduct();
             }
         };
+        
 
         // Delete
+        const deleteProductConfirmation = (productId) => {
+            selectedProductId.value = productId;
+            showDeleteConfirmation.value = true; 
+        };
+
+
         const deleteProduct = async (id) => {
-            try {
-                await produkStore.deleteProduct(id);
-            } catch (error) {
-                console.error("Error deleting product:", error);
+            selectedProductId.value = id; 
+            showDeleteConfirmation.value = true; 
+        };
+
+        const confirmDelete = async () => {
+            if (selectedProductId.value) {
+                try {
+                    await produkStore.deleteProduct(selectedProductId.value);
+                    showDeleteConfirmation.value = false;
+                    getProduct();
+                    selectedProductId.value = null;
+                } catch (error) {
+                    console.error("Error deleting product:", error);
+                }
             }
         };
+
+        const cancelDelete = () => {
+            showDeleteConfirmation.value = false;
+            editedProduct.value = null;
+        };
+
 
         // Notif Keuntungan
         const keuntunganNotif = () => {
@@ -326,10 +374,18 @@ export default {
             formatHarga,
             keuntunganNotif,
             printProductData, 
+            showDeleteConfirmation,
+            selectedProductId,
+            deleteProductConfirmation,
+            confirmDelete,
+            cancelDelete,
+
         };
     },
     components: {
-        VueFeather,
-    },
+    VueFeather,
+    AlertDelete,
+    EditKeuntungan,
+},
 };
 </script>

@@ -1,5 +1,5 @@
 <script>
-import { useStore } from "../store/store"
+import { useStore } from "../../store/store"
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import VueFeather from "vue-feather";
@@ -31,7 +31,7 @@ export default {
         }
 
         const handleHome = () => {
-            router.push({name: "Home"})
+            router.push({name: "Dashboard"})
         }
 
         const handleProduct = () => {
@@ -46,7 +46,11 @@ export default {
         }
 
         const handleLaporan = () => {
-            router.push({name: "Laporan"})
+            router.push({name: "LaporanKeuangan"})
+        }
+
+        const handleKaryawan = () => {
+            router.push({name: "Karyawan"})
         }
 
         return {
@@ -61,6 +65,7 @@ export default {
             handlePenjualan,
             handleDataPenjualan,
             handleLaporan,
+            handleKaryawan
         };
 
     },
@@ -71,15 +76,13 @@ export default {
 };
 </script>
 
-
-
 <template>
-    <div class="font-poppins w-1/2 md:w-1/3 lg:w-64 fixed md:top-0 md:left-0 h-screen lg:block bg-white z-30 transition duration-500 ease-in-out"
+    <div class="font-poppins w-1/2 md:w-1/3 lg:w-56 fixed md:top-0 md:left-0 h-screen lg:block bg-white z-30 transition duration-500 ease-in-out"
         :class="sideBarOpen ? '' : 'hidden'" id="main-nav">
 
         <div  @click="handleHome" class="w-full h-24 flex gap-2 px-5 items-center mb-8 p-5">
-            <img src="../assets//logo.png" class="w-20 h-12" />
-            <p class="font-semibold text-md text-gray-800">UD ADI MULIA PROFILE</p>
+            <img src="../../assets//logo.png" class="w-20 h-12" />
+            <p class="font-semibold text-sm text-gray-800">UD ADI MULIA PROFILE</p>
         </div>
 
         <div class="mb-4 px-4 text-gray-800">
@@ -87,24 +90,24 @@ export default {
             <div @click="handleHome"
                 class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
                 <font-awesome-icon icon="house"  />
-                <span class="text-gray-800 font-medium pl-2">Dashboard</span>
+                <span class="text-gray-800 font-medium pl-2 text-sm">Dashboard</span>
             </div>
              <div @click="handlePembelian"
                     class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
                     <font-awesome-icon icon="truck"  />
-                    <span class="text-gray-800 font-medium pl-2">Pembelian</span>
+                    <span class="text-gray-800 font-medium pl-2 text-sm">Pembelian</span>
                 </div>
             <div @click="handleProduct"
                 class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
                 <font-awesome-icon icon="boxes-stacked" />
-                <span class="text-gray-800 font-medium pl-2">Product</span>
+                <span class="text-gray-800 font-medium pl-2 text-sm">Product</span>
             </div>
             <div class="w-full">
                 <button
                     class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150 focus:outline-none"
                     @click="toggleDropdownCompras">
                     <font-awesome-icon icon="cart-shopping" />
-                    <span class="text-gray-800 font-medium pl-2">Penjualan</span>
+                    <span class="text-gray-800 font-medium pl-2 text-sm">Penjualan</span>
                     <svg class="hidden lg:flex w-4 h-4 ml-16 text-gray-600" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -114,12 +117,12 @@ export default {
                     <div  @click="handlePenjualan"
                         class="flex items-center h-10 pl-5 hover:text-gray-900 rounded-lg cursor-pointer transition duration-500 ease-in-out animated focus:outline-none">
                         <font-awesome-icon icon="cart-plus" />
-                        <span class="font-medium pl-2">Create Penjualan</span>
+                        <span class="font-medium pl-2 text-sm">Create Penjualan</span>
                     </div>
                     <div @click="handleDataPenjualan" 
                         class="flex items-center h-10 pl-5 hover:text-gray-900 rounded-lg cursor-pointer duration-150">
                         <font-awesome-icon icon="tags" />
-                        <span class="font-medium pl-2">Data Penjualan</span>
+                        <span class="font-medium pl-2 text-sm">Data Penjualan</span>
                     </div>
                 </div>
             </div>
@@ -130,15 +133,27 @@ export default {
             <div @click="handleToko"
                 class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
                 <font-awesome-icon icon="shop" />
-                <span class="text-gray-800 font-medium pl-2">Toko</span>
+                <span class="text-gray-800 font-medium pl-2 text-sm">Toko</span>
             </div>
+
+            <div @click="handleKaryawan"
+                class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
+                <font-awesome-icon icon="users" />
+                <span class="text-gray-800 font-medium pl-2 text-sm">Karyawan</span>
+            </div>
+
         </div>
         <div class="mb-4 px-4 text-gray-800 mt-5">
             <p class="pl-4 text-xs font-semibold mb-4 text-gray-600">MONITORING</p>
             <div @click="handleLaporan"
                 class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
                 <font-awesome-icon icon="chart-line" />
-                <span class="text-gray-800 font-medium pl-2">Laporan</span>
+                <span class="text-gray-800 font-medium pl-2 text-sm">Keuangan</span>
+            </div>
+            <div
+                    class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
+                    <font-awesome-icon icon="chart-line" />
+                    <span class="text-gray-800 font-medium pl-2 text-sm">Pendapatan</span>
             </div>
         </div>
     </div>
