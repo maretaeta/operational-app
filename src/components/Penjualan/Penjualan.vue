@@ -27,60 +27,49 @@
             <!-- Form Penjualan -->
             <form @submit.prevent="submitPenjualan">
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-base xl:text-lg font-medium">Nama Toko</label>
+                    <label class="block text-gray-700 text-sm xl:text-base font-medium">Nama Toko</label>
                     <input v-model="nama_toko" class="w-full px-3 py-2 border rounded-lg" />
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-base xl:text-lg font-medium pb-2">Pilih Barang:</label>
+                    <label class="block text-gray-700 text-sm xl:text-base font-medium pb-2">Pilih Barang :</label>
                     <div class="flex bg-cyan-700 p-1 w-28 gap-1 text-white rounded text-sm justify-center">
                         <font-awesome-icon icon="plus" class="p-1" />
                         <button @click="showModal = true">Barang</button>
                     </div>
-                    <!-- <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 xl:gap-10">
-                        <div v-for="product in produk" :key="product.id_product" class="border" >  
-                            <label class="block text-gray-700 text-sm md:text-base pt-3 p-2 mb-1 text-center">
-                            {{ product.nama_product }}
-                            </label>
-                            <div class="grid grid-cols-3 gap-3 p-2 items-center">
-                                <button @click="product.quantity > 0 ? product.quantity-- : 0" class="bg-slate-200 text-gray-800 text-base font-semibold rounded-md">-</button>
-                                <input v-model="product.quantity" type="number" class="w-full col-span-1 border rounded-md text-center flex justify-center" />
-                                <button @click="product.quantity++" class="bg-slate-200 text-gray-800 text-base font-semibold rounded-md">+</button>
-                            </div>
-                            <input type="hidden" :name="'selectedProducts[' + product.id_product + '][id]'" :value="product.id_product" />
-                        </div>
-                    </div> -->
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-base xl:text-lg font-medium pt-6 pb-3">Barang yang Dipilih:</label>
+                    <label class="block text-gray-700 text-sm xl:text-base font-medium pt-6 pb-3">Barang yang Dipilih :</label>
                     <div class="flex flex-wrap gap-6">
                         <div v-for="(product, index) in selectedProducts" :key="index" class="flex items-center justify-between w-full">
                             <div class="w-1/2">
                                 <p>{{ index + 1 }}. {{ product.nama_product }}</p>
                             </div>
                             <div class="w-1/2 flex justify-end items-center">
-                                <button @click="decrementQuantity(product)" class="bg-slate-200 text-gray-800 text-base font-semibold rounded-md w-20">-</button>
+                                <button @click="decrementQuantity(product)" class="bg-slate-200 text-gray-800 text-sm font-semibold rounded-md w-20">-</button>
                                 <input v-model="product.quantity" type="number" class="w-16 mx-2 border rounded-md text-center" />
-                                <button @click="incrementQuantity(product)" class="bg-slate-200 text-gray-800 text-base font-semibold rounded-md w-20">+</button>
+                                <button @click="incrementQuantity(product)" class="bg-slate-200 text-gray-800 text-sm font-semibold rounded-md w-20">+</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-
                 <div class="mb-10">
-                    <label class="block text-gray-700 text-base xl:text-lg font-medium pt-6 mb-2 ">Diskon :</label>
+                    <label class="block text-gray-700 text-sm xl:text-base font-medium pt-6 mb-2 ">Diskon </label>
                     <input v-model="diskon" class="w-full px-3 py-2 border rounded-lg" type="number" />
                 </div>
 
-               <button @click="createPenjualan" class="bg-cyan-700 hover-bg-blue-700 text-white font-medium py-2 px-4 rounded">Create Penjualan</button>
-
+               <button @click="createPenjualan" class="bg-cyan-700 text-sm xl:text-base hover-bg-blue-700 text-white font-medium py-2 px-4 rounded">Create Penjualan</button>
           </form>
         </div>
-        <SelectProductModals :showModal="showModal" :products="produk" @close="showModal = false" @add="addToPenjualan" />
-  
-      </div>
+
+        <SelectProductModals 
+            :showModal="showModal" 
+            :products="produk" 
+            @close="showModal = false" 
+            @add="addToPenjualan" 
+        />
+      
+        </div>
     </div>
 </template>
 
@@ -92,9 +81,12 @@ import { ProdukStore } from "../../store/product";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import SelectProductModals from "../../modals/penjualan/selectproductmodals.vue"
+import { useRouter } from "vue-router";
 
 export default {
     setup() {
+        const router = useRouter();
+
         const produk = ref([]);
         const produkStore = ProdukStore();
         const nama_toko = ref();
@@ -104,6 +96,7 @@ export default {
         const selectedProducts = ref([]);
         const localSelectedProducts = ref([]);
 
+        // get produk
         async function getProduk() {
             try {
                 const response = await produkStore.getProduct();
@@ -126,13 +119,14 @@ export default {
         }
 
 
+       // create penjualan
         const createPenjualan = async () => {
             const postPenjualan = {
                 nama_toko: nama_toko.value,
                 diskon: diskon.value,
             };
 
-            const selectedProductsArray = localSelectedProducts.value
+            const selectedProductsArray = selectedProducts.value
                 .filter((product) => product.quantity > 0)
                 .map((product) => ({
                     id: product.id_product,
@@ -148,13 +142,14 @@ export default {
                     console.log("Penjualan berhasil:", response.data);
                     error.value = null;
                     CreateNotif();
+                     router.push({ name: "DataPenjualan" });
+
                 } catch (error) {
                     console.error("Gagal membuat penjualan:", error);
                     error.value = "Gagal membuat penjualan";
                 }
             }
         };
-
 
         // toastify
         const CreateNotif = () => {
@@ -164,12 +159,12 @@ export default {
             });
         };
 
-       const addToPenjualan = (selectedProductsToAdd) => {
+
+        // add dari modal ke barang yang dipilih
+        const addToPenjualan = (selectedProductsToAdd) => {
             selectedProductsToAdd.forEach((selectedProduct) => {
-                // Cek apakah produk sudah ada dalam daftar barang yang dipilih
-                const existingProduct = selectedProducts.value.find(product => product.id_product === selectedProduct.id_product);
+            const existingProduct = selectedProducts.value.find(product => product.id_product === selectedProduct.id_product);
                 if (!existingProduct) {
-                    // Tandai produk sebagai sudah dipilih dan tambahkan ke daftar barang yang dipilih
                     selectedProduct.selected = true;
                     selectedProducts.value.push(selectedProduct);
                 }
@@ -177,6 +172,7 @@ export default {
             showModal.value = false;
         };
 
+        // 
         const removeFromSelected = (productToRemove) => {
             const index = selectedProducts.value.findIndex(product => product.id_product === productToRemove.id_product);
             if (index !== -1) {
@@ -200,16 +196,21 @@ export default {
         };
 
         
-
-         const incrementQuantity = (product) => {
-            product.quantity++;
+       const incrementQuantity = (product) => {
+            const index = selectedProducts.value.findIndex((p) => p.id_product === product.id_product);
+            if (index !== -1) {
+                selectedProducts.value[index].quantity++;
+            }
         };
 
         const decrementQuantity = (product) => {
-            if (product.quantity > 0) {
-                product.quantity--;
+            const index = selectedProducts.value.findIndex((p) => p.id_product === product.id_product);
+            if (index !== -1 && selectedProducts.value[index].quantity > 0) {
+                selectedProducts.value[index].quantity--;
             }
         };
+
+
 
         onMounted(() => {
             getProduk();
@@ -231,6 +232,8 @@ export default {
       
         };
     },
-    components: { SelectProductModals }
+    components: { 
+        SelectProductModals 
+    }
 };
 </script>

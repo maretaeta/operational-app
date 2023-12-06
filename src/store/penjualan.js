@@ -37,7 +37,7 @@ export const penjualanStore = defineStore("penjualan", {
     async deletePenjualan(id_penjualan) {
       try {
         const response = await axios.delete(
-          `http://localhost:4000/api/v1/penjualan/${id_penjualan}`,
+          `http://localhost:4000/api/v1/penjualan/delete/${id_penjualan}`,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -80,7 +80,7 @@ export const penjualanStore = defineStore("penjualan", {
     async getDetailPenjualan(id_penjualan) {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/penjualan/${id_penjualan}`
+          `http://localhost:4000/api/v1/penjualan/detail/${id_penjualan}`
         );
 
         if (!response || !response.data) {

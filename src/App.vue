@@ -17,8 +17,8 @@
 <script>
 import { useStore } from "./store/store";
 
-import sidebar from "./components/Headers/sidebar.vue"
-import navbar from "./components/Headers/navbar.vue"
+import sidebar from "./components/Layout/sidebar.vue"
+import navbar from "./components/Layout/navbar.vue"
 
 export default {
   name: 'App',

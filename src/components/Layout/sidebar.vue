@@ -145,12 +145,12 @@ export default {
         </div>
         <div class="mb-4 px-4 text-gray-800 mt-5">
             <p class="pl-4 text-xs font-semibold mb-4 text-gray-600">MONITORING</p>
-            <div @click="handleLaporan"
+            <!-- <div @click="handleLaporan"
                 class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
                 <font-awesome-icon icon="chart-line" />
                 <span class="text-gray-800 font-medium pl-2 text-sm">Keuangan</span>
-            </div>
-            <div
+            </div> -->
+            <div @click="handleLaporan"
                     class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
                     <font-awesome-icon icon="chart-line" />
                     <span class="text-gray-800 font-medium pl-2 text-sm">Pendapatan</span>

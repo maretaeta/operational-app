@@ -17,39 +17,124 @@
                 </ol>
             </div>
 
-        <div class="items-center justify-center p-2">
+         <div class="items-center justify-center p-2">
             <div class="w-full">
-                <h3 class="text-2xl font-medium text-gray-600">Data Karyawan</h3>
-                <p class="text-sm text-gray-400 mb-6">Data karyawan yang bekerja</p>
-                <div  class="flex gap-3 justify-end items-start pb-5">
-                    <div class="flex gap-2 bg-cyan-800 text-white w-38 h-10 rounded-xl items-center text-center px-5">
-                        <font-awesome-icon icon="plus" />
-                        <p class="text-sm">karyawan</p>
-                    </div>   
+              <h3 class="text-2xl font-medium text-gray-600">Data Karyawan</h3>
+              <p class="text-sm text-gray-400 mb-6">Data karyawan yang bekerja</p>
+              <div class="flex gap-3 justify-end items-start pb-5">
+                <div @click="openCreateModal" class="flex gap-2 bg-cyan-800 text-white w-38 h-10 rounded-xl items-center text-center px-5">
+                  <font-awesome-icon icon="plus" />
+                  <p class="text-sm">karyawan</p>
                 </div>
+              </div>
             </div>
 
-
-            <div class="grid grid-cols-3 gap-5">
-                <div class="border p-2 text-center">
-                    <div class="flex justify-end px-2">
-                        <font-awesome-icon icon="ellipsis-vertical" class="p-1 h-5 text-cyan-700"/>
-                    </div>
-                    <div class="flex justify-center">
-                        <img src="../../assets//user.png" class="w-1/2" />
-                    </div>
-                    <p class="text-lg text-cyan-800 font-medium">Hyunseok</p>
-                    <p class="text-sm text-gray-800 py-2">Jl. Apit Yeh No.43, Banjar tengah, Sempidi, Kec. Mengwi, Kabupaten Badung, Bali 80116</p>
-                    <p class="text-sm font-medium text-gray-900">Rp. 3.000.000/bln</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-6">
+              <div v-for="employee in karyawan" :key="employee.id_karyawan" class="border p-2 text-center  relative">
+                <div class="flex justify-end px-2">
+                  <font-awesome-icon icon="ellipsis-vertical" class="p-1 h-5 text-cyan-700 cursor-pointer" @click="toggleDropdown(employee.id_karyawan)" />
                 </div>
-            </div>
+                <div class="flex gap-5">
+                     <div class="flex justify-center">
+                      <img src="../../assets//user.png" class="w-20" />
+                    </div>
+                    <div class="flex flex-col justify-start">
+                        <p class="text-lg text-cyan-800 font-medium"> {{ employee.nama_karyawan }}</p>
+                        <p class="text-sm text-gray-800 py-2">{{ employee.jabatan }}</p>
+                        <p class="text-sm font-medium text-gray-900 pb-5">Rp. {{ employee.gaji }}/bln</p>
 
+                    </div>
+                    
+                </div>
+               
+
+                <!-- Dropdown Menu -->
+                <div v-if="employee.showDropdown" class="absolute right-5 top-0 mt-10 bg-white border rounded-md overflow-hidden shadow-md">
+                    <div class="px-5 py-3">
+                        <div class="flex px-5  gap-3 text-green-600 hover:bg-gray-200">
+                            <font-awesome-icon icon="pen-to-square" class="p-1" />
+                            <p class="block " >Update</p>
+                        </div>
+                        <div class="flex px-5 py-2 gap-3 text-red-600 hover:bg-gray-200">
+                            <font-awesome-icon icon="trash" class="p-1" />
+                            <p class="block" >Delete</p>
+                        </div>
+                        <div class="flex px-5 gap-3 text-cyan-700 hover:bg-gray-200">
+                            <font-awesome-icon icon="info" class=" p-1 pt-1 pr-2" />
+                            <p class="block " >Detail</p>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                </div>
+              </div>
+            </div>
         </div>
     </div>
-</div>
+
+    <ModalCreateKaryawan :isVisible="isCreateModalVisible" :karyawanStore="karyawanStore" @closeModal="closeCreateModal" />
+
 </template>
 
 <script>
+import { onMounted, ref } from "vue";
+import { useKaryawan } from "../../store/karyawan.js";
+import ModalCreateKaryawan from "../../modals/karyawan/ModalCreateKaryawan.vue"
+
+export default {
+    setup() {
+        const karyawanStore = useKaryawan();
+        const karyawan = ref([]);
+        const isCreateModalVisible = ref(false);
+
+        async function getKaryawan() {
+            try {
+                const response = await karyawanStore.getKaryawan();
+                if (Array.isArray(response)) {
+                    karyawan.value = response;
+                    
+                } else {
+                    console.log("Unexpected response format:", response);
+                }
+            } catch (error) {
+                console.error("Failed to fetch karyawan data:", error);
+            }
+        }
+
+        function toggleDropdown(employeeId) {
+            const employee = karyawanStore.karyawan.find(emp => emp.id_karyawan === employeeId);
+            if (employee) {
+                employee.showDropdown = !employee.showDropdown;
+                console.log(`Toggled dropdown for employee with ID: ${employeeId}`);
+            }
+        }
+        function openCreateModal() {
+            isCreateModalVisible.value = true;
+        }
+
+        function closeCreateModal() {
+            isCreateModalVisible.value = false;
+        }
 
 
-</script>
+        onMounted(() => {
+            getKaryawan()
+        });
+
+        return {
+            getKaryawan,
+            toggleDropdown,
+            openCreateModal,
+            closeCreateModal,
+            isCreateModalVisible,
+            karyawan,
+            karyawanStore,
+        };
+    },
+
+    components: {
+        ModalCreateKaryawan,
+    }
+}
+</script>           

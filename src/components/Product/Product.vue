@@ -39,7 +39,7 @@
                                 <tr>
                                     <th
                                         class="px-4 py-5 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
-                                        ID
+                                        No
                                     </th>
                                     <th
                                         class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
@@ -76,9 +76,9 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 border-t border-gray-300">
-                                <tr v-for="(i, index) in displayedProducts" :key="i.id_product" class="border-b border-gray-200">
+                                <tr v-for="(i, index) in sortedProduk" :key="i.id_product" class="border-b border-gray-200">
                                     <td class="px-4 py-4 whitespace-no-wrap text-center">
-                                        <p class="text-sm leading-5 font-medium text-gray-900">{{ i.id_product }}</p>
+                                        <p class="text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
                                     </td>
                                     <td class="px-4 py-4 whitespace-no-wrap">
                                         <div class="text-sm leading-5 font-medium text-gray-900">{{ i.jenis_product }}</div>
@@ -138,46 +138,21 @@
           </div>
         </div>
 
-      <AlertDelete
-        :showDeleteConfirmation="showDeleteConfirmation"
-        @confirm-delete="confirmDelete"
-        @cancel-delete="cancelDelete"
-      />
+        <AlertDelete
+            :showDeleteConfirmation="showDeleteConfirmation"
+            @confirm-delete="confirmDelete"
+            @cancel-delete="cancelDelete"
+        />
 
-        <EditKeuntungan
-        :editedProduct="editedProduct"
-        :openEditModal="openEditModal"
-        :closeEditModal="closeEditModal"
-        :submitEdit="submitEdit"
-      />
+            <EditKeuntungan
+            :editedProduct="editedProduct"
+            :openEditModal="openEditModal"
+            :closeEditModal="closeEditModal"
+            :submitEdit="submitEdit"
+        />
 
-        <!-- Modal for editing data
-        <div v-if="editedProduct" class="fixed inset-0 flex items-center justify-center z-50">
-            <div class="modal-overlay absolute inset-0 bg-gray-500 opacity-75"></div>
-            <div class="modal-container bg-white w-96 mx-auto rounded shadow-lg z-50 overflow-y-auto">
-                <div class="modal-content py-10 text-left px-6">
-                    <h2 class="text-2xl text-cyan-800 font-semibold mb-6">Edit Keuntungan</h2>
-                    <form @submit.prevent="submitEdit">
-                        <div class="mb-4">
-                            <label for="harga_product" class="block text-sm font-medium text-gray-700">Harga Product</label>
-                            <input v-model="editedProduct.harga_product" type="number"
-                                class="mt-1 p-2 w-full border rounded">
-                        </div>
-                        <div class="mb-4">
-                            <label for="keuntungan" class="block text-sm font-medium text-gray-700">Keuntungan</label>
-                            <input v-model="editedProduct.keuntungan" type="number" class="mt-1 p-2 w-full border rounded">
-                        </div>
-                        <div class="mt-6 flex justify-end">
-                            <button @click="submitEdit" class="bg-cyan-700 px-4 py-3 text-white rounded">Simpan</button>
-                            <button @click="closeEditModal"
-                            class="px-4 py-2 bg-gray-300 text-gray-700 rounded ml-4">Batal</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div> -->
-</div>
     </div>
+</div>
 
 
 </template>
@@ -199,12 +174,10 @@ export default {
         const produk = ref([]);
         const produkStore = ProdukStore();
         const editedProduct = ref(null);
-        const itemsPerPage = 8;
+        const itemsPerPage = 10;
         const currentPage = ref(1);
         const showDeleteConfirmation = ref(false);
-        const selectedProductId = ref(null);
-
-        
+        const selectedProductId = ref(null);    
 
         // Get Product
         async function getProduct() {
@@ -220,6 +193,14 @@ export default {
             }
         }
 
+        // descending
+        const sortedProduk = computed(() => {
+            return [...produk.value].sort((a, b) => {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            });
+        });
+
+        // pagination
         const displayedProducts = computed(() => {
             const startIndex = (currentPage.value - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
@@ -240,6 +221,7 @@ export default {
             }
         };
 
+        // modal
         const openEditModal = (product) => {
             editedProduct.value = { ...product };
         };
@@ -248,6 +230,7 @@ export default {
             editedProduct.value = null;
         };
 
+        // edit keuntungan produk
         const submitEdit = async () => {
             if (editedProduct.value) {
                 const hargaProduct = parseFloat(editedProduct.value.harga_product);
@@ -263,7 +246,7 @@ export default {
         };
         
 
-        // Delete
+        // Delete produk
         const deleteProductConfirmation = (productId) => {
             selectedProductId.value = productId;
             showDeleteConfirmation.value = true; 
@@ -298,7 +281,7 @@ export default {
         const keuntunganNotif = () => {
             toast.success("Keuntungan berhasil dibuat", {
                 position: 'top-right',
-                duration: 3000,
+                duration: 1000,
             });
         }
 
@@ -314,6 +297,7 @@ export default {
             return formatToRupiah(harga);
         }
 
+        // print data
         const printProductData = () => {
             const doc = new jsPDF({ orientation: 'landscape' });
 
@@ -379,13 +363,15 @@ export default {
             deleteProductConfirmation,
             confirmDelete,
             cancelDelete,
+            sortedProduk,
 
         };
     },
+    
     components: {
-    VueFeather,
-    AlertDelete,
-    EditKeuntungan,
-},
+        VueFeather,
+        AlertDelete,
+        EditKeuntungan,
+    },
 };
 </script>

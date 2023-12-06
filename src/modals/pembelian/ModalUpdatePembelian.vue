@@ -39,13 +39,13 @@
                             <label for="pembelian_productSources" class="block text-sm font-medium text-gray-700">Harga
                                 Beli</label>
                             <input v-model="editedProduct.pembelian_productSources"
-                                class="mt-1 p-2 w-full border rounded" />
+                                class="mt-1 p-2 w-full border rounded" type="number"/>
                         </div>
                         <div class="mb-4">
                             <label for="ongkosProses_productSources"
                                 class="block text-sm font-medium text-gray-700">Ongkos</label>
                             <input v-model="editedProduct.ongkosProses_productSources"
-                                class="mt-1 p-2 w-full border rounded" />
+                                class="mt-1 p-2 w-full border rounded" type="number" />
                         </div>
                         <div class="mt-6 flex justify-end">
                             <button type="submit" class="bg-cyan-700 px-4 py-3 text-white rounded">Simpan</button>

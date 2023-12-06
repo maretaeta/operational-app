@@ -6,6 +6,7 @@ import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import ModalPembelian from "../../modals/pembelian/CreatePembelianModals.vue"
 import ModalUpdatePembelian from '../../modals/pembelian/ModalUpdatePembelian.vue';
+import AlertDeletePembelian from '../../modals/pembelian/AlertDeletePembelian.vue';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
@@ -31,33 +32,66 @@ export default {
         const success = ref(false);
         const selectedPembelian = ref(null);
 
+        const isDeleteConfirmationVisible = ref(false);
+        const selectedDeleteId = ref(null);
+
+        const pembelian = ref([]);
+
         const closeModal = () => {
             showModal.value = false;
         };
 
+        // create pembelian
+        const purchaseData = ref({
+            nama_toko: '',
+            alamat_toko: '',
+            jenis_productSources: '',
+            nama_productSources: '',
+            ukuran_productSources: '',
+            jumlah_productSources: '',
+            pembelian_productSources: '',
+            ongkosProses_productSources: '',
+        });
 
-
+      // create pembelian
         const createPurchase = async () => {
-            const purchaseData = {
-                nama_toko: nama_toko.value,
-                alamat_toko: alamat_toko.value,
-                jenis_productSources: jenis_productSources.value,
-                nama_productSources: nama_productSources.value,
-                ukuran_productSources: ukuran_productSources.value,
-                satuan_productSources: satuan_productSources.value,
-                jumlah_productSources: jumlah_productSources.value,
-                pembelian_productSources: pembelian_productSources.value,
-                ongkosProses_productSources: ongkosProses_productSources.value,
-                
-            };
-
             try {
-                const response = await buyStore.createPurchase(purchaseData);
+                const response = await buyStore.createPurchase({
+                    nama_toko: purchaseData.value.nama_toko,
+                    alamat_toko: purchaseData.value.alamat_toko,
+                    jenis_productSources: purchaseData.value.jenis_productSources,
+                    nama_productSources: purchaseData.value.nama_productSources,
+                    ukuran_productSources: purchaseData.value.ukuran_productSources,
+                    jumlah_productSources: parseInt(purchaseData.value.jumlah_productSources),
+                    pembelian_productSources: parseInt(purchaseData.value.pembelian_productSources),
+                    ongkosProses_productSources: parseInt(purchaseData.value.ongkosProses_productSources)
+                });
+
                 console.log('Purchase creation successful:', response);
-                notify();
+
+                if (response) {
+                    pembelian.value.push(response);
+                    calculateTotalPages();
+                    updateDisplayedData();
+                }
                 showModal.value = false;
+                notify();
+
             } catch (error) {
                 console.error('Purchase creation error:', error);
+
+                if (error?.code === 'P2025') {
+                    // Prisma error code for unique constraint violation
+                    toast.error("Toko dengan nama tersebut sudah ada", {
+                        position: 'top-right',
+                        duration: 3000,
+                    });
+                } else {
+                    toast.error("Terjadi kesalahan saat membuat pembelian", {
+                        position: 'top-right',
+                        duration: 3000,
+                    });
+                }
             }
         };
 
@@ -71,21 +105,20 @@ export default {
         // modal pagination
         const currentStep = ref(buyStore.currentStep);
 
-        const nextStep = () => {
-            if (buyStore.currentStep < steps.length - 1) {
-                currentStep.value = buyStore.currentStep + 1;
+       const nextStep = () => {
+            if (currentStep.value < 1) {
+                currentStep.value += 1;
             }
         };
 
-        const backStep = () => {
+         const backStep = () => {
             if (currentStep.value > 0) {
                 currentStep.value -= 1;
             }
         };
 
         // get product
-        const pembelian = ref([]);
-        async function getPembelian() {
+        const getPembelian = async () => {
             try {
                 const response = await buyStore.getPembelian();
                 if (Array.isArray(response)) {
@@ -98,7 +131,8 @@ export default {
             } catch (error) {
                 console.error("Gagal mendapatkan data produk:", error);
             }
-        }
+        };
+
 
         // delete produk
         const deleteProduct = async (id_productSources) => {
@@ -108,6 +142,34 @@ export default {
                 console.error("Error deleting product:", error);
             }
         };
+
+        const showDeleteConfirmationModal = (id) => {
+            selectedDeleteId.value = id;
+            isDeleteConfirmationVisible.value = true;
+        };
+
+        const deleteConfirmed = async () => {
+            try {
+                await deleteProduct(selectedDeleteId.value);
+                const index = pembelian.value.findIndex(item => item.id_productSources === selectedDeleteId.value);
+                if (index !== -1) {
+                    pembelian.value.splice(index, 1);
+                    
+                    calculateTotalPages();
+                    updateDisplayedData();
+                }
+                isDeleteConfirmationVisible.value = false;
+            } catch (error) {
+                console.error('Error deleting product:', error);
+            }
+        };
+
+
+        const cancelDelete = () => {
+            selectedDeleteId.value = null;
+            isDeleteConfirmationVisible.value = false;
+        };
+
 
 
         const editPembelian = (pembelianData) => {
@@ -224,12 +286,28 @@ export default {
         };
 
 
-        onMounted(() => {
+       onMounted(() => {
             getPembelian();
+            calculateTotalPages();
+            updateDisplayedData();
+
+            watch(() => buyStore.pembelian, () => {
+                pembelian.value = [...buyStore.pembelian];
+                calculateTotalPages();
+                updateDisplayedData();
+            });
+        });
+
+
+       watch(() => buyStore.pembelian, () => {
+            pembelian.value = [...buyStore.pembelian];
             calculateTotalPages();
             updateDisplayedData();
         });
 
+         watch(() => buyStore.currentStep, (newStep) => {
+            currentStep.value = newStep;
+        });
 
         return {
             currentStep,
@@ -267,30 +345,40 @@ export default {
             closeModal,
             selectedPembelian,
             editPembelian,
-            editPembelian,
             showEditModal,
             selectedPembelianForEdit,
             printPurchaseData,
             formatDate,
             sortedPembelian,
+            isDeleteConfirmationVisible,
+            selectedDeleteId,
+            showDeleteConfirmationModal,
+            deleteConfirmed,
+            cancelDelete,
+            purchaseData,
         };
     },
     methods: {
         openBuyModal() {
             this.showModal = true;
         },
-        
+
+         showDeleteConfirmationModal(id) {
+            this.selectedDeleteId = id;
+            this.isDeleteConfirmationVisible = true;
+        },
+
     },
     components: {
         VueFeather,
         ModalUpdatePembelian,
         ModalPembelian,
+        AlertDeletePembelian
 
     }
 
 };
 </script>
-
 
 <template>
     <div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
@@ -332,9 +420,9 @@ export default {
                 <table class="min-w-full divide-y divide-gray-200 text-left">
                 <thead>
                     <tr>
-                        <th
+                         <th
                             class="px-5 py-3 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
-                            Id
+                            No
                         </th>
                         <th
                             class="px-8 py-3 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
@@ -387,9 +475,9 @@ export default {
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200 border-t border-gray-300">
-                     <tr v-for="pembelianData in displayPembelian" :key="pembelianData.id_productSources" class="border-b border-gray-200">
+                    <tr v-for="(pembelianData, index) in sortedPembelian" :key="pembelianData.id_productSources" class="border-b border-gray-200">
                         <td class="px-6 py-4 whitespace-no-wrap text-center">
-                            <p class="text-sm leading-5 font-medium text-gray-900">{{ pembelianData.id_productSources }}</p>
+                            <p class="text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
                         </td>
                         <td class="px-3 py-3 text-center whitespace-no-wrap"> 
                             <div class="text-sm leading-5 font-medium text-gray-900">{{ formatDate(pembelianData.createdAt) }}</div>
@@ -427,8 +515,7 @@ export default {
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap text-center flex gap-3">  
                             <vue-feather type="edit" size="20" stroke="green" @click="editPembelian(pembelianData)" />
-                            <vue-feather type="trash-2" size="20" stroke="red" @click="deleteProduct(pembelianData.id_productSources)"  />
-
+                           <vue-feather type="trash-2" size="20" stroke="red" @click="showDeleteConfirmationModal(pembelianData.id_productSources)" />
                         </td>
                     </tr>
                 </tbody>
@@ -444,18 +531,24 @@ export default {
         <span class="p-2 text-xs">Page {{ currentPage }} of {{ totalPages }}</span>
         <button @click="nextPage" :disabled="currentPage === totalPages" class="text-xs cursor-pointer bg-gray-300 text-gray-700 p-2 w-20">Next</button>
       </div>
-
-
             </div>
         </div>
     </div>
 </div>
 
     <ModalPembelian
-      :showModal="showModal"
-      @closeModal="closeModal"
-      @createPurchase="createPurchase"
-    />
+          :showModal="showModal"
+          :onCloseModal="closeModal"
+          :onCreatePurchase="createPurchase"
+          :purchaseData="purchaseData"
+          :currentStep="currentStep"
+          :pembelian="pembelian"
+          :updateDisplayedData="updateDisplayedData" 
+          :notify="notify"
+          @nextStep="nextStep"
+          @backStep="backStep"
+        />
+    
 
     <ModalUpdatePembelian
       v-if="showEditModal"
@@ -463,6 +556,11 @@ export default {
       @close="showEditModal = false"
     />
 
+     <AlertDeletePembelian 
+        :showDeleteConfirmation="isDeleteConfirmationVisible"
+        @confirm-delete="deleteConfirmed"
+        @cancel-delete="cancelDelete"
+      />
 
 </template>
 

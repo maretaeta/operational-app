@@ -24,11 +24,12 @@
                     <p class="text-xs md:text-sm text-gray-400 mb-6">detail penjualan kayu</p>
                 </div>
 
-                <div v-if="penjualanDetail" class="items-center border">
+                <div class="flex justify-center p-4">
+                    <img src="../../assets//logo.png" class="w-28 lg:w-32 absolute" />
+                </div>
+                <div v-if="penjualanDetail" class="items-center border rounded">
                     <div class="bg-slate-200 p-4">
-                       <div class="flex justify-center">
-                         <img src="../../assets//logo.png" class="w-20" />
-                       </div>
+                     
                        <div class="flex gap-5 justify-between pt-5">
                         <p class="text-sm lg:text-lg font-medium">UD. Adi Mulia Profile</p>
                         <p class="text-sm lg:text-lg">{{ formatDate(penjualanDetail.createdAt) }}</p>
@@ -49,6 +50,7 @@
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Kayu</th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Kayu</th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ukuran Kayu</th>
+                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga Kayu</th>
                                         </tr>
                                     </thead>
@@ -57,6 +59,7 @@
                                             <td class="px-6 py-4 whitespace-nowrap">{{ item.product.jenis_product }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap">{{ item.product.nama_product }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap">{{ item.product.ukuran_product }}</td>
+                                             <td class="px-6 py-4 whitespace-nowrap">{{ item.quantity }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap">{{ formatHarga(item.product.harga_product) }}</td>
                                         </tr>
                                     </tbody>
@@ -70,6 +73,17 @@
                                 <p>Diskon :</p>
                                 <span> {{ formatHarga(penjualanDetail.diskon) }}</span>
                             </div>
+                            <!-- <div class="flex gap-5 justify-end">
+                                <p>Total Barang</p>
+                                <span>
+                                    {{
+                                        items.reduce((total, item) => {
+                                            const quantities = item.penjualanItems.map((penjualanItem) => penjualanItem.quantity);
+                                            return total + quantities.reduce((subTotal, quantity) => subTotal + quantity, 0);
+                                        }, 0)
+                                    }}
+                                </span>
+                            </div> -->
                             <div class="flex gap-5 justify-end py-4">
                                 <p>Total Harga :</p>
                                 <span>{{ formatHarga(penjualanDetail.totalHarga_product) }}</span>

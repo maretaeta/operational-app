@@ -91,10 +91,11 @@ export const useBuyStore = defineStore("buy", {
           throw new Error("Failed to delete pembelian");
         }
 
-        const index = this.pembelian.findIndex((p) => p.id_productSources);
-        if (index !== -1) {
-          this.pembelian.splice(index, 1);
-        }
+        this.pembelian = this.pembelian.filter(
+          (Item) => Item.id_productSources !== id_productSources
+        );
+
+        return response.data;
       } catch (error) {
         console.error("Error deleting pembelian : ", error);
         throw error;

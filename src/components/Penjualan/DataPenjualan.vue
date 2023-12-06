@@ -106,6 +106,7 @@ export default {
       }
     });
 
+    //  print all data ke pdf
     const printPenjualanData = () => {
     const doc = new jsPDF({ orientation: 'landscape' });
     const tableData = [];
@@ -163,6 +164,13 @@ export default {
       return date.toLocaleDateString('id-ID', options);
     };
 
+    const sortedPenjualan = computed(() => {
+      return [...penjualan.value].sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+    });
+
+
     onMounted(() => {
       getPenjualan();
     });
@@ -183,9 +191,9 @@ export default {
             showModal,
             selectedPenjualan,
             showDeleteConfirmationModal,
-           
             deleteConfirmed,
             cancelDelete,
+            sortedPenjualan,
           };
     },
 
@@ -251,7 +259,7 @@ export default {
               <thead>
                   <tr>
                     <th class="px-4 py-5 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
-                      ID
+                      No
                     </th>
                     <th class="px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                       Tanggal
@@ -259,21 +267,9 @@ export default {
                     <th class="px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                         Nama Toko
                     </th>
-                    <!-- <th class="px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
-                      Jenis Produk
-                    </th>
-                    <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
-                      Nama Produk
-                    </th>
-                    <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
-                      Ukuran Produk
-                    </th> -->
                      <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                       Jumlah
                     </th> 
-                     <!-- <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
-                      Harga Produk
-                    </th>  -->
                     <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
                       Diskon
                     </th>
@@ -286,10 +282,10 @@ export default {
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200 border-t border-gray-300">
-                  <template v-for="item in displayedPenjualan" :key="item.id_penjualan">
+                  <template v-for="(item, index) in sortedPenjualan" :key="item.id_penjualan">
                     <tr v-if="item.penjualanItems.length > 0" class="border-b border-gray-200">
                       <td class="px-6 py-4 whitespace-no-wrap text-center">
-                          <p class="text-sm leading-5 font-medium text-gray-900">{{ item.id_penjualan }}</p>
+                          <p class="text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
                       </td>
                       <td class="px-3 py-4 whitespace-no-wrap ">
                           <div class="text-sm leading-5 font-medium text-gray-900">{{ formatDate(item.createdAt) }}</div>
@@ -297,55 +293,11 @@ export default {
                       <td class="px-3 py-4 whitespace-no-wrap ">
                           <div class="text-sm leading-5 font-medium text-gray-900">{{ item.nama_toko }}</div>
                       </td>
-                      <!-- <td class=" px-3 py-4 whitespace-no-wrap">
-                        <div class=" text-sm leading-5 font-medium text-gray-900">
-                          <ol style="white-space: pre-wrap; margin: 0;">
-                            <li>
-                              {{ item.penjualanItems.map((item) => item.product.jenis_product).join('\n') }} 
-                            </li>
-                          </ol>
+                      <td class="px-6 py-4 whitespace-no-wrap">
+                        <div class="text-sm leading-5 font-medium text-gray-900">
+                          {{ item.penjualanItems.reduce((total, item) => total + item.quantity, 0).toString().replace(".", ",") }}
                         </div>
                       </td>
-
-                      <td class="px-3 py-4  whitespace-no-wrap">
-                        <div class="text-sm leading-5 font-medium text-gray-900">
-                          <ol style="white-space: pre-wrap; margin: 0;">
-                            <li>
-                              {{ item.penjualanItems.map((item) => item.product.nama_product).join('\n') }}
-                            </li>
-                          </ol>
-                          
-                        </div>
-                      </td>
-
-                      <td class="px-6 py-4 whitespace-no-wrap ">
-                        <div class="text-sm leading-5 font-medium text-gray-900">
-                          <ol style="white-space: pre-wrap; margin: 0;">
-                            <li>
-                          {{ item.penjualanItems.map((item) => item.product.ukuran_product).join('\n') }}
-                          </li>
-                          </ol>
-                        </div>
-                      </td> -->
-                      <td class="px-6 py-4 whitespace-no-wrap ">
-                        <div class="text-sm leading-5 font-medium text-gray-900">
-                          <ol style="white-space: pre-wrap; margin: 0;">
-                            <li>{{ item.penjualanItems.map((item) => item.quantity.toString().replace(".", ",")).join('\n') }}
-                            </li>
-                          </ol>
-                        </div>
-                      </td>
-
-                      <!-- <td class="px-6 py-4 whitespace-no-wrap ">
-                        <div class="text-sm leading-5 font-medium text-gray-900">
-                          <ol style="white-space: pre-wrap; margin: 0;">
-                          <li>
-                            {{ item.penjualanItems.map((item) => formatHarga(item.product.hargaJual)).join('\n') }}
-                          </li>
-                        </ol> 
-                        </div>
-                      </td> -->
-
                       <td class="px-6 py-4 whitespace-no-wrap ">
                         <div class="text-sm leading-5 font-medium text-gray-900" v-if="item.diskon !== null">{{ formatHarga(item.diskon) }}</div>
                         <div class="text-sm leading-5 font-medium text-gray-900" v-else>Tidak Ada Diskon</div>
@@ -355,7 +307,6 @@ export default {
                       </td>
                       <td class="px-6 py-4 whitespace-no-wrap  flex gap-3">
                         <font-awesome-icon icon="trash-can" class="text-red-500 pt-1" @click="deletePenjualan(item.id_penjualan)"  />
-                        <!-- <vue-feather type="trash-2" size="20" stroke="red" @click="deletePenjualan(item.id_penjualan)" /> -->
                         <font-awesome-icon icon="print" class="pt-1 text-green-700" />
                        <router-link :to="{ name: 'DetailPenjualan', params: { id: item.id_penjualan } }">
                           <font-awesome-icon icon="ellipsis-vertical" class="text-cyan-800 pt-1" />

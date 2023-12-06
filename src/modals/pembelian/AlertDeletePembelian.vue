@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
     props: {
