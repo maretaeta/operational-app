@@ -63,8 +63,10 @@ export const AuthStore = defineStore("auth", {
     },
 
     logout() {
-      this.token = null;
       localStorage.removeItem("token");
+      this.token = null;
+      this.role = null;
+      this.tokenExpiration = null;
       delete axios.defaults.headers.common["Authorization"];
     },
 

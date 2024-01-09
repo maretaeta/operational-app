@@ -19,6 +19,7 @@ export const useBuyStore = defineStore("buy", {
     editPembelian: null,
 
     totalPembelian: 0,
+    jenisKayu: [],
   }),
 
   mutations: {
@@ -137,9 +138,36 @@ export const useBuyStore = defineStore("buy", {
         }
 
         this.totalPembelian = response.data.total;
+        this.month = response.data.month;
       } catch (error) {
         console.error("Error find total product sources");
         throw Error;
+      }
+    },
+
+    async filterJenisKayu(jenisKayu) {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/v1/pembelian/filter-jenis-kayu`,
+          {
+            params: {
+              jenisKayu: jenisKayu,
+            },
+          }
+        );
+
+        console.log("API response:", response.data);
+
+        if (!response) {
+          throw new Error("Failed to filter by jenis kayu");
+        }
+
+        const data = response.data;
+        this.jenisKayu = data;
+        return data;
+      } catch (error) {
+        console.error("Filter by jenis kayu error:", error);
+        throw error;
       }
     },
   },

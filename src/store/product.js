@@ -8,6 +8,7 @@ export const ProdukStore = defineStore("produk", {
     product: [],
     editProduct: null,
     totalProduct: 0,
+    type: [],
   }),
 
   actions: {
@@ -104,8 +105,57 @@ export const ProdukStore = defineStore("produk", {
           throw new Error("Gagal mendapatkan total produk");
         }
         this.totalProduct = response.data.total;
+        this.month = response.data.month;
       } catch (error) {
         console.error("Kesalahan dalam mendapatkan total produk:", error);
+        throw error;
+      }
+    },
+
+    async filterProductsType(type) {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/v1/product/filter/${type}`,
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        );
+
+        if (!response) {
+          throw new Error("Failed to get filtered products");
+        }
+
+        const { data, status } = response;
+
+        if (status !== 200) {
+          throw new Error(`Failed to get filtered products. Status: ${status}`);
+        }
+
+        this.type = data;
+        return data;
+      } catch (error) {
+        console.error("Filter products error: ", error.message);
+        throw error;
+      }
+    },
+
+    async searchPenjualan(query) {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/v1/product/search?query=${query}`
+        );
+
+        if (!response) {
+          throw new Error("Failed to search Penjualan");
+        }
+
+        const data = response.data;
+        this.produk = data;
+        return data;
+      } catch (error) {
+        console.error("Search product error: ", error);
         throw error;
       }
     },

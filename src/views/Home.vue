@@ -1,7 +1,7 @@
 <template>
    <div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
     <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
-        <nav class="font-poppins text-sm font-semibold mb-6">
+        <!-- <nav class="font-poppins text-sm font-semibold mb-6">
             <ol class="list-none p-0 pl-3 inline-flex">
                 <li class="flex items-center text-purple">
                     <router-link to="/">Home</router-link>
@@ -14,9 +14,9 @@
                     <router-link to="">Dashboard</router-link>
                 </li>
             </ol>
-        </nav>
+        </nav> -->
 
-        <div class="lg:flex justify-between items-center mb-6 p-2">
+        <div class="lg:flex justify-between items-center mb-8 p-2 pt-8 pb-5">
             <p class="text-2xl font-semibold mb-2 lg:mb-0 text-gray-800">Selamat datang, Admin!</p>
             <button @click="handleLaporan"
                 class="bg-purple hover:bg-purple-light focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow duration-150">
@@ -26,17 +26,22 @@
 
         <!-- Cards -->
         <div class="flex flex-wrap -mx-3 mb-16 p-2">
+
             <div class="w-1/2 xl:w-1/4 px-3">
                 <div class="w-full bg-white border rounded-lg flex items-center p-0 mb-6 xl:mb-0">
-                    <div class="px-3 py-10 lg:px-5 lg:py-5 bg-pink text-white rounded-l-lg">
+                    <div class="px-3 py-5 lg:px-5 lg:py-5 bg-pink text-white rounded-l-lg">
                         <font-awesome-icon icon="cube" class="w-8 h-8 fill-current mx-auto hidden lg:block" />
                     </div>
-                    <div class="text-gray-700 ml-6 leading-6">
+                    <div class="text-gray-700 ml-4 leading-6">
+                        <div class="flex justify-end pb-2 pt-1">
+                            <span class="text-xs text-gray-400">{{ store.month }}</span>
+                        </div>
                         <p class="font-semibold text-2xl">{{ store.totalProduct }}</p>
                         <p class="text-sm text-gray-600">Total Barang</p>
                     </div>
                 </div>
             </div>
+
 
             <div class="w-1/2 xl:w-1/4 px-3">
                 <div class="w-full bg-white border rounded-lg flex items-center p-0 mb-6 xl:mb-0">
@@ -44,6 +49,9 @@
                         <font-awesome-icon icon="cart-shopping" class="w-8 h-8 fill-current mx-auto hidden lg:block" />
                     </div>
                     <div class="text-gray-700 ml-6 leading-6">
+                         <div class="flex justify-end pb-2 pt-1">
+                                <span class="text-xs text-gray-400">{{ pembelian.month }}</span>
+                            </div>
                         <p class="font-semibold text-2xl">{{ pembelian.totalPembelian }}</p>
                         <p class="text-sm text-gray-600">Pembelian Kayu</p>
                     </div>
@@ -56,6 +64,9 @@
                         <font-awesome-icon icon="truck-fast" class="w-8 h-8 fill-current mx-auto hidden lg:block" />
                     </div>
                     <div class="text-gray-700 ml-6 leading-6">
+                        <div class="flex justify-end pb-2 pt-1">
+                                    <span class="text-xs text-gray-400">{{ pembelian.month }}</span>
+                                </div>
                         <p class="font-semibold text-2xl">{{ penjualan.totalPenjualan }}</p>
                         <p class="text-sm text-gray-600">Penjualan Kayu</p>
                     </div>
@@ -68,17 +79,20 @@
                         <font-awesome-icon icon="sack-dollar" class="w-8 h-8 fill-current mx-auto hidden lg:block" />
                     </div>
                     <div class="text-gray-700 ml-6 leading-6">
+                        <div class="flex justify-end pb-2 pt-1">
+                                    <span class="text-xs text-gray-400">{{ pembelian.month }}</span>
+                                </div>
                         <p class="font-semibold text-2xl">1,906</p>
-                        <p class="text-sm text-gray-600">Pendapatan Bersih</p>
+                        <p class="text-sm text-gray-600">Pendapatan</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- charts -->
-        <div class="flex flex-wrap -mx-6 p-6">
+        <div class="flex flex-wrap -mx-6 p-6 ">
             <div class="w-full xl:w-1/2 px-3">
-                <p class="text-xl font-semibold mb-4 text-gray-700">Recent Purchases</p>
+                <p class="text-xl font-semibold mb-4 text-gray-700">Recent Income</p>
                 <div class="w-full bg-white border rounded-lg p-4 mb-8 xl:mb-0">
                     <select v-model="selectedYear" @change="loadDataBasedOnYear">
                         <option v-for="year in availableYears" :value="year">{{ year }}</option>
@@ -86,12 +100,7 @@
                     <canvas ref="chartCanvas"></canvas>
                 </div>
             </div>
-            <!-- <div class="w-full xl:w-1/3 px-3">
-                <p class="text-xl font-semibold mb-4 text-gray-700">Recent Product</p>
-                <div class="w-full bg-white border rounded-lg p-4 mb-8 xl:mb-0">
-                           <canvas ref="chartCanvas"></canvas>
-                </div>
-            </div> -->
+            
             <div class="w-full xl:w-1/2 px-3">
                 <p class="text-xl font-semibold mb-4 text-gray-700">Recent Transactions</p>
                 <div class="w-full bg-white border rounded-lg p-4">
@@ -104,6 +113,17 @@
                     </div>
                 </div>
             </div>
+
+            <!-- <div class="w-full xl:w-1/2 px-3 pt-10">
+                <p class="text-xl font-semibold mb-4 text-gray-700">Recent Purchases</p>
+                 <div class="w-full bg-white border rounded-lg p-4"></div>
+            </div>
+
+            <div class="w-full xl:w-1/2 px-3 pt-10">
+                    <p class="text-xl font-semibold mb-4 text-gray-700">Recent Sales</p>
+                     <div class="w-full bg-white border rounded-lg p-4"></div>
+            </div>
+             -->
         </div>
         </div>
     </div>
@@ -118,7 +138,7 @@ import { penjualanStore } from "../store/penjualan";
 import { ProdukStore } from "../store/product";
 import Chart from "chart.js/auto";
 import { useRouter } from "vue-router";
-
+ 
 export default {
     setup() {
         const router = useRouter()
@@ -130,7 +150,7 @@ export default {
         const recentTransactions = ref([]);
 
         const handleLaporan = () => {
-            router.push({ name: "Laporan" })
+            router.push({ name: "LaporanKeuangan" })
         }
 
         const selectedYear = ref(new Date().getFullYear());

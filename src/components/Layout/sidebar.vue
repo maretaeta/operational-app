@@ -77,15 +77,15 @@ export default {
 </script>
 
 <template>
-    <div class="font-poppins w-1/2 md:w-1/3 lg:w-56 fixed md:top-0 md:left-0 h-screen lg:block bg-white z-30 transition duration-500 ease-in-out"
+    <div class="font-poppins w-1/2 md:w-1/3 lg:w-60 fixed md:top-0 md:left-0 h-screen lg:block bg-white z-30 transition duration-500 ease-in-out"
         :class="sideBarOpen ? '' : 'hidden'" id="main-nav">
 
         <div  @click="handleHome" class="w-full h-24 flex gap-2 px-5 items-center mb-8 p-5">
-            <img src="../../assets//logo.png" class="w-20 h-12" />
-            <p class="font-semibold text-sm text-gray-800">UD ADI MULIA PROFILE</p>
+            <!-- <img src="../../assets//logo.png" class="w-20 h-12" />
+            <p class="font-semibold text-sm text-gray-800">UD ADI MULIA PROFILE</p> -->
         </div>
 
-        <div class="mb-4 px-4 text-gray-800">
+        <div class="mb-4 px-5 text-gray-800">
             <p class="pl-4 text-xs font-semibold mb-4 text-gray-600">MENU</p>
             <div @click="handleHome"
                 class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
@@ -128,7 +128,7 @@ export default {
             </div>
             
         </div>
-        <div class="mb-4 px-4 text-gray-800 mt-5">
+        <div class="mb-4 px-5 text-gray-800 mt-5">
             <p class="pl-4 text-xs font-semibold mb-4 text-gray-600">Relations</p>
             <div @click="handleToko"
                 class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">
@@ -143,7 +143,7 @@ export default {
             </div>
 
         </div>
-        <div class="mb-4 px-4 text-gray-800 mt-5">
+        <div class="mb-4 px-5 text-gray-800 mt-5">
             <p class="pl-4 text-xs font-semibold mb-4 text-gray-600">MONITORING</p>
             <!-- <div @click="handleLaporan"
                 class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150">

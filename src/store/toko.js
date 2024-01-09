@@ -34,7 +34,7 @@ export const TokoStore = defineStore("toko", {
     async deleteToko(id_toko) {
       try {
         const response = await axios.delete(
-          `http://localhost:4000/api/v1/toko/${id_toko}`,
+          `http://localhost:4000/api/v1/toko/delete/${id_toko}`,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -77,6 +77,25 @@ export const TokoStore = defineStore("toko", {
         }
       } catch (error) {
         console.error("Error updating toko:", error);
+        throw error;
+      }
+    },
+
+    async searchToko(keyword) {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/v1/toko/search?keyword=${keyword}`
+        );
+
+        if (!response) {
+          throw new Error("Failed to search Toko");
+        }
+
+        const data = response.data;
+        this.toko = data;
+        return data;
+      } catch (error) {
+        console.error("Search toko error: ", error);
         throw error;
       }
     },

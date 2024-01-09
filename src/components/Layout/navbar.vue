@@ -1,9 +1,33 @@
 <script>
 import { useStore } from "../../store/store"
+import { AuthStore } from "../../store/auth";
 import VueFeather from 'vue-feather'
+import {useRouter} from "vue-router"
 
 export default {
     name: 'navbar',
+    setup(){
+        const store = AuthStore();
+        const router = useRouter();
+
+         const handleLogout = async () => {
+            try {
+                await store.logout();
+                router.push('/');
+
+            } catch (error) {
+                console.error('An error occurred during logout:', error);
+            }
+        };
+
+    
+        return {
+            handleLogout,
+           
+        }
+    },
+
+    
     computed: {
         isSideBarOpen() {
             return useStore().sideBarOpen;
@@ -18,6 +42,7 @@ export default {
         toggleSidebar() {
             useStore().toggleSidebar();
         },
+        
     },
     components:{
         VueFeather,
@@ -27,8 +52,8 @@ export default {
 
 
 <template>
-    <div class="font-poppins sticky top-0 z-40 pl-0 lg:pl-56">
-        <div class="w-full h-24 px-9 bg-white flex items-center justify-between">
+    <div class="font-poppins sticky top-0 z-50 pl-0 ">
+        <div class="w-full h-20 px-9 bg-white flex items-center justify-between shadow-md">
             <div class="flex">
                 <div class="lg:hidden flex items-center mr-4 text-gray-700">
                     <button class="hover:text-purple-600 hover:border-white focus:outline-none navbar-burger"
@@ -36,6 +61,10 @@ export default {
                         <vue-feather type="menu" class="pt-2 text-black items-center"/>
                     </button>
                 </div>
+                 <div class="w-full justify-center items-center hidden md:flex">
+                <img src="../../assets//logo.png" class="w-[65px]" />
+                <p class="font-semibold text-base text-gray-800">UD. ADI MULIA PROFILE</p>
+            </div>
                 <!-- <div class="relative text-gray-500">
                     <input type="search" name="serch" placeholder="Product..."
                         class="bg-white h-10 w-full xl:w-64 px-5 rounded-lg border text-sm focus:outline-none">
@@ -52,7 +81,7 @@ export default {
             </div>
 
             <div class="flex items-center relative pr-9">
-                <button
+                <!-- <button
                     class="p-1 mr-4 rounded-full text-gray-700 hover:bg-purple-100 hover:text-purple duration-150 focus:outline-none">
                     <div class="flex leading-3 px-0">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"
@@ -63,18 +92,17 @@ export default {
                         </svg>
                         <div class="h-2 w-2 rounded-full bg-pink z-10 -ml-1"></div>
                     </div>
-                </button>
+                </button> -->
                 <button class="p-0 focus:outline-none duration-150 flex gap-1" @click="dropDownOpen = !dropDownOpen">
-                    <font-awesome-icon icon="circle-user"  class="w-7 h-7 mt-1 rounded-full shadow-lg border-2 hover:border-white border-purple-600 duration-150"/>
-                    <p class="items-center text-center p-2 text-sm">Hi, Admin</p>
+                    <font-awesome-icon icon="circle-user"  class="w-7 h-7 mt-1 rounded-full shadow-lg border-2  hover:border-purple-600 duration-150"/>
+                    <p class="items-center text-center p-2 pt-3 text-sm">Hi, Admin</p>
                 </button>
             </div>
         </div>
 
-        <div class="absolute border bg-slate-100 border-t-0 shadow-xl text-gray-700 rounded-b-lg w-48 right-0 mr-6 p-2"
+        <div class="absolute border bg-white border-t-0 shadow-xl text-gray-700 rounded-b-lg w-48 right-0 mr-6 p-2"
             :class="dropDownOpen ? '' : 'hidden'">
-            <p class="block px-4 py-2 hover:bg-gray-200">Account</p>
-            <p class="block px-4 py-2 hover:bg-gray-100">Logout</p>
+            <p class="block px-4 py-2" @click="handleLogout">Logout</p>
         </div>
     </div>
 </template>

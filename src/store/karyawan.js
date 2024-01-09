@@ -1,3 +1,5 @@
+/** @format */
+
 import { defineStore } from "pinia";
 import axios from "axios";
 
@@ -54,6 +56,34 @@ export const useKaryawan = defineStore("karyawan", {
         return createdKaryawan;
       } catch (error) {
         console.error("Create Karyawan error:", error);
+        throw error;
+      }
+    },
+
+    async deleteKaryawan(id_karyawan) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:4000/api/v1/karyawan/delete/${id_karyawan}`,
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        );
+
+        if (!response || response.status !== 200) {
+          throw new Error("Failed to delete karyawan");
+        }
+
+        const index = this.karyawan.findIndex(
+          (p) => p.id_karyawan === id_karyawan
+        );
+
+        if (index !== -1) {
+          this.karyawan.splice(index, 1);
+        }
+      } catch (error) {
+        console.error("Error deleting karyawan:", error);
         throw error;
       }
     },

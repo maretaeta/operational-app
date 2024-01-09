@@ -10,7 +10,6 @@ import AlertDeletePembelian from '../../modals/pembelian/AlertDeletePembelian.vu
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
-
 export default {
     setup() {
         const steps = ["step1", "step2"];
@@ -36,6 +35,8 @@ export default {
         const selectedDeleteId = ref(null);
 
         const pembelian = ref([]);
+
+        const selectedJenisKayu = ref(null);
 
         const closeModal = () => {
             showModal.value = false;
@@ -81,7 +82,6 @@ export default {
                 console.error('Purchase creation error:', error);
 
                 if (error?.code === 'P2025') {
-                    // Prisma error code for unique constraint violation
                     toast.error("Toko dengan nama tersebut sudah ada", {
                         position: 'top-right',
                         duration: 3000,
@@ -125,6 +125,7 @@ export default {
                     pembelian.value = response;
                     calculateTotalPages();
                     updateDisplayedData();
+                    getUniqueJenisKayu();
                 } else {
                     console.error("Respon API tidak valid:", response);
                 }
@@ -132,6 +133,7 @@ export default {
                 console.error("Gagal mendapatkan data produk:", error);
             }
         };
+
 
 
         // delete produk
@@ -285,29 +287,53 @@ export default {
             showModal.value = true;
         };
 
+        // filter jenis
+        const uniqueJenisKayu = ref([]);
+
+        const getUniqueJenisKayu = () => {
+            const uniqueValues = [...new Set(pembelian.value.map(item => item.jenis_productSources))];
+            uniqueJenisKayu.value = uniqueValues;
+        };
+
+        const filteredPembelian = computed(() => {
+            if (selectedJenisKayu.value) {
+                return pembelian.value.filter(item => item.jenis_productSources === selectedJenisKayu.value);
+            } else {
+                return pembelian.value;
+            }
+        });
+
+        const filterByJenisKayu = () => {
+            updateDisplayedData();
+        };
+
+
+
 
        onMounted(() => {
             getPembelian();
             calculateTotalPages();
             updateDisplayedData();
-
-            watch(() => buyStore.pembelian, () => {
-                pembelian.value = [...buyStore.pembelian];
-                calculateTotalPages();
-                updateDisplayedData();
-            });
+            getUniqueJenisKayu();
         });
 
 
-       watch(() => buyStore.pembelian, () => {
+        watch(() => buyStore.pembelian, () => {
             pembelian.value = [...buyStore.pembelian];
             calculateTotalPages();
             updateDisplayedData();
+            getUniqueJenisKayu();
         });
 
          watch(() => buyStore.currentStep, (newStep) => {
             currentStep.value = newStep;
         });
+
+        watch(() => filteredPembelian.value, () => {
+            calculateTotalPages();
+            updateDisplayedData();
+        });
+
 
         return {
             currentStep,
@@ -356,6 +382,11 @@ export default {
             deleteConfirmed,
             cancelDelete,
             purchaseData,
+            filterByJenisKayu,
+            uniqueJenisKayu,
+            getUniqueJenisKayu,
+            selectedJenisKayu,
+            filteredPembelian
         };
     },
     methods: {
@@ -368,12 +399,14 @@ export default {
             this.isDeleteConfirmationVisible = true;
         },
 
+        
+
     },
     components: {
         VueFeather,
         ModalUpdatePembelian,
         ModalPembelian,
-        AlertDeletePembelian
+        AlertDeletePembelian,
 
     }
 
@@ -381,12 +414,13 @@ export default {
 </script>
 
 <template>
-    <div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
+    <div class="pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
     <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
-    <div class="font-poppins text-sm font-semibold mb-6 ">
+    <div class="font-poppins text-sm font-semibold mb-6 pt-3">
+        <h3 class="text-2xl font-medium text-gray-700 pl-3 pb-3">Data Pembelian</h3>
         <ol class="list-none p-0 pl-3 inline-flex">
             <li class="flex items-center text-purple">
-                <p class="text-gray-700">Home</p>
+                <p class="text-gray-700">Dashboard</p>
                 <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                     <path
                         d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
@@ -399,18 +433,29 @@ export default {
     </div>
     <div class="items-center justify-center p-2">
         <div class="w-full">
-            <h3 class="text-2xl font-medium text-gray-600">Data Pembelian</h3>
-            <p class="text-sm text-gray-400 mb-6">Data pembelian kayu dari berbagai toko</p>
-        <div  class="flex gap-3 justify-end items-start pb-5">
-            <div @click="openBuyModal" class="flex gap-2 bg-cyan-800 text-white w-38 h-10 rounded-xl items-center text-center px-5" >
-                <vue-feather type="plus" size="17" />
-                <p class="text-sm">Pembelian</p>
+            <div class="flex justify-between items-start py-5">
+                <div @click="openBuyModal" class="flex gap-2 bg-cyan-800 text-white py-3 rounded-xl items-center text-xs text-center px-4">
+                    <vue-feather type="plus" size="17" />
+                    <p class="">Pembelian</p>
+                </div>
+            
+            <div class="flex gap-2 ">
+                <div class="bg-cyan-800 py-2 px-4 flex gap-2 rounded-xl items-center text-center" @click="filterByJenisKayu">
+                    <vue-feather type="filter" size="17" class="text-white " />
+                    <p class="text-sm text-white ">Filter</p>
+                   <select v-model="selectedJenisKayu" @change="filterByJenisKayu" class="text-sm bg-transparent focus:outline-none text-white ">
+        <option v-for="jenisKayu in uniqueJenisKayu" :value="jenisKayu" class="text-black text-sm">{{ jenisKayu }}</option>
+    </select>
+
+
+                </div>
+
+                    <div class="bg-cyan-800 text-white py-2 px-4 flex gap-2 rounded-xl items-center text-center" @click="printPurchaseData">
+                        <vue-feather type="printer" size="17" />
+                        <p class="text-sm">Cetak</p>
+                    </div>
+                </div>
             </div>
-            <div class="flex gap-2 bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3" @click="printPurchaseData">
-                <vue-feather type="printer" size="17" />
-                <p class="text-sm">Cetak</p>
-            </div>      
-        </div>
 
     <!-- tabel data pembelian -->
     <div class="flex flex-col mb-12 bg-gray-25 rounded-md border">
@@ -474,8 +519,8 @@ export default {
                         </th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200 border-t border-gray-300">
-                    <tr v-for="(pembelianData, index) in sortedPembelian" :key="pembelianData.id_productSources" class="border-b border-gray-200">
+               <tbody class="bg-white divide-y divide-gray-200 border-t border-gray-300">
+                    <tr v-for="(pembelianData, index) in filteredPembelian" :key="pembelianData.id_productSources" class="border-b border-gray-200">
                         <td class="px-6 py-4 whitespace-no-wrap text-center">
                             <p class="text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
                         </td>

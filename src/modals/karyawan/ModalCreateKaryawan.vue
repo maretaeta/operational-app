@@ -65,7 +65,6 @@ export default {
             try {
                 await this.karyawanStore.createKaryawan(this.formData);
                 this.closeCreateModal();
-                // Clear the form data after submission
                 this.formData = {
                     nama_karyawan: '',
                     jabatan: '',

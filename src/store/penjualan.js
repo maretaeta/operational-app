@@ -93,5 +93,44 @@ export const penjualanStore = defineStore("penjualan", {
         throw error;
       }
     },
+
+    async getPenjualanByJenisProduk(jenisProduk) {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/v1/penjualan/byJenisProduk/${jenisProduk}`
+        );
+
+        if (!response) {
+          throw new Error("Failed to get Penjualan by jenis produk");
+        }
+
+        const data = response.data.data;
+        this.penjualan = data;
+        return data;
+      } catch (error) {
+        console.error("Get penjualan by jenis produk error: ", error);
+        throw error;
+      }
+    },
+
+    // search
+    async searchPenjualan(keyword) {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/v1/penjualan/search?keyword=${keyword}`
+        );
+
+        if (!response) {
+          throw new Error("Failed to search Penjualan");
+        }
+
+        const data = response.data;
+        this.penjualan = data;
+        return data;
+      } catch (error) {
+        console.error("Search penjualan error: ", error);
+        throw error;
+      }
+    },
   },
 });

@@ -6,11 +6,11 @@ import Login from "../views/Login.vue";
 import Buy from "../components/Pembelian/Buy.vue";
 import Register from "../views/Register.vue";
 import Toko from "../components/Relation/Toko.vue";
-import Produk from "../components/Product/product.vue";
+import Produk from "../views/Product/Product.vue";
 import Penjualan from "../components/Penjualan/Penjualan.vue";
 import DataPenjualan from "../components/Penjualan/DataPenjualan.vue";
 import EmptyLayout from "../views/EmptyLayout.vue";
-import LaporanKeuangan from "../components/Laporan/Keuangan.vue";
+import LaporanKeuangan from "../views/Pendapatan/Keuangan.vue"
 import Karyawan from "../components/Relation/Karyawan.vue";
 import DetailPenjualan from "../modals/penjualan/DetailPenjualan.vue";
 

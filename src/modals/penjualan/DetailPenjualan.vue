@@ -73,17 +73,6 @@
                                 <p>Diskon :</p>
                                 <span> {{ formatHarga(penjualanDetail.diskon) }}</span>
                             </div>
-                            <!-- <div class="flex gap-5 justify-end">
-                                <p>Total Barang</p>
-                                <span>
-                                    {{
-                                        items.reduce((total, item) => {
-                                            const quantities = item.penjualanItems.map((penjualanItem) => penjualanItem.quantity);
-                                            return total + quantities.reduce((subTotal, quantity) => subTotal + quantity, 0);
-                                        }, 0)
-                                    }}
-                                </span>
-                            </div> -->
                             <div class="flex gap-5 justify-end py-4">
                                 <p>Total Harga :</p>
                                 <span>{{ formatHarga(penjualanDetail.totalHarga_product) }}</span>

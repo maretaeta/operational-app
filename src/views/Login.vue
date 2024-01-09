@@ -11,6 +11,7 @@ export default {
             username: "",
             password: "",
         });
+        const error = ref(null);
 
         const handleLogin = async () => {
             try {
@@ -18,21 +19,29 @@ export default {
 
                 if (response) {
                     router.push("/dashboard");
-                } else {
-                    console.error("Login failed");
+               } else {
+                    const errorMessage = response.data ? response.data.message : "Login failed";
+                    error.value = { message: errorMessage };
                 }
             } catch (error) {
-                console.error("Login error:", error.response ? error.response.data : error.message);
+                if (error.response && error.response.data) {
+                    error.value = error.response.data;
+                } else {
+                    error.value = { message: "Login error" };
+                }
+                console.error("Login error:", error);
             }
         };
 
         return {
             loginData,
             handleLogin,
+            error,
         };
     },
 };
 </script>
+
 
  <template>
      <div class="font-poppins w-full mx-auto h-full min-h-screen bg-slate-200 items-center justify-center justify-items-center flex p-5">
@@ -46,30 +55,45 @@ export default {
                      <p class="pt-2 pb-5 lg:pb-7 text-sm">
                       Welcome Back to Manajement Inventory Application: Easy and Fast Solution to Manage Business
                      </p>
-                     <form class="mx-auto " @submit.prevent="handleLogin">
-                         <div class="mb-3 lg:mb-7">
-                             <label>
-                                 <p class="text-sm">Username</p>
-                             </label>
-                             <input v-model="loginData.username" type="username" placeholder="Enter Username" name="username"
-                                 class="mt-1 ml-2 w-full xl:w-[500px] rounded-md pl-2 h-10 text-lg bg-transparent border border-cyan-800" />
-                         </div>
+     <form class="mx-auto " @submit.prevent="handleLogin">
+                 <div class="mb-3 lg:mb-7">
+                   <label>
+                     <p class="text-sm">Username</p>
+                   </label>
+                   <input
+                     v-model="loginData.username"
+                     type="username"
+                     placeholder="Enter Username"
+                     name="username"
+                     class="mt-1 ml-2 w-full xl:w-[500px] rounded-md pl-2 h-10 text-lg bg-transparent border border-cyan-800"
+                   />
+                 </div>
 
-                         <div class="mb-3 lg:mb-7">
-                             <label>
-                                 <p>Password</p>
-                             </label>
-                             <input v-model="loginData.password" type="password" placeholder="Enter Password" name="password"
-                                 class="mt-1 ml-2 w-full xl:w-[500px] rounded-md pl-2 h-10 text-lg bg-transparent border border-cyan-800" />
-                         </div>
-                         <button type="submit" class="bg-cyan-800 rounded-md text-white w-full mx-auto py-2 ml-2 mt-3 xl:w-[500px]">
-                             Login
-                         </button>                     
-                </form>
-                     <p class=" text-center pt-7">
+                 <div class="mb-3 lg:mb-7">
+                   <label>
+                     <p>Password</p>
+                   </label>
+                   <input
+                     v-model="loginData.password"
+                     type="password"
+                     placeholder="Enter Password"
+                     name="password"
+                     class="mt-1 ml-2 w-full xl:w-[500px] rounded-md pl-2 h-10 text-lg bg-transparent border border-cyan-800"
+                   />
+                 </div>
+                 <button type="submit" class="bg-cyan-800 rounded-md text-white w-full mx-auto py-2 ml-2 mt-3 xl:w-[500px]">
+                   Login
+                 </button>
+                 <!-- <p class="text-red-500 mt-2" v-if="error && typeof error === 'string'">{{ error }}</p>
+                 <p class="text-red-500 mt-2" v-if="error && error.includes('Username')">{{ error }}</p>
+                 <p class="text-red-500 mt-2" v-if="error && error.includes('Password')">{{ error }}</p>
+                 -->
+                 <p class="text-red-500 mt-2" v-if="error">{{ error.message }}</p>
+               </form>
+                     <!-- <p class=" text-center pt-7">
                          Don't have an account?
                          <span class="text-cyan-900 pl-1" >Sign up</span>
-                     </p>
+                     </p> -->
                  </div>
              </div>
          </div>
