@@ -1,9 +1,9 @@
 <template>
-    <div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
-        <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
-        <div class="font-poppins text-sm font-semibold mb-6 pt-3">
-            <h3 class="text-2xl font-medium text-gray-700 pl-3 pb-3">Create Penjualan</h3>
-            <ol class="list-none p-0 pl-3 inline-flex">
+    <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+        <div class="bg-white min-h-screen rounded-xl p-7 ml-7">
+        <div class="font-poppins font-semibold mb-6 pt-3">
+            <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3 pb-3">Create Penjualan</h3>
+            <ol class="list-none p-0 pl-3 inline-flex text-xs xl:text-sm">
                 <li class="flex items-center text-purple">
                     <p class="text-gray-700">Dashboard</p>
                     <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
@@ -18,23 +18,29 @@
             </ol>
         </div>
 
-        <div class="items-center justify-center p-2">
+        <div class="items-center justify-center p-2 pt-5">
             <!-- Form Penjualan -->
             <form @submit.prevent="submitPenjualan">
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm xl:text-base font-medium">Nama Toko</label>
+                    <label class="block text-gray-700 text-sm xl:text-base font-medium">Nama Toko 
+                        <span class="text-red-600">*</span>
+                    </label>
                     <input v-model="nama_toko" class="w-full px-3 py-2 border rounded-lg" />
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm xl:text-base font-medium pb-2">Pilih Barang :</label>
-                    <div class="flex bg-cyan-700 p-1 w-28 gap-1 text-white rounded text-sm justify-center">
+                    <label class="block text-gray-700 text-sm xl:text-base font-medium pb-2">Pilih Barang :
+                        <span class="text-red-600">*</span>
+                    </label>
+                    <div class="flex bg-cyan-700 p-1 w-20 xl:w-28 gap-1 text-white rounded text-xs xl:text-sm justify-center">
                         <font-awesome-icon icon="plus" class="p-1" />
                         <button @click="showModal = true">Barang</button>
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm xl:text-base font-medium pt-6 pb-3">Barang yang Dipilih :</label>
+                    <label class="block text-gray-700 text-sm xl:text-base font-medium pt-6 pb-3">Barang yang Dipilih :
+                        <span class="text-red-600">*</span>
+                    </label>
                     <div class="flex flex-wrap gap-6">
                         <div v-for="(product, index) in selectedProducts" :key="index" class="flex items-center justify-between w-full">
                             <div class="w-1/2">
@@ -53,7 +59,11 @@
                     <input v-model="diskon" class="w-full px-3 py-2 border rounded-lg" type="number" />
                 </div>
 
-               <button @click="createPenjualan" class="bg-cyan-700 text-sm xl:text-base hover-bg-blue-700 text-white font-medium py-2 px-4 rounded">Create Penjualan</button>
+                <div v-if="error" class="text-red-500 mb-4 italic text-sm">
+                {{ error }} !!
+            </div>
+
+               <button @click="createPenjualan" class="bg-cyan-700 text-xs xl:text-sm hover-bg-blue-700 text-white font-medium py-2 px-4 rounded">Create Penjualan</button>
           </form>
         </div>
 
@@ -77,6 +87,7 @@ import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import SelectProductModals from "../../modals/penjualan/selectproductmodals.vue"
 import { useRouter } from "vue-router";
+import { message } from 'ant-design-vue'
 
 export default {
     setup() {
@@ -95,19 +106,20 @@ export default {
         async function getProduk() {
             try {
                 const response = await produkStore.getProduct();
+
                 if (Array.isArray(response)) {
-                    produk.value = response.map((product) => ({
-                        id_product: product.id_product,
-                        nama_product: product.nama_product,
-                        quantity: 0,
-                    }));
-                }
-                else {
+                    produk.value = response
+                        .filter(product => product.stok_product > 0)
+                        .map((product) => ({
+                            id_product: product.id_product,
+                            nama_product: product.nama_product,
+                            quantity: 0,
+                        }));
+                } else {
                     console.error("Respon API tidak valid:", response);
                     error.value = "Gagal mendapatkan data produk";
                 }
-            }
-            catch (error) {
+            } catch (error) {
                 console.error("Gagal mendapatkan data produk:", error);
                 error.value = "Gagal mendapatkan data produk";
             }
@@ -116,6 +128,11 @@ export default {
 
        // create penjualan
         const createPenjualan = async () => {
+            if (!nama_toko.value || selectedProducts.value.length === 0) {
+                error.value = "Nama toko dan barang harus diisi.";
+                return;
+            }
+
             const postPenjualan = {
                 nama_toko: nama_toko.value,
                 diskon: diskon.value,
@@ -130,13 +147,19 @@ export default {
 
             if (selectedProductsArray.length > 0) {
                 try {
-                    const response = await axios.post("http://localhost:4000/api/v1/penjualan/create", {
+                    const response = await axios.post(`${import.meta.env.VITE_APP_BASE_URL}/penjualan/create`, {
                         postPenjualan,
                         selectedProducts: selectedProductsArray,
                     });
-                    console.log("Penjualan berhasil:", response.data);
+                  
                     error.value = null;
-                    CreateNotif();
+                    message.success({
+                        content: 'Sales data successfully created',
+                        duration: 3,  
+                        style: {
+                            fontSize: '17px',  
+                        },
+                    });
                      router.push({ name: "DataPenjualan" });
 
                 } catch (error) {
@@ -147,12 +170,12 @@ export default {
         };
 
         // toastify
-        const CreateNotif = () => {
-            toast.success("Penjualan berhasil dibuat", {
-                position: 'top-right',
-                duration: 3000,
-            });
-        };
+        // const CreateNotif = () => {
+        //     toast.success("Penjualan berhasil dibuat", {
+        //         position: 'top-right',
+        //         duration: 3000,
+        //     });
+        // };
 
 
         // add dari modal ke barang yang dipilih
@@ -217,7 +240,7 @@ export default {
             createPenjualan,
             error,
             showModal,
-            CreateNotif,
+            // CreateNotif,
             addToPenjualan,
             selectedProducts,
             incrementQuantity,

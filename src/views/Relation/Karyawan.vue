@@ -1,5 +1,5 @@
 <template>
-    <div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
+    <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
         <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
         <div class="font-poppins text-sm font-semibold mb-6 pt-3">
             <h3 class="text-2xl font-medium text-gray-700 pl-3 pb-3">Karyawan</h3>
@@ -118,7 +118,7 @@ export default {
             );
             if (employee) {
                 employee.showDropdown = !employee.showDropdown;
-                console.log(`Toggled dropdown for employee with ID: ${employeeId}`);
+               
             }
         }
 
@@ -136,14 +136,14 @@ export default {
         function prepareDelete(id_karyawan) {
             employeeToDelete.value = id_karyawan;
             showDeleteConfirmation.value = true;
-            console.log('Preparing to delete:', id_karyawan);
+            
         }
 
         // Function to perform delete operation
         async function deleteKaryawan() {
             try {
                 if (employeeToDelete.value) {
-                    console.log('Deleting Karyawan with ID:', employeeToDelete.value);
+               
                     await karyawanStore.deleteKaryawan(employeeToDelete.value);
                     employeeToDelete.value = null;
                     showDeleteConfirmation.value = false;
@@ -155,14 +155,14 @@ export default {
 
         // Function to confirm delete
         function confirmDelete() {
-            console.log('Confirm Delete Called');
+            
             deleteKaryawan();
             showDeleteConfirmation.value = false;
         }
 
         // Function to cancel delete
         function cancelDelete() {
-            console.log('Cancel Delete Called');
+          
             employeeToDelete.value = null;
             showDeleteConfirmation.value = false;
         }

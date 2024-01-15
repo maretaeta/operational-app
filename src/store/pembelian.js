@@ -20,6 +20,7 @@ export const useBuyStore = defineStore("buy", {
 
     totalPembelian: 0,
     jenisKayu: [],
+    totalKeuntungan: 0,
   }),
 
   mutations: {
@@ -37,7 +38,7 @@ export const useBuyStore = defineStore("buy", {
     async createPurchase(purchaseData) {
       try {
         const response = await axios.post(
-          "http://localhost:4000/api/v1/pembelian/create",
+          `${import.meta.env.VITE_APP_BASE_URL}/pembelian/create`,
           purchaseData
         );
 
@@ -56,7 +57,7 @@ export const useBuyStore = defineStore("buy", {
     async getPembelian() {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/v1/pembelian",
+          `${import.meta.env.VITE_APP_BASE_URL}/pembelian`,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -80,7 +81,7 @@ export const useBuyStore = defineStore("buy", {
     async deletePembelian(id_productSources) {
       try {
         const response = await axios.delete(
-          `http://localhost:4000/api/v1/pembelian/${id_productSources}`,
+          `${import.meta.env.VITE_APP_BASE_URL}/pembelian/${id_productSources}`,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -106,7 +107,7 @@ export const useBuyStore = defineStore("buy", {
     async updatePembelian(updatedData) {
       try {
         const response = await axios.put(
-          `http://localhost:4000/api/v1/pembelian/update/${updatedData.id_productSources}`,
+          `${import.meta.env.VITE_APP_BASE_URL}/pembelian/update/${updatedData.id_productSources}`,
           updatedData,
           {
             headers: {
@@ -130,7 +131,7 @@ export const useBuyStore = defineStore("buy", {
     async getTotalPembelian() {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/v1/pembelian/total"
+          `${import.meta.env.VITE_APP_BASE_URL}/pembelian/total`,
         );
 
         if (!response) {
@@ -148,15 +149,13 @@ export const useBuyStore = defineStore("buy", {
     async filterJenisKayu(jenisKayu) {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/pembelian/filter-jenis-kayu`,
+          `${import.meta.env.VITE_APP_BASE_URL}/pembelian/filter-jenis-kayu`,
           {
             params: {
               jenisKayu: jenisKayu,
             },
           }
         );
-
-        console.log("API response:", response.data);
 
         if (!response) {
           throw new Error("Failed to filter by jenis kayu");
@@ -167,6 +166,44 @@ export const useBuyStore = defineStore("buy", {
         return data;
       } catch (error) {
         console.error("Filter by jenis kayu error:", error);
+        throw error;
+      }
+    },
+
+    async searchPembelian(query) {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_APP_BASE_URL}/pembelian/search?query=${query}`,
+        );
+
+        if (!response) {
+          throw new Error("Failed to search Pembelian");
+        }
+
+        const data = response.data;
+        this.pembelian = data;
+        return data;
+      } catch (error) {
+        console.error("Search pembelian error: ", error);
+        throw error;
+      }
+    },
+
+    async getTotalKeuntungan() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_APP_BASE_URL}/pembelian/monthly-profit`,
+        );
+
+        if (!response || !response.data) {
+          throw new Error("Gagal mendapatkan total keuntungan");
+        }
+
+        const { profit, month } = response.data[0];
+        this.totalKeuntungan = profit;
+        this.month = month;
+      } catch (error) {
+        console.error("Error dalam mendapatkan total keuntungan:", error);
         throw error;
       }
     },

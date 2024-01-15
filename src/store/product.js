@@ -16,7 +16,7 @@ export const ProdukStore = defineStore("produk", {
     async getProduct() {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/v1/product",
+          `${import.meta.env.VITE_APP_BASE_URL}/product`,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -49,7 +49,9 @@ export const ProdukStore = defineStore("produk", {
     async updateProduct(updatedData) {
       try {
         const response = await axios.put(
-          `http://localhost:4000/api/v1/product/update/${updatedData.id_product}`,
+          `${import.meta.env.VITE_APP_BASE_URL}/product/update/${
+            updatedData.id_product
+          }`,
           {
             harga_product: updatedData.harga_product,
             keuntungan: updatedData.keuntungan,
@@ -75,7 +77,7 @@ export const ProdukStore = defineStore("produk", {
     async deleteProduct(id) {
       try {
         const response = await axios.delete(
-          `http://localhost:4000/api/v1/product/${id}`,
+          `${import.meta.env.VITE_APP_BASE_URL}/product/${id}`,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -99,7 +101,7 @@ export const ProdukStore = defineStore("produk", {
     async getTotalProduct() {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/v1/product/total"
+          `${import.meta.env.VITE_APP_BASE_URL}/product/total`
         );
         if (!response) {
           throw new Error("Gagal mendapatkan total produk");
@@ -115,7 +117,7 @@ export const ProdukStore = defineStore("produk", {
     async filterProductsType(type) {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/product/filter/${type}`,
+          `${import.meta.env.VITE_APP_BASE_URL}/product/filter/${type}`,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -144,7 +146,7 @@ export const ProdukStore = defineStore("produk", {
     async searchPenjualan(query) {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/product/search?query=${query}`
+          `${import.meta.env.VITE_APP_BASE_URL}/product/search?query=${query}`
         );
 
         if (!response) {

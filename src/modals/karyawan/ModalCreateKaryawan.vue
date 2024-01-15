@@ -8,22 +8,35 @@
                     <h2 class="text-2xl text-cyan-800 font-semibold mb-6">Create Karyawan</h2>
                     <form @submit.prevent="createKaryawan">
                         <div class="mb-4">
-                            <label for="nama_karyawan" class="block text-sm font-medium text-gray-700">Nama Karyawan</label>
+                            <label for="nama_karyawan" class="block text-sm font-medium text-gray-700">Nama Karyawan
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input v-model="formData.nama_karyawan" class="mt-1 p-2 w-full border rounded" />
                         </div>
                         <div class="mb-4">
-                            <label for="jabatan" class="block text-sm font-medium text-gray-700">Jabatan</label>
+                            <label for="jabatan" class="block text-sm font-medium text-gray-700">Jabatan
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input v-model="formData.jabatan" class="mt-1 p-2 w-full border rounded" />
                         </div>
                         <div class="mb-4">
-                            <label for="gaji" class="block text-sm font-medium text-gray-700">Gaji</label>
+                            <label for="gaji" class="block text-sm font-medium text-gray-700">Gaji
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input v-model="formData.gaji" class="mt-1 p-2 w-full border rounded" type="number" />
                         </div>
                         <div class="mb-4">
-                            <label for="tanggal_masuk" class="block text-sm font-medium text-gray-700">Tanggal Masuk</label>
+                            <label for="tanggal_masuk" class="block text-sm font-medium text-gray-700">Tanggal Masuk
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input v-model="formData.tanggal_masuk" type="date" id="tanggal" name="tanggal"
                                 class="mt-1 p-2 w-full border rounded" />
                         </div>
+
+                        <div v-if="validationError" class="text-red-600 mb-4 text-sm pt-4">
+                            {{ validationError }}
+                        </div>
+
                         <div class="mt-6 flex justify-end">
                             <button type="submit" class="bg-cyan-700 px-4 py-3 text-white rounded">Simpan</button>
                             <button @click="closeCreateModal"
@@ -37,7 +50,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 export default {
     props: {
@@ -62,6 +75,11 @@ export default {
     },
     methods: {
         async createKaryawan() {
+            if (!this.formData.nama_karyawan || !this.formData.jabatan || !this.formData.gaji || !this.formData.tanggal_masuk) {
+                this.validationError = "Semua kolom dengan tanda * harus diisi.";
+                return;
+            }
+
             try {
                 await this.karyawanStore.createKaryawan(this.formData);
                 this.closeCreateModal();
@@ -71,12 +89,20 @@ export default {
                     gaji: '',
                     tanggal_masuk: '',
                 };
+                this.validationError = null;
             } catch (error) {
                 console.error('Error creating Karyawan:', error);
             }
         },
         closeCreateModal() {
             this.$emit('closeModal');
+        },
+    },
+    computed: {
+        validationError() {
+            return (!this.formData.nama_karyawan || !this.formData.jabatan || !this.formData.gaji || !this.formData.tanggal_masuk)
+                ? " * harus diisi."
+                : null;
         },
     },
 };

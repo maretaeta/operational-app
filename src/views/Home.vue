@@ -1,6 +1,6 @@
 <template>
-   <div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
-    <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
+   <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+    <div class="bg-white min-h-screen rounded-xl p-7 ml-7">
         <!-- <nav class="font-poppins text-sm font-semibold mb-6">
             <ol class="list-none p-0 pl-3 inline-flex">
                 <li class="flex items-center text-purple">
@@ -17,73 +17,74 @@
         </nav> -->
 
         <div class="lg:flex justify-between items-center mb-8 p-2 pt-8 pb-5">
-            <p class="text-2xl font-semibold mb-2 lg:mb-0 text-gray-800">Selamat datang, Admin!</p>
+            <p class="text-xl xl:text-2xl font-semibold mb-2 lg:mb-0 text-gray-800">Selamat datang, Admin!</p>
             <button @click="handleLaporan"
-                class="bg-purple hover:bg-purple-light focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow duration-150">
+                class="text-xs xl:text-sm bg-cyan-800 hover:bg-cyan-200 focus:outline-none rounded-lg px-6 py-3 text-white font-semibold shadow duration-150">
                 Lihat Laporan
             </button>
         </div>
 
+        
         <!-- Cards -->
         <div class="flex flex-wrap -mx-3 mb-16 p-2">
 
-            <div class="w-1/2 xl:w-1/4 px-3">
-                <div class="w-full bg-white border rounded-lg flex items-center p-0 mb-6 xl:mb-0">
-                    <div class="px-3 py-5 lg:px-5 lg:py-5 bg-pink text-white rounded-l-lg">
-                        <font-awesome-icon icon="cube" class="w-8 h-8 fill-current mx-auto hidden lg:block" />
-                    </div>
-                    <div class="text-gray-700 ml-4 leading-6">
-                        <div class="flex justify-end pb-2 pt-1">
+                 <div class="w-1/2 xl:w-1/4 px-3">
+                    <div class="w-full bg-white border rounded-lg flex items-center p-0 mb-6 xl:mb-0">
+                        <div class="px-3 py-10 lg:px-5 lg:py-8 bg-pink text-white rounded-l-lg">
+                            <font-awesome-icon icon="cube" class="w-8 h-8 fill-current mx-auto hidden lg:block" />
+                        </div>
+                        <div class="text-gray-700 ml-6 p-2 md:p-0 leading-6">
+                             <div class="flex justify-end pb-2 pt-1">
                             <span class="text-xs text-gray-400">{{ store.month }}</span>
                         </div>
-                        <p class="font-semibold text-2xl">{{ store.totalProduct }}</p>
-                        <p class="text-sm text-gray-600">Total Barang</p>
+                        <p class="font-semibold text-xl xl:text-2xl">{{ store.totalProduct }}</p>
+                        <p class="text-sm text-gray-600">Stok Barang</p>
                     </div>
                 </div>
-            </div>
+             </div>
 
 
             <div class="w-1/2 xl:w-1/4 px-3">
                 <div class="w-full bg-white border rounded-lg flex items-center p-0 mb-6 xl:mb-0">
-                    <div class="px-3 py-10 lg:px-5 lg:py-5 bg-purple text-white rounded-l-lg">
+                    <div class="px-3 py-10 lg:px-5 lg:py-8 bg-purple text-white rounded-l-lg">
                         <font-awesome-icon icon="cart-shopping" class="w-8 h-8 fill-current mx-auto hidden lg:block" />
                     </div>
-                    <div class="text-gray-700 ml-6 leading-6">
+                    <div class="text-gray-700 ml-6 p-2 md:p-0  leading-6">
                          <div class="flex justify-end pb-2 pt-1">
-                                <span class="text-xs text-gray-400">{{ pembelian.month }}</span>
+                                <span class="text-xs text-gray-400">{{ store.month }}</span>
                             </div>
-                        <p class="font-semibold text-2xl">{{ pembelian.totalPembelian }}</p>
-                        <p class="text-sm text-gray-600">Pembelian Kayu</p>
+                        <p class="font-semibold text-xl xl:text-2xl">{{ pembelian.totalPembelian }}</p>
+                        <p class="text-sm text-gray-600 ">Pembelian Kayu</p>
                     </div>
                 </div>
             </div>
 
             <div class="w-1/2 xl:w-1/4 px-3">
                 <div class="w-full bg-white border rounded-lg flex items-center p-0 mb-6 xl:mb-0">
-                    <div class="px-3 py-10 lg:px-5 lg:py-5 bg-orange text-white rounded-l-lg">
+                    <div class="px-3 py-10 lg:px-5 lg:py-8 bg-orange text-white rounded-l-lg">
                         <font-awesome-icon icon="truck-fast" class="w-8 h-8 fill-current mx-auto hidden lg:block" />
                     </div>
-                    <div class="text-gray-700 ml-6 leading-6">
+                    <div class="text-gray-700 ml-6 p-2 md:p-0  leading-6">
                         <div class="flex justify-end pb-2 pt-1">
-                                    <span class="text-xs text-gray-400">{{ pembelian.month }}</span>
+                                    <span class="text-xs text-gray-400">{{ store.month }}</span>
                                 </div>
-                        <p class="font-semibold text-2xl">{{ penjualan.totalPenjualan }}</p>
-                        <p class="text-sm text-gray-600">Penjualan Kayu</p>
+                        <p class="font-semibold text-xl xl:text-2xl">{{ penjualan.totalPenjualan }}</p>
+                        <p class="text-sm text-gray-600 ">Penjualan Kayu</p>
                     </div>
                 </div>
             </div>
 
             <div class="w-1/2 xl:w-1/4 px-3">
                 <div class="w-full bg-white border rounded-lg flex items-center p-0 mb-6 xl:mb-0">
-                    <div class="px-3 py-10 lg:px-5 lg:py-5 bg-green text-white rounded-l-lg">
+                    <div class="px-3 py-10 lg:px-5 lg:py-8 bg-green text-white rounded-l-lg">
                         <font-awesome-icon icon="sack-dollar" class="w-8 h-8 fill-current mx-auto hidden lg:block" />
                     </div>
-                    <div class="text-gray-700 ml-6 leading-6">
+                    <div class="text-gray-700 ml-6 p-2 md:p-0  leading-6">
                         <div class="flex justify-end pb-2 pt-1">
-                                    <span class="text-xs text-gray-400">{{ pembelian.month }}</span>
+                                    <span class="text-xs text-gray-400">{{ store.month }}</span>
                                 </div>
-                        <p class="font-semibold text-2xl">1,906</p>
-                        <p class="text-sm text-gray-600">Pendapatan</p>
+                        <p class="font-semibold text-xl xl:text-2xl">{{ toko.totalToko }}</p>
+                        <p class="text-sm text-gray-600  ">Langganan Toko</p>
                     </div>
                 </div>
             </div>
@@ -92,12 +93,15 @@
         <!-- charts -->
         <div class="flex flex-wrap -mx-6 p-6 ">
             <div class="w-full xl:w-1/2 px-3">
-                <p class="text-xl font-semibold mb-4 text-gray-700">Recent Income</p>
+                <p class="text-xl font-semibold mb-4 text-gray-700">Recent Wood Purchasing</p>
                 <div class="w-full bg-white border rounded-lg p-4 mb-8 xl:mb-0">
                     <select v-model="selectedYear" @change="loadDataBasedOnYear">
                         <option v-for="year in availableYears" :value="year">{{ year }}</option>
                     </select>
                     <canvas ref="chartCanvas"></canvas>
+                    <!-- <a-chart :options="chartOptions" :data="chartData">
+            <a-tooltip show-title={false} />
+          </a-chart> -->
                 </div>
             </div>
             
@@ -131,14 +135,16 @@
 
 
 <script>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed} from "vue";
 import axios from "axios";
 import { useBuyStore } from "../store/pembelian";
 import { penjualanStore } from "../store/penjualan";
 import { ProdukStore } from "../store/product";
 import Chart from "chart.js/auto";
 import { useRouter } from "vue-router";
- 
+import {TokoStore} from "../store/toko"
+
+
 export default {
     setup() {
         const router = useRouter()
@@ -146,6 +152,8 @@ export default {
         const store = ProdukStore();
         const pembelian = useBuyStore();
         const penjualan = penjualanStore();
+
+        const toko = TokoStore()
 
         const recentTransactions = ref([]);
 
@@ -179,7 +187,7 @@ export default {
         const fetchChartData = async (year) => {
             try {
                 const response = await axios.get(
-                    `http://localhost:4000/api/v1/pembelian/sales/${year}`
+                    `${import.meta.env.VITE_APP_BASE_URL}/pembelian/sales/${year}`
                 );
                 const data = response.data;
                 chartData.value.labels = [
@@ -213,7 +221,7 @@ export default {
 
         const fetchRecentTransactions = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/api/v1/penjualan/top`);
+                const response = await axios.get(`${import.meta.env.VITE_APP_BASE_URL}/penjualan/top`);
                 recentTransactions.value = response.data;
             } catch (error) {
                 console.error("Error fetching recent transactions: ", error);
@@ -232,14 +240,22 @@ export default {
             return formatToRupiah(harga);
         }
 
+        
+
 
         onMounted(async () => {
             await store.getTotalProduct();
+            
+            await pembelian.getTotalKeuntungan();
+            
+
             await pembelian.getTotalPembelian();
+            
             await penjualan.getTotalPenjualan();
 
-            await fetchChartData(selectedYear.value);
+            await toko.getTotalToko();
 
+            await fetchChartData(selectedYear.value);
             await fetchRecentTransactions();
 
             const chartCanvas = document.querySelector("canvas");
@@ -250,10 +266,12 @@ export default {
             });
         });
 
+
         return {
             store,
             pembelian,
             penjualan,
+            toko,
             chartData,
             chartOptions,
             selectedYear,

@@ -60,6 +60,7 @@
 
 <script>
 import { useBuyStore } from '../../store/pembelian';
+import { message } from 'ant-design-vue'
 
 export default {
     props: {
@@ -85,12 +86,14 @@ export default {
                 };
                 await store.updatePembelian(updatedData);
                 this.closeEditModal();
+                message.success('Product successfully updated');
+
             } catch (error) {
                 console.error("Update error:", error);
+                message.error('Failed to update product. Please try again.');
             }
         },
         closeEditModal() {
-            // this.editedProduct = null;
             this.$emit("close");
         },
     },

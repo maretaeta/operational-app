@@ -13,7 +13,7 @@ export const useKaryawan = defineStore("karyawan", {
     async getKaryawan() {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/v1/karyawan",
+          `${import.meta.env.VITE_APP_BASE_URL}/karyawan`,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -37,7 +37,7 @@ export const useKaryawan = defineStore("karyawan", {
     async createKaryawan(newKaryawan) {
       try {
         const response = await axios.post(
-          "http://localhost:4000/api/v1/karyawan/create",
+          `${import.meta.env.VITE_APP_BASE_URL}/karyawan/create`,
           newKaryawan,
           {
             headers: {
@@ -63,7 +63,7 @@ export const useKaryawan = defineStore("karyawan", {
     async deleteKaryawan(id_karyawan) {
       try {
         const response = await axios.delete(
-          `http://localhost:4000/api/v1/karyawan/delete/${id_karyawan}`,
+          `${import.meta.env.VITE_APP_BASE_URL}/karyawan/delete/${id_karyawan}`,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,

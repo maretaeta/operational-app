@@ -9,6 +9,8 @@ import ModalUpdatePembelian from '../../modals/pembelian/ModalUpdatePembelian.vu
 import AlertDeletePembelian from '../../modals/pembelian/AlertDeletePembelian.vue';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { message } from 'ant-design-vue'
+import { Spin } from "ant-design-vue";
 
 export default {
     setup() {
@@ -22,7 +24,6 @@ export default {
         const jenis_productSources = ref('');
         const nama_productSources = ref('');
         const ukuran_productSources = ref('');
-        const satuan_productSources = ref('');
         const jumlah_productSources = ref('');
         const pembelian_productSources = ref('');
         const ongkosProses_productSources = ref('');
@@ -37,6 +38,8 @@ export default {
         const pembelian = ref([]);
 
         const selectedJenisKayu = ref(null);
+
+        const isDataLoaded = ref(false);
 
         const closeModal = () => {
             showModal.value = false;
@@ -54,8 +57,25 @@ export default {
             ongkosProses_productSources: '',
         });
 
-      // create pembelian
+        // create pembelian
         const createPurchase = async () => {
+            if (
+                !purchaseData.value.nama_toko ||
+                !purchaseData.value.alamat_toko ||
+                !purchaseData.value.jenis_productSources ||
+                !purchaseData.value.nama_productSources ||
+                !purchaseData.value.ukuran_productSources ||
+                !purchaseData.value.jumlah_productSources ||
+                !purchaseData.value.pembelian_productSources ||
+                !purchaseData.value.ongkosProses_productSources
+            ) {
+                toast.error("Semua data harus diisi", {
+                    position: 'top-right',
+                    duration: 3000,
+                });
+                return;
+            }
+
             try {
                 const response = await buyStore.createPurchase({
                     nama_toko: purchaseData.value.nama_toko,
@@ -68,13 +88,26 @@ export default {
                     ongkosProses_productSources: parseInt(purchaseData.value.ongkosProses_productSources)
                 });
 
-                console.log('Purchase creation successful:', response);
+      
 
                 if (response) {
                     pembelian.value.push(response);
                     calculateTotalPages();
                     updateDisplayedData();
                 }
+
+                // Reset purchaseData after successful creation
+                purchaseData.value = {
+                    nama_toko: '',
+                    alamat_toko: '',
+                    jenis_productSources: '',
+                    nama_productSources: '',
+                    ukuran_productSources: '',
+                    jumlah_productSources: '',
+                    pembelian_productSources: '',
+                    ongkosProses_productSources: '',
+                };
+
                 showModal.value = false;
                 notify();
 
@@ -94,6 +127,7 @@ export default {
                 }
             }
         };
+
 
         const notify = () => {
             toast.success("Pembelian berhasil dibuat", {
@@ -126,6 +160,7 @@ export default {
                     calculateTotalPages();
                     updateDisplayedData();
                     getUniqueJenisKayu();
+                    isDataLoaded.value = true;
                 } else {
                     console.error("Respon API tidak valid:", response);
                 }
@@ -133,8 +168,6 @@ export default {
                 console.error("Gagal mendapatkan data produk:", error);
             }
         };
-
-
 
         // delete produk
         const deleteProduct = async (id_productSources) => {
@@ -159,6 +192,13 @@ export default {
                     
                     calculateTotalPages();
                     updateDisplayedData();
+                     message.success({
+                        content: 'Deleted successfully',
+                        duration: 3,
+                        style: {
+                            fontSize: '17px',
+                        },
+                    });
                 }
                 isDeleteConfirmationVisible.value = false;
             } catch (error) {
@@ -219,9 +259,10 @@ export default {
             }
         };
 
-        const calculateTotalPages = () => {
-            totalPages.value = Math.ceil(pembelian.value.length / itemsPerPage);
-        };
+            const calculateTotalPages = () => {
+                    totalPages.value = Math.ceil(filteredAndSearchedPembelian.value.length / itemsPerPage);
+                };
+
 
         // format date
         const formatDate = (dateString) => {
@@ -307,11 +348,74 @@ export default {
             updateDisplayedData();
         };
 
+        // search
+        const searchQuery = ref('');
+
+        const searchPembelian = () => {
+            const query = searchQuery.value.toLowerCase().trim();
+
+            if (!query) {
+                getPembelian();
+            } else {
+                filteredPembelian.value = pembelian.value.filter((item) => {
+                    return Object.values(item).some((value) => {
+                        if (value !== null && value !== undefined) {
+                            return value.toString().toLowerCase().includes(query);
+                        }
+                        return false;
+                    });
+                });
+                currentPage.value = 1; 
+                calculateTotalPages(); 
+                updateDisplayedData();
+            }
+        };
 
 
+        const filteredAndSearchedPembelian = computed(() => {
+            const query = searchQuery.value.toLowerCase().trim();
 
+            if (query && selectedJenisKayu.value) {
+                // If both search query and jenis kayu are selected, filter based on both
+                return filteredPembelian.value.filter((item) => {
+                    return (
+                        item.nama_toko.toLowerCase().includes(query) ||
+                        item.alamat_toko.toLowerCase().includes(query) ||
+                        item.jenis_productSources.toLowerCase().includes(query) ||
+                        item.nama_productSources.toLowerCase().includes(query) ||
+                        item.ukuran_productSources.toLowerCase().includes(query) ||
+                        item.jumlah_productSources.toString().toLowerCase().includes(query) ||
+                        item.pembelian_productSources.toString().toLowerCase().includes(query) ||
+                        item.ongkosProses_productSources.toString().toLowerCase().includes(query) ||
+                        item.totalPembelian_productSources.toString().toLowerCase().includes(query) ||
+                        item.hargaPerLembar.toString().toLowerCase().includes(query)
+                    );
+                });
+            } else if (query) {
+                // If only the search query is selected
+                return pembelian.value.filter((item) => {
+                    return (
+                        item.nama_toko.toLowerCase().includes(query) ||
+                        item.alamat_toko.toLowerCase().includes(query) ||
+                        item.jenis_productSources.toLowerCase().includes(query) ||
+                        item.nama_productSources.toLowerCase().includes(query) ||
+                        item.ukuran_productSources.toLowerCase().includes(query) ||
+                        item.jumlah_productSources.toString().toLowerCase().includes(query) ||
+                        item.pembelian_productSources.toString().toLowerCase().includes(query) ||
+                        item.ongkosProses_productSources.toString().toLowerCase().includes(query) ||
+                        item.totalPembelian_productSources.toString().toLowerCase().includes(query) ||
+                        item.hargaPerLembar.toString().toLowerCase().includes(query)
+                    );
+                });
+            } else {
+                return filteredPembelian.value;
+            }
+        });
+
+        
        onMounted(() => {
             getPembelian();
+            calculateTotalPages();
             calculateTotalPages();
             updateDisplayedData();
             getUniqueJenisKayu();
@@ -342,7 +446,6 @@ export default {
             jenis_productSources,
             nama_productSources,
             ukuran_productSources,
-            satuan_productSources,
             jumlah_productSources,
             pembelian_productSources,
             ongkosProses_productSources,
@@ -386,7 +489,12 @@ export default {
             uniqueJenisKayu,
             getUniqueJenisKayu,
             selectedJenisKayu,
-            filteredPembelian
+            filteredPembelian,
+            searchQuery,
+            searchPembelian,
+            filteredAndSearchedPembelian,
+            isDataLoaded,
+            
         };
     },
     methods: {
@@ -407,6 +515,7 @@ export default {
         ModalUpdatePembelian,
         ModalPembelian,
         AlertDeletePembelian,
+        Spin,
 
     }
 
@@ -414,11 +523,12 @@ export default {
 </script>
 
 <template>
-    <div class="pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
-    <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
-    <div class="font-poppins text-sm font-semibold mb-6 pt-3">
-        <h3 class="text-2xl font-medium text-gray-700 pl-3 pb-3">Data Pembelian</h3>
-        <ol class="list-none p-0 pl-3 inline-flex">
+    <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+         <a-spin v-if="!isDataLoaded" size="large" class="flex items-center justify-center min-h-screen" />
+    <div v-if="isDataLoaded" class="bg-white min-h-screen rounded-xl p-7 ml-7">
+    <div class="font-poppins font-semibold mb-6 pt-3">
+        <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3 pb-3">Data Pembelian</h3>
+        <ol class="list-none p-0 pl-3 inline-flex text-sm">
             <li class="flex items-center text-purple">
                 <p class="text-gray-700">Dashboard</p>
                 <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
@@ -433,29 +543,66 @@ export default {
     </div>
     <div class="items-center justify-center p-2">
         <div class="w-full">
-            <div class="flex justify-between items-start py-5">
-                <div @click="openBuyModal" class="flex gap-2 bg-cyan-800 text-white py-3 rounded-xl items-center text-xs text-center px-4">
-                    <vue-feather type="plus" size="17" />
-                    <p class="">Pembelian</p>
-                </div>
-            
-            <div class="flex gap-2 ">
-                <div class="bg-cyan-800 py-2 px-4 flex gap-2 rounded-xl items-center text-center" @click="filterByJenisKayu">
-                    <vue-feather type="filter" size="17" class="text-white " />
-                    <p class="text-sm text-white ">Filter</p>
-                   <select v-model="selectedJenisKayu" @change="filterByJenisKayu" class="text-sm bg-transparent focus:outline-none text-white ">
-        <option v-for="jenisKayu in uniqueJenisKayu" :value="jenisKayu" class="text-black text-sm">{{ jenisKayu }}</option>
-    </select>
+           <div class="flex flex-col lg:flex-row lg:justify-between pb-7 pt-5">
 
-
-                </div>
-
-                    <div class="bg-cyan-800 text-white py-2 px-4 flex gap-2 rounded-xl items-center text-center" @click="printPurchaseData">
-                        <vue-feather type="printer" size="17" />
-                        <p class="text-sm">Cetak</p>
-                    </div>
-                </div>
+        <div class="flex flex-col md:flex-row gap-3 justify-between pb-8 lg:pb-5">
+            <div @click="openBuyModal" class="flex bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3 text-xs xl:text-sm">
+                <vue-feather type="plus" size="17" />
+                <p class="m-2">Create</p>
             </div>
+
+            
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-2 justify-end pb-5">
+            <div class="relative text-gray-500">
+                   <input
+                        v-model="searchQuery"
+                        type="search"
+                        name="search"
+                        placeholder="Search..."
+                        class="bg-white h-10 w-full xl:w-64 px-5 rounded-lg border text-sm focus:outline-none"
+                    />
+
+                    <button
+                        type="submit"
+                        @click="searchPembelian"
+                        class="absolute right-0 top-0 mt-3 mr-4 focus:outline-none hover:text-purple-600"
+                    >
+                        <svg
+                            class="h-4 w-4 fill-current"
+                            xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                            version="1.1"
+                            id="Capa_1"
+                            x="0px"
+                            y="0px"
+                            viewBox="0 0 56.966 56.966"
+                            style="enable-background:new 0 0 56.966 56.966;"
+                            xml:space="preserve"
+                            width="512px"
+                            height="512px"
+                        >
+                            <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+                        </svg>
+                    </button>
+                </div>
+
+            <div class="bg-cyan-800 px-4 flex rounded-xl items-center text-center text-xs xl:text-sm" @click="filterByJenisKayu">
+                <vue-feather type="filter" size="17" class="text-white " />
+                <p class=" text-white m-1 ">Filter</p>
+                <select v-model="selectedJenisKayu" @change="filterByJenisKayu" class="bg-transparent focus:outline-none text-white ">
+                    <option v-for="jenisKayu in uniqueJenisKayu" :value="jenisKayu" class="text-black text-sm">{{ jenisKayu }}</option>
+                </select>
+            </div>
+
+            <div class="bg-cyan-800 text-white px-4 flex rounded-xl items-center text-center text-xs xl:text-sm" @click="printPurchaseData">
+                <vue-feather type="printer" size="16" />
+                <p class="m-2">Print</p>
+            </div>
+        </div>
+    </div>
+
 
     <!-- tabel data pembelian -->
     <div class="flex flex-col mb-12 bg-gray-25 rounded-md border">
@@ -464,99 +611,104 @@ export default {
                 <div class="overflow-x-auto sm:rounded-lg">
                 <table class="min-w-full divide-y divide-gray-200 text-left">
                 <thead>
-                    <tr>
+                    <tr class="capitalize">
                          <th
-                            class="px-5 py-3 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-5 py-3 bg-cyan-600 text-white text-center text-xs xl:text-sm leading-4 font-medium  tracking-wider">
                             No
                         </th>
                         <th
-                            class="px-8 py-3 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-8 py-3 bg-cyan-600 text-white  text-xs xl:text-sm leading-4 font-medium tracking-wider">
                             Tanggal
                         </th>
                         <th
-                            class="px-6 py-3 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-6 py-3 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium  tracking-wider">
                             Nama Toko
                         </th>
                         <th
-                            class="px-6 py-3 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-6 py-3 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium  tracking-wider">
                             Alamat Toko
                         </th>
                         <th
-                            class="px-6 py-3 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-6 py-3 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium  tracking-wider">
                             Jenis Produk
                         </th>
                         <th
-                            class="px-6 py-3 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-6 py-3 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium  tracking-wider">
                             Nama Produk
                         </th>
                          <th
-                            class="px-6 py-3 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-6 py-3 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium  tracking-wider">
                                 Ukuran Produk
                             </th>
                         <th
-                            class="px-6 py-3 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-6 py-3 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium  tracking-wider">
                            Jumlah
                         </th>
                         <th
-                            class="px-6 py-3 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-6 py-3 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium  tracking-wider">
                             Harga Beli
                         </th>
                         <th
-                            class="px-6 py-3 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-6 py-3 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium  tracking-wider">
                                 Ongkos
                         </th>
                         <th
-                            class="px-6 py-3 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-6 py-3 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium  tracking-wider">
                            Total Harga
                         </th>
                         <th
-                            class="px-6 py-3 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-6 py-3 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium  tracking-wider">
                                 Harga PerLembar
                         </th>
                         <th
-                            class="px-6 py-3 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                            class="px-6 py-3 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium  tracking-wider">
                             Aksi
                         </th>
                     </tr>
                 </thead>
                <tbody class="bg-white divide-y divide-gray-200 border-t border-gray-300">
-                    <tr v-for="(pembelianData, index) in filteredPembelian" :key="pembelianData.id_productSources" class="border-b border-gray-200">
+                    <tr v-if="filteredAndSearchedPembelian.length === 0" class="border-b border-gray-200">
+                        <td colspan="13" class="px-4 py-3 whitespace-no-wrap text-center text-sm text-gray-700">
+                        purches data have been made yet.
+                        </td>
+                    </tr>
+                    <tr v-else v-for="(pembelianData, index) in filteredAndSearchedPembelian" :key="pembelianData.id_productSources" class="border-b border-gray-200">
                         <td class="px-6 py-4 whitespace-no-wrap text-center">
-                            <p class="text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
+                            <p class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
                         </td>
                         <td class="px-3 py-3 text-center whitespace-no-wrap"> 
-                            <div class="text-sm leading-5 font-medium text-gray-900">{{ formatDate(pembelianData.createdAt) }}</div>
+                            <div class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ formatDate(pembelianData.createdAt) }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap"> 
-                            <div class="text-sm leading-5 font-medium text-gray-900">{{ pembelianData.nama_toko }}</div>
+                            <div class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ pembelianData.nama_toko }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap">  
-                            <div class="text-sm leading-5 font-medium text-gray-900">{{ pembelianData.alamat_toko }}</div>
+                            <div class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ pembelianData.alamat_toko }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap">  
-                            <div class="text-sm leading-5 font-medium text-gray-900">{{ pembelianData.jenis_productSources }}</div>
+                            <div class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ pembelianData.jenis_productSources }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap">  
-                            <div class="text-sm leading-5 font-medium text-gray-900">{{ pembelianData.nama_productSources }}</div>
+                            <div class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ pembelianData.nama_productSources }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap ">  
-                            <div class="text-sm leading-5 font-medium text-gray-900">{{ pembelianData.ukuran_productSources }}</div>
+                            <div class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ pembelianData.ukuran_productSources }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap">  
-                            <div class="text-sm leading-5 font-medium text-gray-900">{{ pembelianData.jumlah_productSources}}</div>
+                            <div class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ pembelianData.jumlah_productSources}}</div>
                         </td>
 
                         <td class="px-6 py-4 whitespace-no-wrap">  
-                            <div class="text-sm leading-5 font-medium text-gray-900">{{ formatHarga(pembelianData.pembelian_productSources) }}</div>
+                            <div class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ formatHarga(pembelianData.pembelian_productSources) }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap">  
-                            <div class="text-sm leading-5 font-medium text-gray-900">{{ formatHarga(pembelianData.ongkosProses_productSources) }}</div>
+                            <div class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ formatHarga(pembelianData.ongkosProses_productSources) }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap">  
-                            <div class="text-sm leading-5 font-medium text-gray-900">{{formatHarga(pembelianData.totalPembelian_productSources) }}</div>
+                            <div class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{formatHarga(pembelianData.totalPembelian_productSources) }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap">  
-                            <div class="text-sm leading-5 font-medium text-gray-900">{{ formatHarga(pembelianData.hargaPerLembar)}}</div>
+                            <div class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ formatHarga(pembelianData.hargaPerLembar)}}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap text-center flex gap-3">  
                             <vue-feather type="edit" size="20" stroke="green" @click="editPembelian(pembelianData)" />
@@ -572,10 +724,10 @@ export default {
     
       <!-- Pagination controls -->
       <div class="flex justify-end mt-4">
-        <button @click="prevPage" :disabled="currentPage === 1" class="cursor-pointer bg-gray-300 p-2 w-20 text-gray800 text-xs">Previous</button>
-        <span class="p-2 text-xs">Page {{ currentPage }} of {{ totalPages }}</span>
-        <button @click="nextPage" :disabled="currentPage === totalPages" class="text-xs cursor-pointer bg-gray-300 text-gray-700 p-2 w-20">Next</button>
-      </div>
+        <button @click="prevPage" :disabled="currentPage === 1" class="cursor-pointer bg-gray-200 p-2 w-20 text-gray-800 text-xs">Previous</button>
+            <span class="p-2 text-xs">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button @click="nextPage" :disabled="currentPage === totalPages" class="text-xs cursor-pointer bg-gray-200 text-gray-700 p-2 w-20">Next</button>
+        </div>
             </div>
         </div>
     </div>

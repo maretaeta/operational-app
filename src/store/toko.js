@@ -7,16 +7,20 @@ export const TokoStore = defineStore("toko", {
   state: () => ({
     toko: [],
     editToko: null,
+    totalToko: 0,
   }),
 
   actions: {
     async getToko() {
       try {
-        const response = await axios.get("http://localhost:4000/api/v1/toko", {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_APP_BASE_URL}/toko`,
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        );
 
         if (!response) {
           throw new Error("Failed to fetch toko");
@@ -34,7 +38,7 @@ export const TokoStore = defineStore("toko", {
     async deleteToko(id_toko) {
       try {
         const response = await axios.delete(
-          `http://localhost:4000/api/v1/toko/delete/${id_toko}`,
+          `${import.meta.env.VITE_APP_BASE_URL}/toko/delete/${id_toko}`,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -60,7 +64,7 @@ export const TokoStore = defineStore("toko", {
     async updateToko(id_toko, nama_toko, alamat_toko, notlp_toko) {
       try {
         const response = await axios.put(
-          `http://localhost:4000/api/v1/toko/update/${id_toko}`,
+          `${import.meta.env.VITE_APP_BASE_URL}/toko/update/${id_toko}`,
           {
             nama_toko,
             alamat_toko,
@@ -84,7 +88,7 @@ export const TokoStore = defineStore("toko", {
     async searchToko(keyword) {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/toko/search?keyword=${keyword}`
+          `${import.meta.env.VITE_APP_BASE_URL}/toko/search?keyword=${keyword}`
         );
 
         if (!response) {
@@ -96,6 +100,23 @@ export const TokoStore = defineStore("toko", {
         return data;
       } catch (error) {
         console.error("Search toko error: ", error);
+        throw error;
+      }
+    },
+
+    async getTotalToko() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_APP_BASE_URL}/toko/total`
+        );
+
+        if (!response || !response.data) {
+          throw new Error("Gagal mendapatkan total toko");
+        }
+
+        this.totalToko = response.data.totalToko;
+      } catch (error) {
+        console.error("Error dalam mendapatkan total keuntungan:", error);
         throw error;
       }
     },

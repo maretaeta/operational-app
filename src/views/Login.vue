@@ -1,13 +1,14 @@
 <script>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { AuthStore } from "../store/auth";
 import { useRouter } from "vue-router";
+import {message} from 'ant-design-vue'
 
 export default {
     setup() {
         const store = AuthStore();
         const router = useRouter();
-        const loginData = ref({
+        const loginData = reactive({
             username: "",
             password: "",
         });
@@ -15,23 +16,47 @@ export default {
 
         const handleLogin = async () => {
             try {
-                const response = await store.login(loginData.value);
+                if (!loginData.username) {
+                    error.value = { message: 'Username is required.' };
+                    return;
+                }
 
-                if (response) {
-                    router.push("/dashboard");
-               } else {
-                    const errorMessage = response.data ? response.data.message : "Login failed";
-                    error.value = { message: errorMessage };
+                if (!loginData.password) {
+                    error.value = { message: 'Password is required.' };
+                    return;
                 }
-            } catch (error) {
-                if (error.response && error.response.data) {
-                    error.value = error.response.data;
+
+                const response = await store.login(loginData);
+
+                if (!response) {
+                    message.error('Login failed. Please check your username and password and try again.');
                 } else {
-                    error.value = { message: "Login error" };
+                    router.push("/dashboard");
                 }
+                
+            } catch (error) {
+                if (error.response) {
+                    const errorMessage = error.response.data.message || 'Login failed';
+                    if (error.response.status === 400 || errorMessage.toLowerCase().includes('invalid password')) {
+                        error.value = { message: 'Invalid username or password.' };
+                    } else if (errorMessage.toLowerCase().includes('user not found')) {
+                        error.value = { message: 'User not found.' };
+                    } else {
+                        error.value = { message: errorMessage };
+                    }
+                    message.error(error.response.data.message || 'Login failed');
+                } else if (error.message.includes('Username')) {
+                    error.value = { message: 'Username is required.' };
+                } else if (error.message.includes('Password')) {
+                    error.value = { message: 'Password is required.' };
+                } else {
+                    error.value = { message: 'Login error' };
+                }
+
                 console.error("Login error:", error);
             }
         };
+
 
         return {
             loginData,
@@ -84,16 +109,11 @@ export default {
                  <button type="submit" class="bg-cyan-800 rounded-md text-white w-full mx-auto py-2 ml-2 mt-3 xl:w-[500px]">
                    Login
                  </button>
-                 <!-- <p class="text-red-500 mt-2" v-if="error && typeof error === 'string'">{{ error }}</p>
-                 <p class="text-red-500 mt-2" v-if="error && error.includes('Username')">{{ error }}</p>
-                 <p class="text-red-500 mt-2" v-if="error && error.includes('Password')">{{ error }}</p>
-                 -->
-                 <p class="text-red-500 mt-2" v-if="error">{{ error.message }}</p>
+                 
+                    <p class="text-red-500 mt-2" v-if="error">{{ error.message }}</p>
+
                </form>
-                     <!-- <p class=" text-center pt-7">
-                         Don't have an account?
-                         <span class="text-cyan-900 pl-1" >Sign up</span>
-                     </p> -->
+                    
                  </div>
              </div>
          </div>

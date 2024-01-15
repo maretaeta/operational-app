@@ -1,9 +1,10 @@
 <template>
-<div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
-    <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
-    <div class="font-poppins text-sm font-semibold mb-6 pt-3">
-        <h3 class="text-2xl font-medium text-gray-700 pl-3 pb-3">Data Produk</h3>
-        <ol class="list-none p-0 pl-3 inline-flex">
+<div class="pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+     <a-spin v-if="!isDataLoaded" size="large" class="flex items-center justify-center min-h-screen" />
+    <div v-if="isDataLoaded" class="bg-white min-h-screen rounded-xl p-7 ml-7">
+    <div class="font-poppins font-semibold mb-6 pt-3">
+        <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3 pb-3">Data Produk</h3>
+        <ol class="list-none p-0 pl-3 inline-flex text-xs xl:text-sm">
             <li class="flex items-center text-purple">
                 <p class="text-gray-700">Dashboard</p>
                 <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
@@ -20,7 +21,7 @@
 
     <div class="items-center justify-center p-2">
         <!-- Filter Section -->
-       <div class="flex gap-3 justify-end items-start pb-5">
+       <div class="flex gap-3 justify-end items-start pb-8 pt-5">
             <div class="relative text-gray-500">
               <input
                 v-model="searchQuery"
@@ -54,22 +55,10 @@
                         </button>
                     </div>
 
-                    
-        <!-- <div class="bg-cyan-800 py-2 px-4 flex gap-2 rounded-xl items-center text-center">
-            <vue-feather type="filter" size="17" class="text-white" />
-            <p class="text-sm text-white">Filter</p>
-    <select v-model.trim="selectedWoodType" @change="filterProductsByWoodType" class="text-sm bg-transparent focus:outline-none text-white">
-        <option value="" disabled>Select Product Type</option>
-        <option v-for="woodType in woodTypes" :key="woodType" :value="woodType" class="text-black text-sm">{{ woodType }}</option>
-    </select>
 
-        </div> -->
-
-
-
-            <div class="flex gap-2 bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3">
+            <div class="flex bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3  text-xs xl:text-sm">
                 <vue-feather type="printer" size="17" @click="printProductData" />
-                <p class="text-sm">Cetak</p>
+                <p class="m-2">Print</p>
             </div>
         </div>
 
@@ -80,76 +69,81 @@
                     <div class="overflow-x-auto sm:rounded-lg">
                         <table class="min-w-full divide-y divide-gray-200 text-left">
                             <thead>
-                                <tr>
+                                <tr class="capitalize">
                                     <th
-                                        class="px-4 py-5 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white text-center    text-xs xl:text-smleading-4 font-medium    tracking-wider">
                                         No
                                     </th>
                                     <th
-                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
                                         Jenis Produk
                                     </th>
                                     <th
-                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
                                         Nama Produk
                                     </th>
                                     <th
-                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
                                         Ukuran Produk
                                     </th>
                                     <th
-                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
                                         Stok Produk
                                     </th>
                                     <th
-                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
                                         Harga Per Lembar
                                     </th>
                                     <th
-                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
                                         Keuntungan
                                     </th>
                                     <th
-                                        class="px-4 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
                                         Harga Jual
                                     </th>
                                     <th
-                                        class="px-4 py-5 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white text-center    text-xs xl:text-smleading-4 font-medium    tracking-wider">
                                         Aksi
                                     </th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200 border-t border-gray-300">
-                                <tr v-for="(i, index) in filteredProducts" :key="i.id_product" class="border-b border-gray-200">
-                                    <td class="px-4 py-4 whitespace-no-wrap text-center">
-                                        <p class="text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
+                                <tr v-if="displayedProducts.length === 0" class="border-b border-gray-200">
+                                    <td colspan="9" class="px-4 py-3 whitespace-no-wrap text-center text-sm text-gray-700">
+                                        No products have been made yet.
                                     </td>
-                                    <td class="px-4 py-4 whitespace-no-wrap">
-                                        <div class="text-sm leading-5 font-medium text-gray-900">{{ i.jenis_product }}</div>
+                                </tr>
+                                <tr v-else v-for="(i, index) in displayedProducts" :key="i.id_product" class="border-b border-gray-200">
+                                    <td class="px-4 py-3 whitespace-no-wrap text-center">
+                                        <p class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{ index + 1 }}</p>
                                     </td>
-                                    <td class="px-4 py-4 whitespace-no-wrap">
-                                        <div class="text-sm leading-5 font-medium text-gray-900">{{ i.nama_product }}</div>
+                                    <td class="px-4 py-3 whitespace-no-wrap">
+                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{ i.jenis_product }}</div>
                                     </td>
-                                    <td class="px-4 py-4 whitespace-no-wrap  ">
-                                        <div class="text-sm leading-5 font-medium text-gray-900">{{ i.ukuran_product }}
+                                    <td class="px-4 py-3 whitespace-no-wrap">
+                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{ i.nama_product }}</div>
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-no-wrap  ">
+                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{ i.ukuran_product }}
                                         </div>
                                     </td>
-                                    <td class="px-4 py-4 whitespace-no-wrap  ">
-                                        <div class="text-sm leading-5 font-medium text-gray-900">{{ i.stok_product }}</div>
+                                    <td class="px-4 py-3 whitespace-no-wrap  ">
+                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{ i.stok_product }}</div>
                                     </td>
-                                    <td class="px-4 py-4 whitespace-no-wrap  ">
-                                        <div class="text-sm leading-5 font-medium text-gray-900">{{
+                                    <td class="px-4 py-3 whitespace-no-wrap  ">
+                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{
                                             formatHarga(i.harga_product) }}</div>
                                     </td>
-                                    <td class="px-4 py-4 whitespace-no-wrap  ">
-                                        <div class="text-sm leading-5 font-medium text-gray-900">{{
+                                    <td class="px-4 py-3 whitespace-no-wrap  ">
+                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{
                                             formatHarga(i.keuntungan) }}</div>
                                     </td>
-                                    <td class="px-4 py-4 whitespace-no-wrap  ">
-                                        <div class="text-sm leading-5 font-medium text-gray-900">{{ formatHarga(i.hargaJual)
+                                    <td class="px-4 py-3 whitespace-no-wrap  ">
+                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{ formatHarga(i.hargaJual)
                                         }}</div>
                                     </td>
-                                    <td class="px-4 py-4 whitespace-no-wrap text-center flex gap-3">
+                                    <td class="px-4 py-3 whitespace-no-wrap text-center flex gap-3">
                                         <vue-feather type="edit" size="20" stroke="green" @click="openEditModal(i)" />
                                          <vue-feather type="trash-2"
                                             size="20"
@@ -167,16 +161,16 @@
 
         <!-- Pagination controls -->
         <div class="flex justify-end mt-4">
-            <button @click="prevPage" :disabled="currentPage === 1" class="text-xs cursor-pointer bg-gray-300 p-2 w-20 rounded">
-              Previous
-            </button>
-            <div class="mx-2 p-2 text-xs">
-              Page {{ currentPage }} of {{ totalPages }}
-            </div>
-            <button @click="nextPage" :disabled="currentPage === totalPages" class="text-xs cursor-pointer bg-gray-300 p-2 w-20 rounded">
-              Next
-            </button>
-          </div>
+        <button @click="prevPage" :disabled="currentPage === 1" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
+          Previous
+        </button>
+        <div class="mx-2 p-2 text-xs">
+          Page {{ currentPage }} of {{ totalPages }}
+        </div>
+        <button @click="nextPage" :disabled="currentPage === totalPages" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
+          Next
+        </button>
+      </div>
         </div>
 
         <AlertDelete
@@ -203,12 +197,12 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { ProdukStore } from "../../store/product";
 import VueFeather from "vue-feather";
-import { toast } from 'vue3-toastify';
-import 'vue3-toastify/dist/index.css';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import AlertDelete from "../../modals/product/AlertDelete.vue";
 import EditKeuntungan from "../../modals/product/EditKeuntungan.vue";
+import {message} from 'ant-design-vue'
+import { Spin } from "ant-design-vue";
 
 export default {
     setup() {
@@ -220,6 +214,7 @@ export default {
         const showDeleteConfirmation = ref(false);
         const selectedProductId = ref(null);
         const searchQuery = ref('');
+          const isDataLoaded = ref(false);
 
         // Get Product
         async function getProduct() {
@@ -227,6 +222,7 @@ export default {
                 const response = await produkStore.getProduct();
                 if (Array.isArray(response)) {
                     produk.value = response;
+                    isDataLoaded.value = true;
                 } else {
                     console.error("Respon API tidak valid:", response);
                 }
@@ -243,14 +239,15 @@ export default {
         });
 
         // pagination
+       // pagination
         const displayedProducts = computed(() => {
             const startIndex = (currentPage.value - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
-            return sortedProduk.value.slice(startIndex, endIndex);
+            return filteredProducts.value.slice(startIndex, endIndex);
         });
 
 
-        const totalPages = computed(() => Math.ceil(produk.value.length / itemsPerPage));
+       const totalPages = computed(() => Math.ceil(filteredProducts.value.length / itemsPerPage));
 
         const nextPage = () => {
             if (currentPage.value < totalPages.value) {
@@ -263,6 +260,7 @@ export default {
                 currentPage.value--;
             }
         };
+
 
         // modal
         const openEditModal = (product) => {
@@ -282,12 +280,20 @@ export default {
                     harga_product: hargaProduct,
                     keuntungan: keuntungan,
                 });
+
+                message.success({
+                    content: 'Profit data successfully created',
+                    duration: 3,  
+                    style: {
+                        fontSize: '17px',  
+                    },
+                });
                 closeEditModal();
-                keuntunganNotif();
                 getProduct();
             }
         };
 
+        
 
         // Delete produk
         const deleteProductConfirmation = (productId) => {
@@ -308,6 +314,13 @@ export default {
                     showDeleteConfirmation.value = false;
                     getProduct();
                     selectedProductId.value = null;
+                     message.success({
+                        content: 'Deleted successfully',
+                        duration: 3,
+                        style: {
+                            fontSize: '17px',
+                        },
+                    });
                 } catch (error) {
                     console.error("Error deleting product:", error);
                 }
@@ -319,14 +332,6 @@ export default {
             editedProduct.value = null;
         };
 
-
-        // Notif Keuntungan
-        const keuntunganNotif = () => {
-            toast.success("Keuntungan berhasil dibuat", {
-                position: 'top-right',
-                duration: 1000,
-            });
-        }
 
         // Format Rupiah
         function formatToRupiah(number) {
@@ -472,7 +477,8 @@ export default {
             nextPage,
             prevPage,
             formatHarga,
-            keuntunganNotif,
+            displayedProducts,
+    
             printProductData,
             showDeleteConfirmation,
             selectedProductId,
@@ -485,7 +491,8 @@ export default {
             filterProductsByWoodType,
             searchQuery,
             searchProducts,
-            filteredProducts
+            filteredProducts,
+             isDataLoaded,
 
         };
     },
@@ -494,6 +501,7 @@ export default {
         VueFeather,
         AlertDelete,
         EditKeuntungan,
+        Spin,
     },
 };
 </script>

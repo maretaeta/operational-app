@@ -6,6 +6,8 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import DetailPenjualan from "../../modals/penjualan/DetailPenjualan.vue";
 import AlertDeletePenjualan from "../../modals/penjualan/AlertDelete.vue"
+import { message } from 'ant-design-vue'
+import { Spin } from "ant-design-vue";
 
 export default {
   setup() {
@@ -20,11 +22,14 @@ export default {
     const jenisProduk = ref('');
     const keyword = ref('');
 
+    const isDataLoaded = ref(false);
+
     async function getPenjualanData() {
       try {
         const response = await usepenjualanStore.getPenjualan(keyword.value);
         if (Array.isArray(response)) {
           penjualan.value = response;
+          isDataLoaded.value = true;
         } else {
           console.error("Response API tidak valid:", response);
         }
@@ -47,6 +52,13 @@ export default {
         await usepenjualanStore.deletePenjualan(selectedDeleteId.value);
         await getPenjualanData();
         showDeleteConfirmationModal.value = false;
+         message.success({
+          content: 'Deleted successfully',
+          duration: 3,
+          style: {
+            fontSize: '17px',
+          },
+        });
       } catch (error) {
         console.error("Error while deleting:", error);
       }
@@ -94,13 +106,16 @@ export default {
       showModal.value = false;
     };
 
-    watch(currentPage, (newPage) => {
+    watch(currentPage, async (newPage) => {
       if (newPage < 1) {
         currentPage.value = 1;
       } else if (newPage > totalPages.value) {
         currentPage.value = totalPages.value;
+      } else {
+        await getPenjualanData(); 
       }
     });
+
 
     const printPenjualanData = () => {
       const doc = new jsPDF({ orientation: 'landscape' });
@@ -212,7 +227,8 @@ export default {
       filterPenjualanByJenisProduk,
       keyword,
       searchPenjualan,
-      filteredPenjualan
+      filteredPenjualan,
+       isDataLoaded,
     };
   },
 
@@ -220,17 +236,19 @@ export default {
     VueFeather,
     DetailPenjualan,
     AlertDeletePenjualan,
+    Spin,
   },
 };
 </script>
 
 
 <template>
-  <div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
-      <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
-      <div class="font-poppins text-sm font-semibold mb-6 pt-3">
-          <h3 class="text-2xl font-medium text-gray-700 pl-3 pb-3">Data Penjualan</h3>
-          <ol class="list-none p-0 pl-3 inline-flex">
+  <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+    <a-spin v-if="!isDataLoaded" size="large" class="flex items-center justify-center min-h-screen" />
+      <div v-if="isDataLoaded" class="bg-white min-h-screen rounded-xl p-7 ml-7">
+      <div class="font-poppins font-semibold mb-6 pt-3">
+          <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3 pb-3">Data Penjualan</h3>
+          <ol class="list-none p-0 pl-3 inline-flex text-xs xl:text-sm">
                 <li class="flex items-center text-purple">
                     <p class="text-gray-700">Dashboard</p>
                     <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
@@ -247,7 +265,7 @@ export default {
 
         <div class="items-center justify-center p-2">
         
-            <div class="flex gap-3 justify-end items-start pb-5">
+            <div class="flex gap-3 justify-end items-start pb-7 pt-5">
                  <div class="relative text-gray-500">
           <input
             v-model="keyword"
@@ -284,9 +302,9 @@ export default {
                 <vue-feather type="filter" size="17" />
                 <p class="text-sm">Filter</p>
               </button>   -->
-              <div class="flex gap-2 bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3">
+              <div class="flex bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3 text-xs xl:text-sm">
                     <vue-feather type="printer" size="17" @click="printPenjualanData" />
-                    <p class="text-sm">Cetak</p>
+                    <p class="m-2">Print</p>
                 </div>  
             </div>
         </div>
@@ -298,63 +316,68 @@ export default {
          <div class="overflow-x-auto sm:rounded-lg">
             <table class="min-w-full divide-y divide-gray-200 text-left">
               <thead>
-                  <tr>
-                    <th class="px-4 py-5 bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                  <tr class="capitalize">
+                    <th class="px-4 py-5 bg-cyan-600 text-white text-center  text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                       No
                     </th>
-                    <th class="px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class="px-6 py-5 bg-cyan-600 text-white   text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                       Tanggal
                     </th>
-                    <th class="px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class="px-6 py-5 bg-cyan-600 text-white   text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                         Nama Toko
                     </th>
-                     <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                     <th class=" px-6 py-5 bg-cyan-600 text-white   text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                       Jumlah
                     </th> 
-                    <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class=" px-6 py-5 bg-cyan-600 text-white   text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                       Diskon
                     </th>
-                    <th class=" px-6 py-5 bg-cyan-600 text-white  text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class=" px-6 py-5 bg-cyan-600 text-white   text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                       Total Harga
                     </th>
-                    <th class="px-6 py-5  bg-cyan-600 text-white text-center text-sm leading-4 font-medium uppercase tracking-wider">
+                    <th class="px-6 py-5  bg-cyan-600 text-white text-center  text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                       Aksi
                     </th>
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200 border-t border-gray-300">
-                  <template v-for="(item, index) in filteredPenjualan" :key="item.id_penjualan">
-                    <tr v-if="item.penjualanItems.length > 0" class="border-b border-gray-200">
+                  <tr v-if="filteredPenjualan.length === 0" class="border-b border-gray-200">
+                                      <td colspan="9" class="px-4 py-3 whitespace-no-wrap text-center text-sm text-gray-700">
+                                          No sales data have been made yet.
+                                      </td>
+                                  </tr>
+                  
+                    <tr v-else v-for="(item, index) in filteredPenjualan" :key="item.id_penjualan" class="border-b border-gray-200">
                       <td class="px-6 py-4 whitespace-no-wrap text-center">
-                          <p class="text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
+                          <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
                       </td>
                       <td class="px-3 py-4 whitespace-no-wrap ">
-                          <div class="text-sm leading-5 font-medium text-gray-900">{{ formatDate(item.createdAt) }}</div>
+                          <div class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ formatDate(item.createdAt) }}</div>
                       </td>
                       <td class="px-3 py-4 whitespace-no-wrap ">
-                          <div class="text-sm leading-5 font-medium text-gray-900">{{ item.nama_toko }}</div>
+                          <div class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ item.nama_toko }}</div>
                       </td>
                       <td class="px-6 py-4 whitespace-no-wrap">
-                        <div class="text-sm leading-5 font-medium text-gray-900">
+                        <div class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">
                           {{ item.penjualanItems.reduce((total, item) => total + item.quantity, 0).toString().replace(".", ",") }}
                         </div>
                       </td>
                       <td class="px-6 py-4 whitespace-no-wrap ">
-                        <div class="text-sm leading-5 font-medium text-gray-900" v-if="item.diskon !== null">{{ formatHarga(item.diskon) }}</div>
-                        <div class="text-sm leading-5 font-medium text-gray-900" v-else>Tidak Ada Diskon</div>
+                        <div class=" text-xs xl:text-sm leading-5 font-medium text-gray-900" v-if="item.diskon !== null">{{ formatHarga(item.diskon) }}</div>
+                        <div class=" text-xs xl:text-sm leading-5 font-medium text-gray-900" v-else>Tidak Ada Diskon</div>
                       </td>
                       <td class="px-6 py-4 whitespace-no-wrap ">
-                        <div class="text-sm leading-5 font-medium text-gray-900">{{ formatHarga(item.totalHarga_product) }}</div>
+                        <div class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ formatHarga(item.totalHarga_product) }}</div>
                       </td>
-                      <td class="px-6 py-4 whitespace-no-wrap  flex gap-3">
+                      <td class="px-6 py-4 whitespace-no-wrap  flex gap-5">
                         <font-awesome-icon icon="trash-can" class="text-red-500 pt-1" @click="deletePenjualan(item.id_penjualan)"  />
-                        <font-awesome-icon icon="print" class="pt-1 text-green-700" />
+                        <!-- <font-awesome-icon icon="print" class="pt-1 text-green-700" /> -->
                        <router-link :to="{ name: 'DetailPenjualan', params: { id: item.id_penjualan } }">
                           <font-awesome-icon icon="ellipsis-vertical" class="text-cyan-800 pt-1" />
                         </router-link>
                       </td>
                     </tr>
-                  </template> 
+          
                 </tbody>
               </table>
             </div>
@@ -364,17 +387,18 @@ export default {
 
     <!-- Pagination controls -->
     <div class="flex justify-end mt-4">
-        <button @click="prevPage" :disabled="currentPage === 1"
-            class="text-xs cursor-pointer bg-gray-300 p-2 w-20 rounded">
-            Previous
-        </button>
-        <div class="mx-2 p-2 text-xs">
-            Page {{ currentPage }} of {{ totalPages }}
-        </div>
-        <button @click="nextPage" :disabled="currentPage === totalPages"
-            class="text-xs cursor-pointer bg-gray-300 p-2 w-20 rounded ">
-            Next
-        </button>
+        <button @click="prevPage" :disabled="currentPage.value === 1" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
+      Previous
+  </button>
+
+  <div class="mx-2 p-2 text-xs">
+      Page {{ currentPage.value }} of {{ totalPages.value }}
+  </div>
+
+  <button @click="nextPage" :disabled="currentPage.value === totalPages.value" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
+      Next
+  </button>
+
     </div>
 
     <DetailPenjualan

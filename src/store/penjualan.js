@@ -13,7 +13,7 @@ export const penjualanStore = defineStore("penjualan", {
     async getPenjualan() {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/v1/penjualan",
+          `${import.meta.env.VITE_APP_BASE_URL}/penjualan`,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -37,7 +37,9 @@ export const penjualanStore = defineStore("penjualan", {
     async deletePenjualan(id_penjualan) {
       try {
         const response = await axios.delete(
-          `http://localhost:4000/api/v1/penjualan/delete/${id_penjualan}`,
+          `${
+            import.meta.env.VITE_APP_BASE_URL
+          }/penjualan/delete/${id_penjualan}`,
           {
             headers: {
               Authorization: `Bearer ${this.token}`,
@@ -63,7 +65,7 @@ export const penjualanStore = defineStore("penjualan", {
     async getTotalPenjualan() {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/v1/penjualan/total"
+          `${import.meta.env.VITE_APP_BASE_URL}/penjualan/total`
         );
 
         if (!response) {
@@ -80,7 +82,9 @@ export const penjualanStore = defineStore("penjualan", {
     async getDetailPenjualan(id_penjualan) {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/penjualan/detail/${id_penjualan}`
+          `${
+            import.meta.env.VITE_APP_BASE_URL
+          }/penjualan/detail/${id_penjualan}`
         );
 
         if (!response || !response.data) {
@@ -97,7 +101,9 @@ export const penjualanStore = defineStore("penjualan", {
     async getPenjualanByJenisProduk(jenisProduk) {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/penjualan/byJenisProduk/${jenisProduk}`
+          `${
+            import.meta.env.VITE_APP_BASE_URL
+          }/penjualan/byJenisProduk/${jenisProduk}`
         );
 
         if (!response) {
@@ -117,7 +123,9 @@ export const penjualanStore = defineStore("penjualan", {
     async searchPenjualan(keyword) {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/v1/penjualan/search?keyword=${keyword}`
+          `${
+            import.meta.env.VITE_APP_BASE_URL
+          }/penjualan/search?keyword=${keyword}`
         );
 
         if (!response) {

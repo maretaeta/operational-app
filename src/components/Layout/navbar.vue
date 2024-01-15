@@ -62,8 +62,8 @@ export default {
                     </button>
                 </div>
                  <div class="w-full justify-center items-center hidden md:flex">
-                <img src="../../assets//logo.png" class="w-[65px]" />
-                <p class="font-semibold text-base text-gray-800">UD. ADI MULIA PROFILE</p>
+                <img src="../../assets//logo.png" class="w-12 xl:w-[65px]" />
+                <p class="font-semibold text-sm xl:text-base text-gray-800">UD. ADI MULIA PROFILE</p>
             </div>
                 <!-- <div class="relative text-gray-500">
                     <input type="search" name="serch" placeholder="Product..."
@@ -93,9 +93,9 @@ export default {
                         <div class="h-2 w-2 rounded-full bg-pink z-10 -ml-1"></div>
                     </div>
                 </button> -->
-                <button class="p-0 focus:outline-none duration-150 flex gap-1" @click="dropDownOpen = !dropDownOpen">
-                    <font-awesome-icon icon="circle-user"  class="w-7 h-7 mt-1 rounded-full shadow-lg border-2  hover:border-purple-600 duration-150"/>
-                    <p class="items-center text-center p-2 pt-3 text-sm">Hi, Admin</p>
+                <button class="p-0 focus:outline-none duration-150 flex" @click="dropDownOpen = !dropDownOpen">
+                    <font-awesome-icon icon="circle-user"  class="w-5 xl:w-7 h-5 xl:h-7 mt-2 xl:mt-1 rounded-full shadow-lg border-2  hover:border-purple-600 duration-150"/>
+                    <p class="items-center text-center p-2 pt-3 text-xs xl:text-sm">Hi, Admin</p>
                 </button>
             </div>
         </div>

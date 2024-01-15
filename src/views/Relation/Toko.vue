@@ -1,9 +1,10 @@
 <template>
-  <div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
-    <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
-          <div class="font-poppins text-sm font-semibold mb-6 pt-3">
-          <h3 class="text-2xl font-medium text-gray-700 pl-3 pb-3">Toko</h3>
-          <ol class="list-none p-0 pl-3 inline-flex">
+  <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+    <a-spin v-if="!isDataLoaded" size="large" class="flex justify-center min-h-screen" />
+    <div  v-if="isDataLoaded" class="bg-white min-h-screen rounded-xl p-7 ml-7">
+          <div class="font-poppins  font-semibold mb-6 pt-3">
+          <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3 pb-3">Toko</h3>
+          <ol class="list-none p-0 pl-3 inline-flex text-xs xl:text-sm">
           <li class="flex items-center text-purple">
             <p class="text-gray-700">Dashboard</p>
             <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
@@ -18,7 +19,7 @@
       </div>
 
       <div class="items-center justify-center p-2">
-        <div class="flex gap-3 justify-end items-start pb-5">
+        <div class="flex gap-3 justify-end items-start pb-7 pt-5">
               <div class="relative text-gray-500">
                 <input
                   v-model="searchKeyword"
@@ -61,38 +62,43 @@
           <div class="overflow-x-auto sm:rounded-lg">
             <table class="min-w-full divide-y divide-gray-200 text-left">
               <thead>
-                <tr>
+                <tr class="capitalize">
                   <th
-                    class="py-4 text-center bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                    class="py-4 px-4 text-center bg-cyan-600 text-white  text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                     Id
                   </th>
-                  <th class="px-5 py-4 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                  <th class="px-5 py-4 bg-cyan-600 text-white  text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                     Nama Toko
                   </th>
-                  <th class="px-5 py-4 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                  <th class="px-5 py-4 bg-cyan-600 text-white  text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                     Alamat Toko
                   </th>
-                  <th class="px-5 py-4 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                  <th class="px-5 py-4 bg-cyan-600 text-white  text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                     NoTlp Toko
                   </th>
-                  <th class="px-5 py-4 bg-cyan-600 text-white text-sm leading-4 font-medium uppercase tracking-wider">
+                  <th class="px-5 py-4 bg-cyan-600 text-white  text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                     Aksi
                   </th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200 border-t border-gray-300">
-                <tr v-for="(item, index) in filteredToko" :key="index" class="border-b border-gray-200">
+                 <tr v-if="filteredToko.length === 0" class="border-b border-gray-200">
+                                      <td colspan="9" class="px-4 py-3 whitespace-no-wrap text-center text-sm text-gray-700">
+                                          toko have been made yet.
+                                      </td>
+                                  </tr>
+                <tr v-else v-for="(item, index) in filteredToko" :key="index" class="border-b border-gray-200">
                   <td class="px-3 py-4 text-center">
-                    <p class="text-sm leading-5 font-medium text-gray-900">{{ item.id_toko }}</p>
+                    <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ item.id_toko }}</p>
                   </td>
                   <td class="px-5 py-4">
-                    <p class="text-sm leading-5 font-medium text-gray-900">{{ item.namatoko }}</p>
+                    <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ item.namatoko }}</p>
                   </td>
                   <td class="px-5 py-4">
-                    <p class="text-sm leading-5 font-medium text-gray-900">{{ item.alamat_toko }}</p>
+                    <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ item.alamat_toko }}</p>
                   </td>
                   <td class="px-5 py-4">
-                    <span class="text-sm leading-5 font-medium text-gray-900">{{ item.notlp_toko }}</span>
+                    <span class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ item.notlp_toko }}</span>
                   </td>
                   <td class="px-4 py-4 flex items-center gap-3">
                   <vue-feather type="edit" size="20" stroke="green" @click="openEditModal(item)" />
@@ -117,15 +123,15 @@
         <h2 class="text-2xl text-cyan-800 font-semibold mb-6">Edit Toko</h2>
         <form @submit.prevent="submitEdit">
           <div class="mb-4">
-            <label for="namatoko" class="block text-sm font-medium text-gray-700">Nama Toko</label>
+            <label for="namatoko" class="block  text-xs xl:text-sm font-medium text-gray-700">Nama Toko</label>
             <input v-model="editedToko.namatoko" type="text" id="namatoko" class="mt-1 p-2 w-full border rounded">
           </div>
           <div class="mb-4">
-            <label for="alamat_toko" class="block text-sm font-medium text-gray-700">Alamat Toko</label>
+            <label for="alamat_toko" class="block  text-xs xl:text-sm font-medium text-gray-700">Alamat Toko</label>
             <input v-model="editedToko.alamat_toko" type="text" id="alamat_toko" class="mt-1 p-2 w-full border rounded">
           </div>
           <div class="mb-4">
-            <label for="notlp_toko" class="block text-sm font-medium text-gray-700">NoTlp Toko</label>
+            <label for="notlp_toko" class="block  text-xs xl:text-sm font-medium text-gray-700">NoTlp Toko</label>
             <input v-model="editedToko.notlp_toko" id="notlp_toko" class="mt-1 p-2 w-full border rounded">
           </div>
           <div class="mt-6 flex justify-end">
@@ -139,18 +145,16 @@
 
   <!-- Pagination controls -->
   <div class="flex justify-end mt-4">
-    <button @click="prevPage" :disabled="currentPage === 1"
-      class="text-xs cursor-pointer bg-gray-300 p-2 w-20 rounded">
-      Previous
-    </button>
-    <div class="mx-2 p-2 text-xs">
-      Page {{ currentPage }} of {{ totalPages }}
+      <button @click="prevPage" :disabled="currentPage === 1" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
+        Previous
+      </button>
+      <div class="mx-2 p-2 text-xs">
+        Page {{ currentPage }} of {{ totalPages }}
+      </div>
+      <button @click="nextPage" :disabled="currentPage === totalPages" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
+        Next
+      </button>
     </div>
-    <button @click="nextPage" :disabled="currentPage === totalPages"
-      class="text-xs cursor-pointer bg-gray-300 p-2 w-20 rounded ">
-      Next
-    </button>
-  </div>
 </div>
 </div>
 
@@ -167,6 +171,8 @@ import {TokoStore} from "../../store/toko"
 import { ref, onMounted, computed } from "vue";
 import VueFeather from "vue-feather"
 import AlertDeleteModal from "../../modals/toko/AlertDeleteModal.vue";
+import { message } from "ant-design-vue";
+import { Spin } from "ant-design-vue";
 
 export default {
   setup() {
@@ -179,12 +185,15 @@ export default {
     const searchKeyword = ref('');
 
     const deleteConfirmationModal = ref(false);
+
+     const isDataLoaded = ref(false);
     
     async function fetchToko() {
       try {
         const response = await tokoStore.getToko();
         if (Array.isArray(response)) {
           toko.value = response;
+          isDataLoaded.value = true;
         } else {
           console.error('Invalid API response:', response);
         }
@@ -216,6 +225,13 @@ export default {
       deleteToko(editedToko.value.id_toko);
       deleteConfirmationModal.value = false;
       closeEditModal();
+      message.success({
+        content: 'Deleted successfully',
+        duration: 3,
+        style: {
+          fontSize: '17px',
+        },
+      });
     };
 
     const cancelDelete = () => {
@@ -251,6 +267,13 @@ export default {
           }
 
           closeEditModal();
+          message.success({
+            content: 'Toko data successfully updated',
+            duration: 3,  
+            style: {
+              fontSize: '17px',  
+            },
+          });
         } catch (error) {
           console.error("Error updating toko:", error);
         }
@@ -295,7 +318,10 @@ export default {
             toko.namatoko.toLowerCase().includes(keyword) ||
             toko.alamat_toko.toLowerCase().includes(keyword) ||
             toko.notlp_toko.toLowerCase().includes(keyword)
+            
           );
+          
+         
         } catch (error) {
          
           return false; 
@@ -329,11 +355,13 @@ export default {
       searchKeyword, 
       searchToko,
       filteredToko,
+       isDataLoaded,
     };
   },
   components: {
     VueFeather,
     AlertDeleteModal,
+    Spin
   }
 };
 </script>

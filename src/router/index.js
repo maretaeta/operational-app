@@ -3,16 +3,17 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Dashboard from "../views/Home.vue";
 import Login from "../views/Login.vue";
-import Buy from "../components/Pembelian/Buy.vue";
+import Buy from "../views/Pembelian/Buy.vue";
 import Register from "../views/Register.vue";
-import Toko from "../components/Relation/Toko.vue";
+import Toko from "../views/Relation/Toko.vue";
 import Produk from "../views/Product/Product.vue";
-import Penjualan from "../components/Penjualan/Penjualan.vue";
-import DataPenjualan from "../components/Penjualan/DataPenjualan.vue";
+import Penjualan from "../views/Penjualan/Penjualan.vue";
+import DataPenjualan from "../views/Penjualan/DataPenjualan.vue";
 import EmptyLayout from "../views/EmptyLayout.vue";
-import LaporanKeuangan from "../views/Pendapatan/Keuangan.vue"
-import Karyawan from "../components/Relation/Karyawan.vue";
+import LaporanKeuangan from "../views/Pendapatan/Keuangan.vue";
+import Karyawan from "../views/Relation/Karyawan.vue";
 import DetailPenjualan from "../modals/penjualan/DetailPenjualan.vue";
+import Pengeluaran from "../views/Pengeluaran/Pengeluaran.vue";
 
 const routes = [
   {
@@ -68,6 +69,11 @@ const routes = [
     name: "DetailPenjualan",
     component: DetailPenjualan,
     props: true,
+  },
+  {
+    path: "/pengeluaran",
+    name: "Pengeluaran",
+    component: Pengeluaran,
   },
 ];
 

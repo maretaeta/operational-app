@@ -13,7 +13,7 @@ export const AuthStore = defineStore("auth", {
     async register(registerData) {
       try {
         const response = await axios.post(
-          "http://localhost:4000/api/v1/auth/register",
+          `${import.meta.env.VUE_APP_BASE_URL}/auth/register`,
           registerData
         );
 
@@ -32,11 +32,9 @@ export const AuthStore = defineStore("auth", {
     async login(loginData) {
       try {
         const response = await axios.post(
-          "http://localhost:4000/api/v1/auth/login",
+          `${import.meta.env.VITE_APP_BASE_URL}/auth/login`,
           loginData
         );
-
-        console.log("Full server response:", response);
 
         if (!response) {
           throw new Error("Login failed");
@@ -72,11 +70,14 @@ export const AuthStore = defineStore("auth", {
 
     async getUsers() {
       try {
-        const response = await axios.get("http://localhost:4000/api/v1/users", {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        });
+        const response = await axios.get(
+          `${import.meta.env.VUE_APP_BASE_URL}/users`,
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        );
 
         if (!response) {
           throw new Error("Failed to fetch users");

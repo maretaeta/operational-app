@@ -1,9 +1,9 @@
 <template>
-    <div class="pl-0 lg:pl-52 xl:pl-56 w-full min-h-screen p-7 xl:p-10 bg-slate-100 relative">
+    <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
         <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
-            <div class="font-poppins text-sm font-semibold mb-6 pt-3">
-                <h3 class="text-2xl font-medium text-gray-700 pl-3 pb-3">Laporan Pendapatan</h3>
-                <ol class="list-none p-0 pl-3 inline-flex">
+            <div class="font-poppins font-semibold mb-6 pt-3">
+                <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3 pb-3">Laporan Pendapatan</h3>
+                <ol class="list-none p-0 pl-3 inline-flex text-xs xl:text-sm">
                     <li class="flex items-center text-purple">
                         <p class="text-gray-700">Dashboard</p>
                         <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
@@ -22,21 +22,21 @@
           <button
             @click="changeTimeFrame('daily')"
             :class="{ 'bg-cyan-700 text-white': selectedTimeFrame === 'daily' }"
-            class="py-2 px-4 rounded-md text-sm"
+            class="py-2 px-4 rounded-md  text-xs xl:text-sm"
           >
             Harian
           </button>
           <button
             @click="changeTimeFrame('monthly')"
             :class="{ 'bg-cyan-700 text-white': selectedTimeFrame === 'monthly' }"
-            class="py-2 px-4 border text-sm"
+            class="py-2 px-4 border  text-xs xl:text-sm"
           >
             Bulanan
           </button>
           <button
             @click="changeTimeFrame('yearly')"
             :class="{ 'bg-cyan-700 text-white': selectedTimeFrame === 'yearly' }"
-            class="py-2 px-4 text-sm"
+            class="py-2 px-4  text-xs xl:text-sm"
           >
             Tahunan
           </button>

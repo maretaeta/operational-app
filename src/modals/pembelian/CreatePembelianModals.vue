@@ -14,7 +14,9 @@
                     </div>
 
                     <div class="mt-8 mb-5">
-                        <label class="block text-xs md:text-sm">Nama Toko</label>
+                        <label class="block text-xs md:text-sm">Nama Toko
+                            <span class="text-red-600">*</span>
+                        </label>
                         <input
                             type="text"
                             v-model="purchaseData.nama_toko"
@@ -24,7 +26,9 @@
                     </div>
                     
                     <div class="mb-5">
-                        <label class="block mb-2 text-xs md:text-sm">Alamat Toko</label>
+                        <label class="block mb-2 text-xs md:text-sm">Alamat Toko
+                            <span class="text-red-600">*</span>
+                        </label>
                         <input
                             type="text"
                             v-model="purchaseData.alamat_toko"
@@ -53,37 +57,49 @@
                             </div>
                         </div>
                         <div class="mt-9 mb-5">
-                            <label class="block text-xs md:text-sm">Jenis Kayu</label>
+                            <label class="block text-xs md:text-sm">Jenis Kayu
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input type="text" v-model="purchaseData.jenis_productSources"
                                 class="w-full px-4 py-2 text-xs md:text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
                                 placeholder="Jenis Kayu" />
                         </div>
                         <div class="mb-4">
-                            <label class="block mb-2 text-xs md:text-sm">Nama Kayu</label>
+                            <label class="block mb-2 text-xs md:text-sm">Nama Kayu
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input type="text" v-model="purchaseData.nama_productSources"
                                 class="w-full px-4 py-2 text-xs md:text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
                                 placeholder="Nama Kayu" />
                         </div>
                         <div class="mb-4">
-                            <label class="block mb-2 text-xs md:text-sm">Ukuran</label>
+                            <label class="block mb-2 text-xs md:text-sm">Ukuran
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input v-model="purchaseData.ukuran_productSources"
                                 class="w-full px-4 py-2 text-xs  md:text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
                                 placeholder="Ukuran" />
                         </div>
                         <div class="mb-4">
-                            <label class="block mb-2 text-xs md:text-sm">Jumlah</label>
+                            <label class="block mb-2 text-xs md:text-sm">Jumlah
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input v-model="purchaseData.jumlah_productSources"
                                 class="w-full px-4 py-2 text-xs md:text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
                                 placeholder="Jumlah" type="number" />
                         </div>
                         <div class="mb-4">
-                            <label class="block mb-2 text-xs md:text-sm">Harga</label>
+                            <label class="block mb-2 text-xs md:text-sm">Harga
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input v-model="purchaseData.pembelian_productSources"
                                 class="w-full px-4 py-2 text-xs md:text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
                                 placeholder="Harga" type="number" />
                         </div>
                         <div class="mb-4">
-                            <label class="block mb-2 text-xs md:text-sm">Ongkos Kirim</label>
+                            <label class="block mb-2 text-xs md:text-sm">Ongkos Kirim
+                                <span class="text-red-600">*</span>
+                            </label>
                             <input v-model="purchaseData.ongkosProses_productSources"
                                 class="w-full px-4 py-2 text-xs md:text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
                                 placeholder="Ongkos Kirim" type="number" />
@@ -138,6 +154,20 @@ export default {
         });
 
        const createPurchase = async () => {
+        if (
+                !purchaseData.value.nama_toko ||
+                !purchaseData.value.alamat_toko ||
+                !purchaseData.value.jenis_productSources ||
+                !purchaseData.value.nama_productSources ||
+                !purchaseData.value.ukuran_productSources ||
+                !purchaseData.value.jumlah_productSources ||
+                !purchaseData.value.pembelian_productSources ||
+                !purchaseData.value.ongkosProses_productSources
+            ) {
+                props.notify('Semua data harus terisi!');
+                return;
+            }
+
             try {
                 const response = await buyStore.createPurchase({
                     nama_toko: purchaseData.value.nama_toko,
@@ -151,7 +181,6 @@ export default {
                 });
 
                if (response) {
-                    console.log('Purchase creation successful:', response);
                     props.pembelian.push(response);
                     props.updateDisplayedData()
                     props.onCloseModal();
