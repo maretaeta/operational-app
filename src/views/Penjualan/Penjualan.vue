@@ -1,5 +1,5 @@
 <template>
-    <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+    <div class=" pl-0 lg:pl-52 xl:pl-64 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
         <div class="bg-white min-h-screen rounded-xl p-7 ml-7">
         <div class="font-poppins font-semibold mb-6 pt-3">
             <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3 pb-3">Create Penjualan</h3>
@@ -85,7 +85,7 @@ import axios from "axios";
 import { ProdukStore } from "../../store/product";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
-import SelectProductModals from "../../modals/penjualan/selectproductmodals.vue"
+import SelectProductModals from "../../modals/penjualan/SelectProductModals.vue"
 import { useRouter } from "vue-router";
 import { message } from 'ant-design-vue'
 

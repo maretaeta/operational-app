@@ -1,5 +1,5 @@
 <template>
-    <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+    <div class=" pl-0 lg:pl-52 xl:pl-64 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
         <a-spin v-if="!isDataLoaded" size="large" class="flex items-center justify-center min-h-screen w-full h-full" />
         <div v-if="isDataLoaded" class="bg-white min-h-screen rounded-xl p-7 ml-7">
             <div class="font-poppins font-semibold mb-6 pt-3">

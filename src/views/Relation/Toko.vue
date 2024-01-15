@@ -1,5 +1,5 @@
 <template>
-  <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+  <div class=" pl-0 lg:pl-52 xl:pl-64 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
     <a-spin v-if="!isDataLoaded" size="large" class="flex justify-center min-h-screen w-full h-full" />
     <div  v-if="isDataLoaded" class="bg-white min-h-screen rounded-xl p-7 ml-7">
           <div class="font-poppins  font-semibold mb-6 pt-3">
@@ -65,7 +65,7 @@
                 <tr class="capitalize">
                   <th
                     class="py-4 px-4 text-center bg-cyan-600 text-white  text-xs xl:text-sm leading-4 font-medium   tracking-wider">
-                    Id
+                    No
                   </th>
                   <th class="px-5 py-4 bg-cyan-600 text-white  text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                     Nama Toko
@@ -89,7 +89,7 @@
                                   </tr>
                 <tr v-else v-for="(item, index) in filteredToko" :key="index" class="border-b border-gray-200">
                   <td class="px-3 py-4 text-center">
-                    <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ item.id_toko }}</p>
+                    <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
                   </td>
                   <td class="px-5 py-4">
                     <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ item.namatoko }}</p>

@@ -62,9 +62,9 @@ export default {
                     </button>
                 </div>
                  <div class="w-full justify-center items-center hidden md:flex">
-                <img src="../../assets//logo.png" class="w-12 xl:w-[65px]" />
-                <p class="font-semibold text-sm xl:text-base text-gray-800">UD. ADI MULIA PROFILE</p>
-            </div>
+                    <img src="../../assets//logo.png" class="w-12 xl:w-[65px]" />
+                    <p class="font-semibold text-sm xl:text-base text-gray-800 pt-2">UD. ADI MULIA PROFILE</p>
+                 </div>
                 <!-- <div class="relative text-gray-500">
                     <input type="search" name="serch" placeholder="Product..."
                         class="bg-white h-10 w-full xl:w-64 px-5 rounded-lg border text-sm focus:outline-none">

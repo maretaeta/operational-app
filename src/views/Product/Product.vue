@@ -1,5 +1,5 @@
 <template>
-<div class="pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+<div class="pl-0 lg:pl-52 xl:pl-64 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
       <a-spin v-if="!isDataLoaded" size="large" class="flex items-center justify-center min-h-screen w-full h-full" />
     <div v-if="isDataLoaded" class="bg-white min-h-screen rounded-xl p-7 ml-7">
     <div class="font-poppins font-semibold mb-6 pt-3">
@@ -71,39 +71,39 @@
                             <thead>
                                 <tr class="capitalize">
                                     <th
-                                        class="px-4 py-3 bg-cyan-600 text-white text-center    text-xs xl:text-smleading-4 font-medium    tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white text-center    text-xs xl:text-sm leading-4 font-medium    tracking-wider">
                                         No
                                     </th>
                                     <th
-                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-sm leading-4 font-medium    tracking-wider">
                                         Jenis Produk
                                     </th>
                                     <th
-                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-sm leading-4 font-medium    tracking-wider">
                                         Nama Produk
                                     </th>
                                     <th
-                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-sm leading-4 font-medium    tracking-wider">
                                         Ukuran Produk
                                     </th>
                                     <th
-                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-sm leading-4 font-medium    tracking-wider">
                                         Stok Produk
                                     </th>
                                     <th
-                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-sm leading-4 font-medium    tracking-wider">
                                         Harga Per Lembar
                                     </th>
                                     <th
-                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-sm leading-4 font-medium    tracking-wider">
                                         Keuntungan
                                     </th>
                                     <th
-                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-smleading-4 font-medium    tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white     text-xs xl:text-sm leading-4 font-medium    tracking-wider">
                                         Harga Jual
                                     </th>
                                     <th
-                                        class="px-4 py-3 bg-cyan-600 text-white text-center    text-xs xl:text-smleading-4 font-medium    tracking-wider">
+                                        class="px-4 py-3 bg-cyan-600 text-white text-center    text-xs xl:text-sm leading-4 font-medium    tracking-wider">
                                         Aksi
                                     </th>
                                 </tr>
@@ -116,31 +116,31 @@
                                 </tr>
                                 <tr v-else v-for="(i, index) in displayedProducts" :key="i.id_product" class="border-b border-gray-200">
                                     <td class="px-4 py-3 whitespace-no-wrap text-center">
-                                        <p class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{ index + 1 }}</p>
+                                        <p class="   text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
                                     </td>
                                     <td class="px-4 py-3 whitespace-no-wrap">
-                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{ i.jenis_product }}</div>
+                                        <div class="   text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ i.jenis_product }}</div>
                                     </td>
                                     <td class="px-4 py-3 whitespace-no-wrap">
-                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{ i.nama_product }}</div>
+                                        <div class="   text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ i.nama_product }}</div>
                                     </td>
                                     <td class="px-4 py-3 whitespace-no-wrap  ">
-                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{ i.ukuran_product }}
+                                        <div class="   text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ i.ukuran_product }}
                                         </div>
                                     </td>
                                     <td class="px-4 py-3 whitespace-no-wrap  ">
-                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{ i.stok_product }}</div>
+                                        <div class="   text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ i.stok_product }}</div>
                                     </td>
                                     <td class="px-4 py-3 whitespace-no-wrap  ">
-                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{
+                                        <div class="   text-xs xl:text-sm leading-5 font-medium text-gray-900">{{
                                             formatHarga(i.harga_product) }}</div>
                                     </td>
                                     <td class="px-4 py-3 whitespace-no-wrap  ">
-                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{
+                                        <div class="   text-xs xl:text-sm leading-5 font-medium text-gray-900">{{
                                             formatHarga(i.keuntungan) }}</div>
                                     </td>
                                     <td class="px-4 py-3 whitespace-no-wrap  ">
-                                        <div class="   text-xs xl:text-smleading-5 font-medium text-gray-900">{{ formatHarga(i.hargaJual)
+                                        <div class="   text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ formatHarga(i.hargaJual)
                                         }}</div>
                                     </td>
                                     <td class="px-4 py-3 whitespace-no-wrap text-center flex gap-3">
