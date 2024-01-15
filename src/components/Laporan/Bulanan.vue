@@ -9,15 +9,15 @@
                                     <thead>
                                         <tr class="capitalize">
                                             <th
-                                                class="px-4 py-5 bg-cyan-600 text-white text-center  text-xs xl:text-smleading-4 font-medium   tracking-wider">
+                                                class="px-4 py-5 bg-cyan-600 text-white text-center  text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                                                 No
                                             </th>
                                              <th
-                                                class="px-4 py-5 bg-cyan-600 text-white text-center  text-xs xl:text-smleading-4 font-medium   tracking-wider">
+                                                class="px-4 py-5 bg-cyan-600 text-white text-center  text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                                                     Bulan
                                                 </th>
                                             <th
-                                                class="px-4 py-5 text-center bg-cyan-600 text-white   text-xs xl:text-smleading-4 font-medium   tracking-wider">
+                                                class="px-4 py-5 text-center bg-cyan-600 text-white   text-xs xl:text-sm leading-4 font-medium   tracking-wider">
                                                 Pendapatan Bersih
                                             </th>
                                         </tr>
@@ -30,13 +30,13 @@
                                         </tr>
                                         <tr v-for="(data, index) in monthData" :key="index" class="border-b border-gray-200">
                                             <td class="px-4 py-4 whitespace-no-wrap text-center">
-                                                <p class=" text-xs xl:text-smleading-5 font-medium text-gray-900">{{ index + 1 }}</p>
+                                                <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
                                             </td>
                                             <td class="px-4 py-4 whitespace-no-wrap  ">
-                                                <div class=" text-xs xl:text-smleading-5 font-medium text-gray-900">{{ data.month }}</div>
+                                                <div class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ data.month }}</div>
                                             </td>
                                             <td class="px-4 py-4 whitespace-no-wrap text-center bg-cyan-50 ">
-                                                    <div class=" text-xs xl:text-smleading-5 font-medium text-gray-900">{{ formatHarga(data.totalPendapatan) }}</div>
+                                                    <div class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ formatHarga(data.totalPendapatan) }}</div>
                                                 </td>
                                         </tr>
                                     </tbody>
