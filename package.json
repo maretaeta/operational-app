@@ -27,7 +27,6 @@
     "vue": "^3.3.4",
     "vue-feather": "^2.0.0",
     "vue-feather-icons": "^5.1.0",
-    "vue-motion": "^0.2.3",
     "vue-router": "^4.2.5",
     "vue-select": "^3.20.2",
     "vue-toastify": "^2.0.0-alpha.2",
