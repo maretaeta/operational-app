@@ -1,5 +1,5 @@
 <template>
-   <div class=" pl-0 lg:pl-52 xl:pl-64 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+   <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
     <div class="bg-white min-h-screen rounded-xl p-7 ml-7">
         <div class="lg:flex justify-between items-center mb-8 p-2 pt-8 pb-5">
             <p class="text-xl xl:text-2xl font-semibold mb-2 lg:mb-0 text-gray-800">Selamat datang, Admin!</p>
@@ -8,8 +8,6 @@
                 Lihat Laporan
             </button>
         </div>
-
-        
         <!-- Cards -->
         <div class="flex flex-wrap -mx-3 mb-16 p-2">
 
@@ -22,7 +20,9 @@
                              <div class="flex justify-end pt-1 pb-3">
                             <span class="text-xs text-gray-400">{{ store.month }}</span>
                         </div>
-                        <span class="font-semibold text-xl xl:text-2xl">{{ store.totalProduct }}</span>
+                        <span class="font-semibold text-xl xl:text-2xl">
+                            <count-up :end-val="store.totalProduct" ></count-up>
+                        </span>
                         <p class="text-sm text-gray-600">Stok Barang</p>
                     </div>
                 </div>
@@ -38,7 +38,9 @@
                          <div class="flex justify-end pt-1 pb-3">
                                 <span class="text-xs text-gray-400">{{ store.month }}</span>
                             </div>
-                        <span class="font-semibold text-xl xl:text-2xl">{{ pembelian.totalPembelian }}</span>
+                        <span class="font-semibold text-xl xl:text-2xl">
+                         <count-up :end-val="pembelian.totalPembelian" ></count-up>
+                         </span>
                         <p class="text-sm text-gray-600 ">Pembelian Kayu</p>
                     </div>
                 </div>
@@ -51,9 +53,11 @@
                     </div>
                     <div class="text-gray-700 ml-6 p-2 md:p-0  leading-6">
                         <div class="flex justify-end pt-1 pb-3">
-                                    <span class="text-xs text-gray-400">{{ store.month }}</span>
-                                </div>
-                        <span class="font-semibold text-xl xl:text-2xl">{{ penjualan.totalPenjualan }}</span>
+                            <span class="text-xs text-gray-400">{{ store.month }}</span>
+                        </div>
+                        <span class="font-semibold text-xl xl:text-2xl">
+                            <count-up :end-val="penjualan.totalPenjualan" ></count-up>
+                        </span>
                         <p class="text-sm text-gray-600 ">Penjualan Kayu</p>
                     </div>
                 </div>
@@ -68,7 +72,9 @@
                         <div class="flex justify-end  pt-1 pb-3">
                             <span class="text-xs text-gray-400">{{ store.month }}</span>
                         </div>
-                        <span class="font-semibold text-xl xl:text-2xl">{{ toko.totalToko }}</span>
+                        <span class="font-semibold text-xl xl:text-2xl">
+                             <count-up :end-val="toko.totalToko" ></count-up>
+                        </span>
                         <p class="text-sm text-gray-600  ">Langganan Toko</p>
                     </div>
                 </div>
@@ -84,9 +90,6 @@
                         <option v-for="year in availableYears" :value="year">{{ year }}</option>
                     </select>
                     <canvas ref="chartCanvas"></canvas>
-                    <!-- <a-chart :options="chartOptions" :data="chartData">
-            <a-tooltip show-title={false} />
-          </a-chart> -->
                 </div>
             </div>
             
@@ -102,17 +105,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- <div class="w-full xl:w-1/2 px-3 pt-10">
-                <p class="text-xl font-semibold mb-4 text-gray-700">Recent Purchases</p>
-                 <div class="w-full bg-white border rounded-lg p-4"></div>
-            </div>
-
-            <div class="w-full xl:w-1/2 px-3 pt-10">
-                    <p class="text-xl font-semibold mb-4 text-gray-700">Recent Sales</p>
-                     <div class="w-full bg-white border rounded-lg p-4"></div>
-            </div>
-             -->
         </div>
         </div>
     </div>
@@ -128,10 +120,15 @@ import { ProdukStore } from "../store/product";
 import Chart from "chart.js/auto";
 import { useRouter } from "vue-router";
 import {TokoStore} from "../store/toko"
+import CountUp from 'vue-countup-v3';
 
 
 export default {
+    components:{
+        CountUp
+    },
     setup() {
+
         const router = useRouter()
 
         const store = ProdukStore();
@@ -147,7 +144,7 @@ export default {
         }
 
         const selectedYear = ref(new Date().getFullYear());
-        const availableYears = ref([2022, 2023, 2024]);
+        const availableYears = ref([2024, 2025, 2026]);
         const chartData = ref({
             labels: [],
             datasets: [
@@ -224,9 +221,6 @@ export default {
         function formatHarga(harga) {
             return formatToRupiah(harga);
         }
-
-        
-
 
         onMounted(async () => {
             await store.getTotalProduct();

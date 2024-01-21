@@ -1,25 +1,27 @@
 <template>
-  <div class=" pl-0 lg:pl-52 xl:pl-64 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
-    <a-spin v-if="!isDataLoaded" size="large" class="flex justify-center min-h-screen w-full h-full" />
-    <div  v-if="isDataLoaded" class="bg-white min-h-screen rounded-xl p-7 ml-7">
-          <div class="font-poppins  font-semibold mb-6 pt-3">
-          <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3 pb-3">Toko</h3>
-          <ol class="list-none p-0 pl-3 inline-flex text-xs xl:text-sm">
-          <li class="flex items-center text-purple">
-            <p class="text-gray-700">Dashboard</p>
-            <svg class="fill-cyan-800 w-3 mb-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-              <path
-                d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
-            </svg>
-          </li>
-          <li class="flex items-center">
-            <p class="text-gray-600">Toko</p>
-          </li>
-        </ol>
-      </div>
+      <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+           <a-spin v-if="!isDataLoaded" size="large" class="flex items-center justify-center min-h-screen w-full h-full" />
+            <ol class="list-none pl-3 inline-flex text-xs ml-7 pt-4 text-gray-400">
+                      <li class="flex items-center text-purple">
+                          <p class="text-gray-600">Dashboard</p>
+                          <svg class="fill-cyan-700 w-3 mb-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                              <path
+                                  d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
+                          </svg>
+                      </li>
+                      <li class="flex items-center">
+                          <p class="text-gray-600">Toko</p>
+                      </li>
+                  </ol>
+
+      <div v-if="isDataLoaded" class="bg-white min-h-screen rounded-xl p-7 ml-7">
+          <div class="font-poppins font-semibold mb-6 ">
+              <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3">Data Toko</h3>
+              <p class="text-gray-400 text-xs pl-3">This is a list of stores that have purchased or had their goods purchased </p>
+          </div>
 
       <div class="items-center justify-center p-2">
-        <div class="flex gap-3 justify-end items-start pb-7 pt-5">
+        <div class="flex gap-3 justify-end items-start pb-7 pt-3">
               <div class="relative text-gray-500">
                 <input
                   v-model="searchKeyword"
@@ -82,17 +84,17 @@
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200 border-t border-gray-300">
-                 <tr v-if="filteredToko.length === 0" class="border-b border-gray-200">
-                                      <td colspan="9" class="px-4 py-3 whitespace-no-wrap text-center text-sm text-gray-700">
-                                          toko have been made yet.
-                                      </td>
-                                  </tr>
-                <tr v-else v-for="(item, index) in filteredToko" :key="index" class="border-b border-gray-200">
+              <tr v-if="displayedToko.length === 0" class="border-b border-gray-200">
+                <td colspan="9" class="px-4 py-3 whitespace-no-wrap text-center text-sm text-gray-700">
+                    No toko have been made yet.
+                </td>
+              </tr>
+              <tr v-else v-for="(item, index) in displayedToko" :key="index" class="border-b border-gray-200">
                   <td class="px-3 py-4 text-center">
-                    <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
+                      <p class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ startIdx + index + 1 }}</p>
                   </td>
                   <td class="px-5 py-4">
-                    <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ item.namatoko }}</p>
+                      <p class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ item.namatoko }}</p>
                   </td>
                   <td class="px-5 py-4">
                     <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ item.alamat_toko }}</p>
@@ -144,17 +146,18 @@
   </div>
 
   <!-- Pagination controls -->
-  <div class="flex justify-end mt-4">
-      <button @click="prevPage" :disabled="currentPage === 1" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
-        Previous
-      </button>
-      <div class="mx-2 p-2 text-xs">
-        Page {{ currentPage }} of {{ totalPages }}
-      </div>
-      <button @click="nextPage" :disabled="currentPage === totalPages" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
-        Next
-      </button>
+ <div class="flex justify-end mt-4">
+    <button @click="prevPage" :disabled="currentPage === 1" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
+      Previous
+    </button>
+    <div class="mx-2 p-2 text-xs">
+      Page {{ currentPage }} of {{ totalPages }}
     </div>
+    <button @click="nextPage" :disabled="currentPage === totalPages" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
+      Next
+    </button>
+  </div>
+
 </div>
 </div>
 
@@ -280,13 +283,14 @@ export default {
       }
     };
 
-    const totalPages = computed(() => Math.ceil(toko.value.length / itemsPerPage));
 
     const startIdx = computed(() => (currentPage.value - 1) * itemsPerPage);
 
     const displayedToko = computed(() => {
-      return toko.value.slice(startIdx.value, startIdx.value + itemsPerPage);
+      return filteredToko.value.slice(startIdx.value, startIdx.value + itemsPerPage);
     });
+
+    const totalPages = computed(() => Math.ceil(filteredToko.value.length / itemsPerPage));
 
     const nextPage = () => {
       if (currentPage.value < totalPages.value) {
@@ -356,6 +360,7 @@ export default {
       searchToko,
       filteredToko,
        isDataLoaded,
+       startIdx
     };
   },
   components: {

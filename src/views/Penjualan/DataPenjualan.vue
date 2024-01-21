@@ -26,7 +26,7 @@ export default {
 
     async function getPenjualanData() {
       try {
-        const response = await usepenjualanStore.getPenjualan(keyword.value);
+        const response = await usepenjualanStore.getPenjualan(keyword.value, currentPage.value, itemsPerPage);
         if (Array.isArray(response)) {
           penjualan.value = response;
           isDataLoaded.value = true;
@@ -37,6 +37,7 @@ export default {
         console.error("Gagal mengambil data penjualan:", error);
       }
     }
+
 
     async function deletePenjualan(id_penjualan) {
       try {
@@ -81,21 +82,25 @@ export default {
 
     const totalPages = computed(() => Math.ceil(penjualan.value.length / itemsPerPage));
     const startIdx = computed(() => (currentPage.value - 1) * itemsPerPage);
+   
     const displayedPenjualan = computed(() => {
-      return penjualan.value.slice(startIdx.value, startIdx.value + itemsPerPage);
+      return sortedPenjualan.value.slice(startIdx.value, startIdx.value + itemsPerPage);
     });
 
     const nextPage = () => {
       if (currentPage.value < totalPages.value) {
         currentPage.value++;
+        getPenjualanData();
       }
     };
 
     const prevPage = () => {
       if (currentPage.value > 1) {
         currentPage.value--;
+        getPenjualanData();
       }
     };
+
 
     const showDetail = (id_Penjualan) => {
       selectedPenjualan.value = id_Penjualan;
@@ -106,15 +111,18 @@ export default {
       showModal.value = false;
     };
 
-    watch(currentPage, async (newPage) => {
-      if (newPage < 1) {
-        currentPage.value = 1;
-      } else if (newPage > totalPages.value) {
-        currentPage.value = totalPages.value;
-      } else {
-        await getPenjualanData(); 
+    watch(currentPage, async (newPage, oldPage) => {
+      if (newPage !== oldPage) {
+        if (newPage < 1) {
+          currentPage.value = 1;
+        } else if (newPage > totalPages.value) {
+          currentPage.value = totalPages.value;
+        } else {
+          await getPenjualanData();
+        }
       }
     });
+
 
 
     const printPenjualanData = () => {
@@ -148,6 +156,7 @@ export default {
       return date.toLocaleDateString('id-ID', options);
     };
 
+    // Add this computed property after the existing ones
     const sortedPenjualan = computed(() => {
       return [...penjualan.value].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     });
@@ -228,7 +237,8 @@ export default {
       keyword,
       searchPenjualan,
       filteredPenjualan,
-       isDataLoaded,
+      isDataLoaded,
+      startIdx,
     };
   },
 
@@ -243,25 +253,26 @@ export default {
 
 
 <template>
-  <div class=" pl-0 lg:pl-52 xl:pl-64 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
-     <a-spin v-if="!isDataLoaded" size="large" class="flex items-center justify-center min-h-screen w-full h-full" />
+      <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+           <a-spin v-if="!isDataLoaded" size="large" class="flex items-center justify-center min-h-screen w-full h-full" />
+            <ol class="list-none pl-3 inline-flex text-xs ml-7 pt-4 text-gray-400">
+                      <li class="flex items-center text-purple">
+                          <p class="text-gray-600">Dashboard</p>
+                          <svg class="fill-cyan-700 w-3 mb-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                              <path
+                                  d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
+                          </svg>
+                      </li>
+                      <li class="flex items-center">
+                          <p class="text-gray-600">Penjualan</p>
+                      </li>
+                  </ol>
+
       <div v-if="isDataLoaded" class="bg-white min-h-screen rounded-xl p-7 ml-7">
-      <div class="font-poppins font-semibold mb-6 pt-3">
-          <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3 pb-3">Data Penjualan</h3>
-          <ol class="list-none p-0 pl-3 inline-flex text-xs xl:text-sm">
-                <li class="flex items-center text-purple">
-                    <p class="text-gray-700">Dashboard</p>
-                    <svg class="fill-cyan-800 w-3 mb-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                        <path
-                            d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373-33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z">
-                        </path>
-                    </svg>
-                </li>
-                <li class="flex items-center">
-                    <p class="text-gray-600">Penjualan</p>
-                </li>
-            </ol>
-        </div>
+          <div class="font-poppins font-semibold mb-6 ">
+              <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3">Data Penjualan</h3>
+              <p class="text-gray-400 text-xs pl-3">This is the data of products that have been sold</p>
+          </div>
 
         <div class="items-center justify-center p-2">
         
@@ -297,11 +308,6 @@ export default {
                         </svg>
                     </button>
                 </div>
-
-              <!-- <button @click="filterPenjualanByJenisProduk" class="bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3">
-                <vue-feather type="filter" size="17" />
-                <p class="text-sm">Filter</p>
-              </button>   -->
               <div class="flex bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3 text-xs xl:text-sm">
                     <vue-feather type="printer" size="17" @click="printPenjualanData" />
                     <p class="m-2">Print</p>
@@ -341,15 +347,15 @@ export default {
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200 border-t border-gray-300">
-                  <tr v-if="filteredPenjualan.length === 0" class="border-b border-gray-200">
-                                      <td colspan="9" class="px-4 py-3 whitespace-no-wrap text-center text-sm text-gray-700">
-                                          No sales data have been made yet.
-                                      </td>
-                                  </tr>
+                  <tr v-if="displayedPenjualan.length === 0" class="border-b border-gray-200">
+                      <td colspan="9" class="px-4 py-3 whitespace-no-wrap text-center text-sm text-gray-700">
+                        No sales data have been made yet.
+                      </td>
+                  </tr>
                   
-                    <tr v-else v-for="(item, index) in filteredPenjualan" :key="item.id_penjualan" class="border-b border-gray-200">
+                    <tr v-else v-for="(item, index) in displayedPenjualan" :key="item.id_penjualan" class="border-b border-gray-200">
                       <td class="px-6 py-4 whitespace-no-wrap text-center">
-                          <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
+                          <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ startIdx + index + 1 }}</p>
                       </td>
                       <td class="px-3 py-4 whitespace-no-wrap ">
                           <div class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ formatDate(item.createdAt) }}</div>
@@ -387,15 +393,15 @@ export default {
 
     <!-- Pagination controls -->
     <div class="flex justify-end mt-4">
-        <button @click="prevPage" :disabled="currentPage.value === 1" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
+        <button @click="prevPage" :disabled="currentPage === 1" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
       Previous
   </button>
 
   <div class="mx-2 p-2 text-xs">
-      Page {{ currentPage.value }} of {{ totalPages.value }}
+      Page {{ currentPage }} of {{ totalPages }}
   </div>
 
-  <button @click="nextPage" :disabled="currentPage.value === totalPages.value" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
+  <button @click="nextPage" :disabled="currentPage === totalPages" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
       Next
   </button>
 

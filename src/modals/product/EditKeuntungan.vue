@@ -7,7 +7,7 @@
                 <form @submit.prevent="submitEdit">
                     <div class="mb-4">
                         <label for="harga_product" class="block text-sm font-medium text-gray-700">Harga Product</label>
-                        <input v-model="editedProduct.harga_product" type="number" class="mt-1 p-2 w-full border rounded">
+                        <input v-model="editedProduct.harga_product" type="number" class="mt-1 p-2 w-full rounded bg-slate-200" readonly>
                     </div>
                     <div class="mb-4">
                         <label for="keuntungan" class="block text-sm font-medium text-gray-700">Keuntungan</label>

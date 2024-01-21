@@ -85,6 +85,7 @@ export default {
                     ongkosProses_productSources: this.editedProduct.ongkosProses_productSources
                 };
                 await store.updatePembelian(updatedData);
+                window.location.reload()
                 this.closeEditModal();
                 message.success('Product successfully updated');
 

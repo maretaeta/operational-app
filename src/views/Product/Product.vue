@@ -1,23 +1,24 @@
 <template>
-<div class="pl-0 lg:pl-52 xl:pl-64 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
-      <a-spin v-if="!isDataLoaded" size="large" class="flex items-center justify-center min-h-screen w-full h-full" />
+    <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+         <a-spin v-if="!isDataLoaded" size="large" class="flex items-center justify-center min-h-screen w-full h-full" />
+          <ol class="list-none pl-3 inline-flex text-xs ml-7 pt-4 text-gray-400">
+                    <li class="flex items-center text-purple">
+                        <p class="text-gray-600">Dashboard</p>
+                        <svg class="fill-cyan-700 w-3 mb-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                            <path
+                                d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
+                        </svg>
+                    </li>
+                    <li class="flex items-center">
+                        <p class="text-gray-600">Produk</p>
+                    </li>
+                </ol>
+
     <div v-if="isDataLoaded" class="bg-white min-h-screen rounded-xl p-7 ml-7">
-    <div class="font-poppins font-semibold mb-6 pt-3">
-        <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3 pb-3">Data Produk</h3>
-        <ol class="list-none p-0 pl-3 inline-flex text-xs xl:text-sm">
-            <li class="flex items-center text-purple">
-                <p class="text-gray-700">Dashboard</p>
-                <svg class="fill-cyan-800 w-3 mb-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                    <path
-                        d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z">
-                    </path>
-                </svg>
-            </li>
-            <li class="flex items-center">
-                <p class="text-gray-600">Produk</p>
-            </li>
-        </ol>
-    </div>
+        <div class="font-poppins font-semibold mb-6 ">
+            <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3">Data Produk</h3>
+            <p class="text-gray-400 text-xs pl-3">This is the existing product stock data</p>
+        </div>
 
     <div class="items-center justify-center p-2">
         <!-- Filter Section -->
@@ -63,7 +64,8 @@
         </div>
 
         <!-- Table -->
-        <div class="flex flex-col mb-12 bg-gray-25 rounded-md border">
+        <div class="min-h-screen">
+        <div class="flex flex-col bg-gray-25 rounded-md border">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                     <div class="overflow-x-auto sm:rounded-lg">
@@ -116,7 +118,7 @@
                                 </tr>
                                 <tr v-else v-for="(i, index) in displayedProducts" :key="i.id_product" class="border-b border-gray-200">
                                     <td class="px-4 py-3 whitespace-no-wrap text-center">
-                                        <p class="   text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
+                                        <p class="   text-xs xl:text-sm leading-5 font-medium text-gray-900"> {{ calculateSequentialNumber(index) }}</p>
                                     </td>
                                     <td class="px-4 py-3 whitespace-no-wrap">
                                         <div class="   text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ i.jenis_product }}</div>
@@ -158,20 +160,21 @@
                 </div>
             </div>
         </div>
+    </div>
 
         <!-- Pagination controls -->
-        <div class="flex justify-end mt-4">
-        <button @click="prevPage" :disabled="currentPage === 1" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
-          Previous
-        </button>
-        <div class="mx-2 p-2 text-xs">
-          Page {{ currentPage }} of {{ totalPages }}
-        </div>
-        <button @click="nextPage" :disabled="currentPage === totalPages" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
-          Next
-        </button>
-      </div>
-        </div>
+            <div class="mt-auto flex justify-end mb-4">
+                <button @click="prevPage" :disabled="currentPage === 1" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
+                Previous
+                </button>
+                <div class="mx-2 p-2 text-xs">
+                Page {{ currentPage }} of {{ totalPages }}
+                </div>
+                <button @click="nextPage" :disabled="currentPage === totalPages" class="text-xs cursor-pointer bg-gray-200 p-2 w-20 rounded">
+                Next
+                </button>
+            </div>
+    </div>
 
         <AlertDelete
             :showDeleteConfirmation="showDeleteConfirmation"
@@ -209,12 +212,12 @@ export default {
         const produk = ref([]);
         const produkStore = ProdukStore();
         const editedProduct = ref(null);
-        const itemsPerPage = 10;
+        const itemsPerPage = 8;
         const currentPage = ref(1);
         const showDeleteConfirmation = ref(false);
         const selectedProductId = ref(null);
         const searchQuery = ref('');
-          const isDataLoaded = ref(false);
+        const isDataLoaded = ref(false);
 
         // Get Product
         async function getProduct() {
@@ -231,23 +234,22 @@ export default {
             }
         }
 
-        // descending
-        const sortedProduk = computed(() => {
+        // engurutan descending
+      const sortedProduk = computed(() => {
             return [...produk.value].sort((a, b) => {
                 return new Date(b.createdAt) - new Date(a.createdAt);
             });
         });
 
-        // pagination
        // pagination
-        const displayedProducts = computed(() => {
-            const startIndex = (currentPage.value - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            return filteredProducts.value.slice(startIndex, endIndex);
-        });
+    //     const displayedProducts = computed(() => {
+    //         const startIndex = (currentPage.value - 1) * itemsPerPage;
+    //         const endIndex = startIndex + itemsPerPage;
+    //         return filteredProducts.value.slice(startIndex, endIndex);
+    //         return sortedProduk.value.slice(startIndex, endIndex);
+    //     });
 
-
-       const totalPages = computed(() => Math.ceil(filteredProducts.value.length / itemsPerPage));
+    //    const totalPages = computed(() => Math.ceil(filteredProducts.value.length / itemsPerPage));
 
         const nextPage = () => {
             if (currentPage.value < totalPages.value) {
@@ -276,24 +278,41 @@ export default {
             if (editedProduct.value) {
                 const hargaProduct = parseFloat(editedProduct.value.harga_product);
                 const keuntungan = parseInt(editedProduct.value.keuntungan);
+
+                // Update the edited product in the local array
+                const updatedProduk = produk.value.map((product) => {
+                    if (product.id_product === editedProduct.value.id_product) {
+                        return {
+                            ...product,
+                            harga_product: hargaProduct,
+                            keuntungan: keuntungan,
+                        };
+                    } else {
+                        return product;
+                    }
+                });
+
+                // Update the local array
+                produk.value = updatedProduk;
+
+                // Send the update to the server
                 await produkStore.updateProduct(editedProduct.value, {
                     harga_product: hargaProduct,
                     keuntungan: keuntungan,
                 });
 
                 message.success({
-                    content: 'Profit data successfully created',
-                    duration: 3,  
+                    content: 'Profit data successfully updated',
+                    duration: 3,
                     style: {
-                        fontSize: '17px',  
+                        fontSize: '17px',
                     },
                 });
+
                 closeEditModal();
-                getProduct();
             }
         };
 
-        
 
         // Delete produk
         const deleteProductConfirmation = (productId) => {
@@ -386,83 +405,52 @@ export default {
             doc.save('produk.pdf');
         };
 
-        const woodTypes = computed(() => produkStore.woodTypes);
-        const selectedWoodType = ref('');
-
-        const filterProductsByWoodType = async () => {
-            try {
-                const selectedWoodTypeValue = selectedWoodType.value.trim();
-
-                if (!selectedWoodTypeValue) {
-                    console.error("Selected wood type is empty");
-                    return;
-                }
-
-                const filteredProducts = await produkStore.filterProductsByType(selectedWoodTypeValue);
-
-                produk.value = filteredProducts;
-                currentPage.value = 1;
-            } catch (error) {
-                console.error("Error filtering products:", error);
-            }
-        };
-
-
-        const onMounted = async () => {
-            await produkStore.filterProductsType();
-            selectedWoodType.value = ''; 
-            getProduct();
-        };
-
-
-        onMounted(() => {
-            selectedWoodType.value = '';
-            getProduct();
-        });
-
-
-        watch(selectedWoodType, (newValue, oldValue) => {
-            console.log("Selected Wood Type changed:", newValue);
-        });
-
         onMounted(() => {
             getProduct();
         });
 
-        onMounted(() => {
-            selectedWoodType.value = '';
-            getProduct();
-
-        });
-
-        // search
         const searchProducts = async () => {
             try {
-                await searchPenjualan(searchQuery.value);
+                await produkStore.searchProducts(searchQuery.value);
                 currentPage.value = 1;
             } catch (error) {
                 console.error('Error searching products:', error);
             }
         };
 
-
-         const filteredProducts = computed(() => {
-            const query = searchQuery.value.toLowerCase();
-            return produk.value.filter((product) => {
+        const sortedAndFilteredProducts = computed(() => {
+            const filtered = produk.value.filter((product) => {
+                const query = searchQuery.value.toLowerCase();
                 return (
                     product.jenis_product.toLowerCase().includes(query) ||
                     product.nama_product.toLowerCase().includes(query) ||
                     product.ukuran_product.toLowerCase().includes(query) ||
-                    product.stok_product.toString().includes(query)||
-                    product.harga_product.toString().includes(query) ||
-                    product.keuntungan.toString().includes(query) ||
-                    product.hargaJual.toString().includes(query)
-
+                    product.stok_product.toString().includes(query) ||
+                    (product.harga_product ? product.harga_product.toString().includes(query) : false) ||
+                    (product.keuntungan ? product.keuntungan.toString().includes(query) : false) ||
+                    (product.hargaJual ? product.hargaJual.toString().includes(query) : false)
                 );
+            });
+
+            return filtered.sort((a, b) => {
+                return new Date(b.createdAt) - new Date(a.createdAt);
             });
         });
 
+        const displayedProducts = computed(() => {
+            const startIndex = (currentPage.value - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            return sortedAndFilteredProducts.value.slice(startIndex, endIndex);
+        });
 
+        const totalPages = computed(() => Math.ceil(sortedAndFilteredProducts.value.length / itemsPerPage));
+
+
+        // nomor pada tabel
+        const calculateSequentialNumber = (index) => {
+            const startIndex = (currentPage.value - 1) * itemsPerPage;
+            return startIndex + index + 1;
+        };
 
         return {
             produk,
@@ -478,7 +466,6 @@ export default {
             prevPage,
             formatHarga,
             displayedProducts,
-    
             printProductData,
             showDeleteConfirmation,
             selectedProductId,
@@ -486,13 +473,12 @@ export default {
             confirmDelete,
             cancelDelete,
             sortedProduk,
-            woodTypes,
-            selectedWoodType,
-            filterProductsByWoodType,
             searchQuery,
             searchProducts,
-            filteredProducts,
-             isDataLoaded,
+          
+            isDataLoaded,
+            calculateSequentialNumber,
+            sortedAndFilteredProducts,
 
         };
     },

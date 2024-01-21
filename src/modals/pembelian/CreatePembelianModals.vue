@@ -98,7 +98,7 @@
                         </div>
                         <div class="mb-4">
                             <label class="block mb-2 text-xs md:text-sm">Ongkos Kirim
-                                <span class="text-red-600">*</span>
+                            
                             </label>
                             <input v-model="purchaseData.ongkosProses_productSources"
                                 class="w-full px-4 py-2 text-xs md:text-sm border rounded-md focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-600"
@@ -185,6 +185,7 @@ export default {
                     props.updateDisplayedData()
                     props.onCloseModal();
                     props.notify();
+                    window.location.reload()
                    
                 }
 

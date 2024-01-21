@@ -1,8 +1,8 @@
 <template>
-    <div class=" pl-0 lg:pl-52 xl:pl-64 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+    <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
         <div class="bg-white min-h-screen rounded-xl p-8 ml-10">
         <div class="font-poppins text-sm font-semibold mb-6 pt-3">
-            <h3 class="text-2xl font-medium text-gray-700 pl-3 pb-3">Karyawan</h3>
+            <h3 class="text-2xl font-medium text-gray-700 pl-3">Karyawan</h3>
             <ol class="list-none p-0 pl-3 inline-flex">
                     <li class="flex items-center text-purple">
                         <p class="text-gray-700">Dashboard</p>

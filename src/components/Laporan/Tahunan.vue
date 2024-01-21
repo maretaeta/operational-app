@@ -1,5 +1,12 @@
 <template>
-    <h4 class="text-base xl:text-lg font-semibold text-gray-700 pb-4">Akumulasi Keuntungan Tahunan</h4>
+    <div class="flex gap-3 justify-between py-4 items-center">
+        <h4 class="text-base xl:text-lg font-semibold text-gray-700 pb-4">Akumulasi Keuntungan Tahunan</h4>
+        <!-- Print Button -->
+        <div class="flex bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3  text-xs xl:text-sm">
+            <vue-feather type="printer" size="17" @click="printTahunanData" />
+            <p class="m-2">Print</p>
+        </div>
+    </div>
     <!-- Table -->
     <div class="flex flex-col mb-12 bg-gray-25 rounded-md border">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -50,15 +57,17 @@
 </template>
 
 <script>
-import VueFeather from "vue-feather"
+import VueFeather from "vue-feather";
 import { PendapatanStore } from "../../store/pendapatan";
 import { ref, onMounted } from "vue";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 export default {
     components: {
         VueFeather,
     },
-   setup(){
+    setup() {
         const usePendapatanMonth = PendapatanStore();
         const yearData = ref([]);
 
@@ -77,7 +86,7 @@ export default {
             }
         };
 
-         function formatToRupiah(number) {
+        function formatToRupiah(number) {
             return new Intl.NumberFormat("id-ID", {
                 style: "currency",
                 currency: "IDR"
@@ -88,9 +97,20 @@ export default {
             return formatToRupiah(harga);
         }
 
-       
+        const printTahunanData = () => {
+            const doc = new jsPDF();
+            doc.autoTable({
+                head: [['No', 'Tahun', 'Pendapatan Bersih']],
+                body: yearData.value.map((data, index) => [
+                    index + 1,
+                    data.year,
+                    formatHarga(data.total)
+                ]),
+            });
+            doc.save('Akumulasi_Keuntungan_Tahunan.pdf');
+        };
 
-         onMounted(() => {
+        onMounted(() => {
             getPendapatanTahunan();
         });
 
@@ -98,9 +118,8 @@ export default {
             getPendapatanTahunan,
             yearData,
             formatHarga,
-        
+            printTahunanData,
         };
-   }
+    },
 };
 </script>
-

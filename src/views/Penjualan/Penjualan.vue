@@ -1,24 +1,25 @@
 <template>
-    <div class=" pl-0 lg:pl-52 xl:pl-64 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
-        <div class="bg-white min-h-screen rounded-xl p-7 ml-7">
-        <div class="font-poppins font-semibold mb-6 pt-3">
-            <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3 pb-3">Create Penjualan</h3>
-            <ol class="list-none p-0 pl-3 inline-flex text-xs xl:text-sm">
+        <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+            <ol class="list-none pl-3 inline-flex text-xs ml-7 pt-4 text-gray-400">
                 <li class="flex items-center text-purple">
-                    <p class="text-gray-700">Dashboard</p>
-                    <svg class="fill-cyan-800 w-3 mb-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                    <p class="text-gray-600">Dashboard</p>
+                    <svg class="fill-cyan-700 w-3 mb-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                         <path
-                            d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z">
-                        </path>
+                        d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
                     </svg>
-                </li>
+                            </li>
                 <li class="flex items-center">
-                    <p class="text-gray-600">Create Penjualan</p>
+                    <p class="text-gray-600">Penjualan</p>
                 </li>
             </ol>
-        </div>
 
-        <div class="items-center justify-center p-2 pt-5">
+            <div class="bg-white min-h-screen rounded-xl p-7 ml-7">
+                <div class="font-poppins font-semibold mb-6 ">
+                    <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3">Create Penjualan</h3>
+                    <p class="text-gray-400 text-xs pl-3">Input your sales data here</p>
+                </div>
+
+        <div class="items-center justify-center p-5 pt-5">
             <!-- Form Penjualan -->
             <form @submit.prevent="submitPenjualan">
                 <div class="mb-4">
@@ -31,7 +32,7 @@
                     <label class="block text-gray-700 text-sm xl:text-base font-medium pb-2">Pilih Barang :
                         <span class="text-red-600">*</span>
                     </label>
-                    <div class="flex bg-cyan-700 p-1 w-20 xl:w-28 gap-1 text-white rounded text-xs xl:text-sm justify-center">
+                    <div class="flex bg-cyan-700 p-1 w-20 xl:w-24 text-white rounded text-xs xl:text-sm justify-center">
                         <font-awesome-icon icon="plus" class="p-1" />
                         <button @click="showModal = true">Barang</button>
                     </div>
@@ -63,7 +64,7 @@
                 {{ error }} !!
             </div>
 
-               <button @click="createPenjualan" class="bg-cyan-700 text-xs xl:text-sm hover-bg-blue-700 text-white font-medium py-2 px-4 rounded">Create Penjualan</button>
+               <button @click="createPenjualan" class="bg-cyan-700 text-xs xl:text-sm hover-bg-blue-700 h-9 text-white font-medium py-2 px-4 rounded">Create Penjualan</button>
           </form>
         </div>
 

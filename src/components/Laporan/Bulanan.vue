@@ -1,6 +1,13 @@
 <template>
+            <div class="flex gap-3 justify-between py-4 items-center">
                 <h4 class="text-base xl:text-lg font-semibold text-gray-700 pb-4">Akumulasi Keuntungan Bulanan</h4>
-                <!-- Table -->
+               <!-- Print Button -->
+                <div class="flex bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3  text-xs xl:text-sm">
+                    <vue-feather type="printer" size="17" @click="printSummaryData" />
+                    <p class="m-2">Print</p>
+                </div>
+            </div>
+
                 <div class="flex flex-col mb-12 bg-gray-25 rounded-md border">
                     <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -48,16 +55,18 @@
 </template>
 
 <script>
-import VueFeather from "vue-feather"
+import VueFeather from "vue-feather";
 import { PendapatanStore } from "../../store/pendapatan";
 import { ref, onMounted } from "vue";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 export default {
     components: {
         VueFeather,
     },
 
-    setup(){
+    setup() {
         const usePendapatanMonth = PendapatanStore();
         const monthData = ref([]);
 
@@ -93,17 +102,30 @@ export default {
             return date.toLocaleDateString('id-ID', options);
         };
 
-         onMounted(() => {
+        const printSummaryData = () => {
+            const doc = new jsPDF();
+            doc.autoTable({
+                head: [['No', 'Bulan', 'Pendapatan Bersih']],
+                body: monthData.value.map((data, index) => [
+                    index + 1,
+                    formatDate(data.month),
+                    formatHarga(data.totalPendapatan)
+                ]),
+            });
+            doc.save('Akumulasi_Keuntungan_Bulanan.pdf');
+        };
+
+        onMounted(() => {
             getPendapatanBulanan();
         });
 
         return {
-           getPendapatanBulanan,
-           monthData,
-           formatHarga,
-           formatDate
+            getPendapatanBulanan,
+            monthData,
+            formatHarga,
+            formatDate,
+            printSummaryData,
         };
     }
 };
 </script>
-

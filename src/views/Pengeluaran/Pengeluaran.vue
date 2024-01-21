@@ -1,22 +1,23 @@
 <template>
-    <div class=" pl-0 lg:pl-52 xl:pl-64 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
-        <a-spin v-if="!isDataLoaded" size="large" class="flex items-center justify-center min-h-screen w-full h-full" />
+        <div class=" pl-0 lg:pl-52 xl:pl-60 w-full min-h-screen p-4 md:p-7 xl:p-10 bg-slate-100 relative">
+             <a-spin v-if="!isDataLoaded" size="large" class="flex items-center justify-center w-full h-full" />
+              <ol class="list-none pl-3 inline-flex text-xs ml-7 pt-4 text-gray-400">
+                        <li class="flex items-center text-purple">
+                            <p class="text-gray-600">Dashboard</p>
+                            <svg class="fill-cyan-700 w-3 mb-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                                <path
+                                    d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z" />
+                            </svg>
+                        </li>
+                        <li class="flex items-center">
+                            <p class="text-gray-600">Pengeluaran</p>
+                        </li>
+                    </ol>
+
         <div v-if="isDataLoaded" class="bg-white min-h-screen rounded-xl p-7 ml-7">
-            <div class="font-poppins font-semibold mb-6 pt-3">
-                <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3 pb-3">Data Pengeluaran</h3>
-                <ol class="list-none p-0 pl-3 inline-flex text-xs xl:text-sm">
-                    <li class="flex items-center text-purple">
-                        <p class="text-gray-700">Dashboard</p>
-                        <svg class="fill-cyan-800 w-3 mb-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                            <path
-                                d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z">
-                            </path>
-                        </svg>
-                    </li>
-                    <li class="flex items-center ">
-                        <p class="text-gray-600">Pengeluaran</p>
-                    </li>
-                </ol>
+            <div class="font-poppins font-semibold mb-6 ">
+                <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3">Data Pengeluaran</h3>
+                <p class="text-gray-400 text-xs pl-3">This is the data of expenses incurred in a few days</p>
             </div>
 
             <div class="items-center justify-center p-2">
@@ -37,6 +38,13 @@
                         </svg>
                     </button>
                     </div>
+
+                   <!-- Print Button -->
+                <div class="flex bg-cyan-800 text-white h-10 rounded-xl items-center text-center px-3  text-xs xl:text-sm">
+                    <vue-feather type="printer" size="17" @click="printPengeluaran" />
+                    <p class="m-2">Print</p>
+                </div>
+
      
                 </div>
 
@@ -83,7 +91,7 @@
                                         <tr v-for="(pengeluaran, index) in filteredPengeluaran" :key="index"
                                             class="border-b border-gray-200">
                                             <td class="px-4 py-5 whitespace-no-wrap text-center">
-                                                <p class=" text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ index + 1 }}</p>
+                                                <p class="text-xs xl:text-sm leading-5 font-medium text-gray-900">{{ pageIndex * itemsPerPage + index + 1 }}</p>
                                             </td>
                                             <td class="px-4 py-5 whitespace-no-wrap">
                                                 <div class=" text-xs xl:text-sm leading-5 font-medium text-gray-900"> {{ formatDate(pengeluaran.date) }}</div>
@@ -91,8 +99,8 @@
                                             <td class="py-5 px-4 whitespace-no-wrap">
                                                 <div class=" text-xs xl:text-sm font-medium text-gray-900">
                                                     <table>
-                                                        <tr v-for="(detail, detailIndex) in pengeluaran.details" :key="detailIndex" class="flex justify-end gap-7">
-                                                            <td class="w-1/3">- {{ detail.keterangan }}</td>
+                                                        <tr v-for="(detail, detailIndex) in pengeluaran.details" :key="detailIndex" class="flex w-full justify-end gap-7">
+                                                            <td class="w-1/2">- {{ detail.keterangan }}</td>
                                                             <td>:</td>
                                                             <td class="w-1/3">{{ formatHarga(detail.jumlah) }}</td>
                                                         </tr>
@@ -160,6 +168,8 @@ import { PengeluaranStore } from '../../store/pengeluaran';
 import AlertDelete from "../../modals/pengeluaran/AlertDelete.vue"
 import { message } from 'ant-design-vue'
 import { Spin } from "ant-design-vue";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 export default {
     components: {
@@ -173,12 +183,11 @@ export default {
         const usepengeluaranStore = PengeluaranStore();
         const showModal = ref(false);
         const pageIndex = ref(0);
-         const itemsPerPage = 8;
-
+        const itemsPerPage = 10;
         const searchKeyword = ref('');
-
         const isDataLoaded = ref(false);
 
+        // modal
         const openModal = () => {
             showModal.value = true;
         };
@@ -187,7 +196,7 @@ export default {
             showModal.value = false;
         };
 
-
+        // pagination
         const nextPage = () => {
             const lastPageIndex = totalPages.value - 1;
             if (pageIndex.value < lastPageIndex) {
@@ -213,12 +222,14 @@ export default {
             return formatToRupiah(harga);
         }
 
+        // format tanggal
         const formatDate = (dateString) => {
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             const date = new Date(dateString);
             return date.toLocaleDateString('id-ID', options);
         };
 
+        // create data pengeluaran
         const formData = ref({
             expenses: [
                 { 
@@ -270,7 +281,7 @@ export default {
         }
 
 
-        // delete function
+        // fungsi delete pengeluaran
         const internalItemToDeleteId = ref(null);
         const showDeleteConfirmation = ref(false);
         const itemToDeleteId = ref(null);
@@ -280,17 +291,14 @@ export default {
             showDeleteConfirmation.value = true;
         };
 
-
         const closeDeleteConfirmationModal = () => {
             showDeleteConfirmation.value = false;
             itemToDeleteId.value = null;
         };
 
+        const confirmDeleteAction = ref(() => { });
 
-
-    const confirmDeleteAction = ref(() => { });
-
-    const deletePengeluaran = async (date) => {
+        const deletePengeluaran = async (date) => {
             try {
                 await usepengeluaranStore.deletePengeluaran(date);
                 message.success({
@@ -322,22 +330,24 @@ export default {
         const totalPages = computed(() => Math.ceil(usepengeluaranStore.pengeluaran.length / itemsPerPage));
 
 
-        const filteredPengeluaran = computed(() => {
+      const filteredPengeluaran = computed(() => {
             const keyword = searchKeyword.value.toLowerCase();
             const startIndex = pageIndex.value * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
 
-            return usepengeluaranStore.pengeluaran
+            const sortedPengeluaran = usepengeluaranStore.pengeluaran
                 .filter((pengeluaran) => {
                     return (
                         pengeluaran.details.some(detail => detail.keterangan.toLowerCase().includes(keyword)) ||
                         pengeluaran.details.some(detail => detail.jumlah.toString().includes(keyword)) ||
                         pengeluaran.total.toString().includes(keyword)
                     );
-                })
-                .slice(startIndex, endIndex);
-        });
+                });
 
+            const copySortedPengeluaran = [...sortedPengeluaran];
+
+            return copySortedPengeluaran.slice(startIndex, endIndex);
+        });
 
         const fetchData = async () => {
             try {
@@ -352,9 +362,6 @@ export default {
             fetchData();
            
         });
-
-    
-
 
         return {
             VueFeather,
@@ -380,7 +387,38 @@ export default {
             deletePengeluaran,
             isDataLoaded,
             totalPages,
+            itemsPerPage,
         };
+    },
+
+    // cetak pengeluaran
+    methods: {
+        printPengeluaran() {
+            const doc = new jsPDF();
+            doc.text('Data Pengeluaran', 20, 10);
+            // Table header
+            const headers = ['No', 'Tanggal', 'Detail Pengeluaran', 'Total Pengeluaran'];
+            const data = [];
+            // Populate data for the table
+            this.filteredPengeluaran.forEach((pengeluaran, index) => {
+                const rowData = [
+                    index + 1,
+                    this.formatDate(pengeluaran.date),
+                    pengeluaran.details.map(detail => `- ${detail.keterangan}: ${this.formatHarga(detail.jumlah)}`).join('\n'),
+                    this.formatHarga(pengeluaran.total),
+                ];
+                data.push(rowData);
+            });
+            // AutoTable configuration
+            const tableConfig = {
+                startY: 20,
+                head: [headers],
+                body: data,
+            };
+
+            doc.autoTable(tableConfig);
+            doc.save('Data Pengeluaran.pdf');
+        },
     },
 };
 </script>
