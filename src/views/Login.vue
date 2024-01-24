@@ -87,9 +87,8 @@ export default {
       >
         <div class="bg-white rounded-xl w-full p-16">
           <h1 class="lg:text-3xl text-xl font-bold">Selamat Datang Admin,</h1>
-          <p class="pt-2 pb-5 lg:pb-7 text-sm">
-            Selamat Datang di aplikasi manajemen operasional : Welcome Back to
-            Manajement Operational Application: Mudah dan Cepat Solusi untuk
+          <p class="pb-5 lg:pb-5 text-sm">
+            Selamat Datang di aplikasi manajemen operasional : Mudah dan Cepat Solusi untuk
             Mengelola Bisnis
           </p>
           <form class="mx-auto" @submit.prevent="handleLogin">
@@ -102,11 +101,11 @@ export default {
                 type="username"
                 placeholder="Enter Username"
                 name="username"
-                class="mt-1 ml-2 w-full xl:w-[500px] rounded-md pl-2 h-10 text-lg bg-transparent border border-cyan-800"
+                class="ml-2 w-full xl:w-[500px] rounded-md pl-2 h-10 text-lg bg-transparent border border-cyan-800"
               />
             </div>
 
-            <div class="mb-3 lg:mb-7">
+            <div class="mb-3 lg:mb-5">
               <label>
                 <p>Password</p>
               </label>
@@ -115,16 +114,16 @@ export default {
                 type="password"
                 placeholder="Enter Password"
                 name="password"
-                class="mt-1 ml-2 w-full xl:w-[500px] rounded-md pl-2 h-10 text-lg bg-transparent border border-cyan-800"
+                class="ml-2 w-full xl:w-[500px] rounded-md pl-2 h-10 text-lg bg-transparent border border-cyan-800"
               />
             </div>
             <button
               type="submit"
-              class="bg-cyan-800 rounded-md text-white w-full mx-auto py-2 ml-2 mt-3 xl:w-[500px]"
+              class="bg-cyan-800 rounded-md mt-2 text-white w-full mx-auto py-2 ml-2 xl:w-[500px]"
             >
               Login
             </button>
-            <p class="text-red-500 mt-3 text-center" v-if="error">
+            <p class="text-red-500 mt-4" v-if="error">
               {{ error.message }}
             </p>
           </form>

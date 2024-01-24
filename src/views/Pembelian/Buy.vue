@@ -585,7 +585,8 @@ export default {
         window.location.reload();
       } catch (error) {
         message.error({
-          content: "Tidak bisa menghapus!. Data telah masuk ke proses transaksi",
+          content:
+            "Data tidak dapat dihapus!. Data telah masuk ke proses transaksi",
           duration: 3,
           style: {
             fontSize: "17px",

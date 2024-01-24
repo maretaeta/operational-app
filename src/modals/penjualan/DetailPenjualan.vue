@@ -60,7 +60,7 @@
                                             <td class="px-6 py-4 whitespace-nowrap">{{ item.product.nama_product }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap">{{ item.product.ukuran_product }}</td>
                                              <td class="px-6 py-4 whitespace-nowrap">{{ item.quantity }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap">{{ formatHarga(item.product.harga_product) }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ formatHarga(item.product.hargaJual) }}</td>
                                         </tr>
                                     </tbody>
                                     </table>

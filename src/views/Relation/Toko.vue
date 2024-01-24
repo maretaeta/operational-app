@@ -159,7 +159,9 @@
                           >{{ item.notlp_toko }}</span
                         >
                       </td>
-                      <td class="text-center justify-center py-4 flex items-center gap-3">
+                      <td
+                        class="text-center justify-center py-4 flex items-center gap-3"
+                      >
                         <button
                           class="bg-blue-600 py-2 px-4 rounded-md text-white"
                           @click="openEditModal(item)"
