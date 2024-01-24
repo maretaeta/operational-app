@@ -106,7 +106,7 @@
                         NoTlp Toko
                       </th>
                       <th
-                        class="px-5 py-4 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium tracking-wider"
+                        class="px-5 py-4 bg-cyan-600 text-white text-center text-xs xl:text-sm leading-4 font-medium tracking-wider"
                       >
                         Aksi
                       </th>
@@ -159,19 +159,19 @@
                           >{{ item.notlp_toko }}</span
                         >
                       </td>
-                      <td class="px-4 py-4 flex items-center gap-3">
-                        <vue-feather
-                          type="edit"
-                          size="20"
-                          stroke="green"
+                      <td class="text-center justify-center py-4 flex items-center gap-3">
+                        <button
+                          class="bg-blue-600 py-2 px-4 rounded-md text-white"
                           @click="openEditModal(item)"
-                        />
-                        <span
-                          class="text-red-500 cursor-pointer"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          class="bg-red-600 py-2 px-4 rounded-md text-white"
                           @click="showDeleteConfirmationModal(item)"
                         >
-                          <vue-feather type="trash-2" size="20" stroke="red" />
-                        </span>
+                          Hapus
+                        </button>
                       </td>
                     </tr>
                   </tbody>

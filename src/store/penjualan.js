@@ -2,6 +2,7 @@
 
 import { defineStore } from "pinia";
 import axios from "axios";
+import { message } from "ant-design-vue";
 
 export const penjualanStore = defineStore("penjualan", {
   state: () => ({
@@ -57,8 +58,8 @@ export const penjualanStore = defineStore("penjualan", {
 
         return response.data;
       } catch (error) {
-        console.error("Delete penjualan error: ", error);
-        throw error;
+        message.error("Failed to delete product");
+        console.error("Error deleting product:", error);
       }
     },
 

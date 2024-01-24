@@ -191,7 +191,7 @@
                           Harga PerLembar
                         </th>
                         <th
-                          class="px-6 py-3 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium tracking-wider"
+                          class="px-6 py-3 text-center bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium tracking-wider"
                         >
                           Aksi
                         </th>
@@ -317,22 +317,22 @@
                         <td
                           class="px-6 py-4 whitespace-no-wrap text-center flex gap-3"
                         >
-                          <vue-feather
-                            type="edit"
-                            size="20"
-                            stroke="green"
+                          <button
+                            class="bg-blue-600 py-2 px-4 rounded-md text-white"
                             @click="editPembelian(pembelianData)"
-                          />
-                          <vue-feather
-                            type="trash-2"
-                            size="20"
-                            stroke="red"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            class="bg-red-600 py-2 px-4 rounded-md text-white"
                             @click="
                               showDeleteConfirmationModal(
                                 pembelianData.id_productSources
                               )
                             "
-                          />
+                          >
+                            Hapus
+                          </button>
                         </td>
                       </tr>
                     </tbody>
@@ -378,8 +378,6 @@
     @nextStep="nextStep"
     @backStep="backStep"
   />
-
-  <!-- :notify="notify" -->
 
   <ModalUpdatePembelian
     v-if="showEditModal"
@@ -540,13 +538,6 @@ export default {
       }
     };
 
-    // const notify = () => {
-    //   toast.success("Pembelian berhasil dibuat", {
-    //     position: "top-right",
-    //     duration: 3000,
-    //   });
-    // };
-
     // modal pagination
     const currentStep = ref(buyStore.currentStep);
 
@@ -584,7 +575,23 @@ export default {
     const deleteProduct = async (id_productSources) => {
       try {
         await buyStore.deletePembelian(id_productSources);
+        message.success({
+          content: "Deleted successfully",
+          duration: 3,
+          style: {
+            fontSize: "17px",
+          },
+        });
+        window.location.reload();
       } catch (error) {
+        message.error({
+          content: "Tidak bisa menghapus!. Data telah masuk ke proses transaksi",
+          duration: 3,
+          style: {
+            fontSize: "17px",
+          },
+        });
+        window.location.reload();
         console.error("Error deleting product:", error);
       }
     };
@@ -605,16 +612,17 @@ export default {
 
           calculateTotalPages();
           updateDisplayedData();
-          message.success({
-            content: "Deleted successfully",
-            duration: 3,
-            style: {
-              fontSize: "17px",
-            },
-          });
         }
         isDeleteConfirmationVisible.value = false;
+        // window.location.reload();
       } catch (error) {
+        message.error({
+          content: "Data telah masuk ke proses transaksi",
+          duration: 3,
+          style: {
+            fontSize: "17px",
+          },
+        });
         console.error("Error deleting product:", error);
       }
     };

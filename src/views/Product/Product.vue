@@ -83,7 +83,8 @@
         </div>
 
         <!-- Table -->
-        <div class="min-h-screen">
+        <!-- min-h-screen -->
+        <div class="">
           <div class="flex flex-col bg-gray-25 rounded-md border">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div
@@ -219,18 +220,18 @@
                         <td
                           class="px-4 py-3 whitespace-no-wrap text-center flex gap-3"
                         >
-                          <vue-feather
-                            type="edit"
-                            size="20"
-                            stroke="green"
+                          <button
+                            class="bg-blue-600 py-2 px-4 rounded-md text-white"
                             @click="openEditModal(i)"
-                          />
-                          <vue-feather
-                            type="trash-2"
-                            size="20"
-                            stroke="red"
+                          >
+                            Edit
+                          </button>
+                          <!-- <button
+                            class="bg-red-600 py-2 px-4 rounded-md text-white"
                             @click="deleteProductConfirmation(i.id_product)"
-                          />
+                          >
+                            Hapus
+                          </button> -->
                         </td>
                       </tr>
                     </tbody>
@@ -242,7 +243,7 @@
         </div>
 
         <!-- Pagination controls -->
-        <div class="mt-auto flex justify-end mb-4">
+        <div class="flex justify-end mt-10">
           <button
             @click="prevPage"
             :disabled="currentPage === 1"
@@ -382,7 +383,6 @@ export default {
           harga_product: hargaProduct,
           keuntungan: keuntungan,
         });
-
         message.success({
           content: "Profit data successfully updated",
           duration: 3,

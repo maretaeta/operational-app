@@ -115,7 +115,7 @@
                         Tanggal
                       </th>
                       <th
-                        class="px-4 py-5 bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium tracking-wider"
+                        class="px-4 py-5 text-center bg-cyan-600 text-white text-xs xl:text-sm leading-4 font-medium tracking-wider"
                       >
                         Detail Pengeluaran
                       </th>
@@ -198,12 +198,12 @@
                       <td
                         class="px-4 py-5 whitespace-no-wrap text-center flex gap-3 items-center justify-center"
                       >
-                        <vue-feather
-                          type="trash-2"
-                          size="20"
-                          stroke="red"
+                        <button
+                          class="bg-red-600 py-2 px-4 rounded-md text-white"
                           @click="openDeleteConfirmationModal(pengeluaran.date)"
-                        />
+                        >
+                          Hapus
+                        </button>
                       </td>
                     </tr>
                   </tbody>

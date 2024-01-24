@@ -59,13 +59,33 @@ export default {
         await getPenjualanData();
         showDeleteConfirmationModal.value = false;
         message.success({
-          content: "Deleted successfully",
+          content: "Data berhasil dihapus",
           duration: 3,
           style: {
             fontSize: "17px",
           },
         });
       } catch (error) {
+        if (error.response && error.response.status === 500) {
+          // 500 error
+          message.error({
+            content: "Terjadi kesalahan server. Mohon coba lagi nanti.",
+            duration: 3,
+            style: {
+              fontSize: "17px",
+            },
+          });
+        } else {
+          // Other errors
+          message.error({
+            content:
+              "Data yang dibeli sudah melalui tahap transaksi dan tidak bisa dihapus",
+            duration: 3,
+            style: {
+              fontSize: "17px",
+            },
+          });
+        }
         console.error("Error while deleting:", error);
       }
     };
@@ -91,10 +111,12 @@ export default {
     const startIdx = computed(() => (currentPage.value - 1) * itemsPerPage);
 
     const displayedPenjualan = computed(() => {
-      return sortedPenjualan.value.slice(
-        startIdx.value,
-        startIdx.value + itemsPerPage
-      );
+      return keyword.value
+        ? filteredPenjualan.value
+        : sortedPenjualan.value.slice(
+            startIdx.value,
+            startIdx.value + itemsPerPage
+          );
     });
 
     const nextPage = () => {
@@ -519,22 +541,23 @@ export default {
                       </div>
                     </td>
                     <td class="px-6 py-4 whitespace-no-wrap flex gap-5">
-                      <font-awesome-icon
-                        icon="trash-can"
-                        class="text-red-500 pt-1"
+                      <button
+                        class="bg-red-600 py-2 px-4 rounded-md text-white"
                         @click="deletePenjualan(item.id_penjualan)"
-                      />
-                      <!-- <font-awesome-icon icon="print" class="pt-1 text-green-700" /> -->
+                      >
+                        Hapus
+                      </button>
                       <router-link
                         :to="{
                           name: 'DetailPenjualan',
                           params: { id: item.id_penjualan },
                         }"
                       >
-                        <font-awesome-icon
-                          icon="ellipsis-vertical"
-                          class="text-cyan-800 pt-1"
-                        />
+                        <button
+                          class="bg-green-600 py-2 px-4 rounded-md text-white"
+                        >
+                          Detail
+                        </button>
                       </router-link>
                     </td>
                   </tr>
