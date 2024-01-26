@@ -371,7 +371,7 @@ export default {
           Data Penjualan
         </h3>
         <p class="text-gray-400 text-xs pl-3">
-          This is the data of products that have been sold
+          Berikut ini adalah data produk yang telah terjual
         </p>
       </div>
 

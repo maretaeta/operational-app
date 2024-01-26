@@ -33,7 +33,7 @@
           Data Pembelian
         </h3>
         <p class="text-gray-400 text-xs pl-3">
-          This is the wood purchase data that has been entered
+        Berikut ini adalah data pembelian kayu yang telah dimasukkan
         </p>
       </div>
       <div class="items-center justify-center p-2">

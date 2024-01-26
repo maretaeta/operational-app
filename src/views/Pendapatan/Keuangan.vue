@@ -17,7 +17,7 @@
         <div v-if="isDataLoaded" class="bg-white min-h-screen rounded-xl p-7 ml-7">
             <div class="font-poppins font-semibold mb-6 ">
                 <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3">Data Pendapatan</h3>
-                <p class="text-gray-400 text-xs pl-3">This is the data of income earned during daily, monthly and yearly basis</p>
+                <p class="text-gray-400 text-xs pl-3">Berikut ini adalah data pendapatan yang diperoleh secara harian, bulanan, dan tahunan</p>
             </div>
 
          <div class="flex justify-end mb-4 pt-5">

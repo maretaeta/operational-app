@@ -27,7 +27,7 @@
         <h3 class="text-xl xl:text-2xl font-medium text-gray-700 pl-3">
           Create Penjualan
         </h3>
-        <p class="text-gray-400 text-xs pl-3">Input your sales data here</p>
+        <p class="text-gray-400 text-xs pl-3">Inputkan data penjualan disini</p>
       </div>
 
       <div class="items-center justify-center p-5 pt-5">
@@ -186,7 +186,14 @@ export default {
     // create penjualan
     const createPenjualan = async () => {
       if (!nama_toko.value || selectedProducts.value.length === 0) {
-        error.value = "Nama toko dan barang harus diisi.";
+        message.error({
+            content: "Nama toko dan barang harus diisi.",
+            duration: 3,
+            style: {
+              fontSize: "17px",
+            },
+          });
+        // error.value = "";
         return;
       }
 

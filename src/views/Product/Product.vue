@@ -33,7 +33,7 @@
           Data Produk
         </h3>
         <p class="text-gray-400 text-xs pl-3">
-          This is the existing product stock data
+          Berikut daftar stok barang yang tersedia
         </p>
       </div>
 

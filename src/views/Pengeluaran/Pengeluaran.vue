@@ -33,7 +33,7 @@
           Data Pengeluaran
         </h3>
         <p class="text-gray-400 text-xs pl-3">
-          This is the data of expenses incurred in a few days
+          Beriku ini adalah data pengeluaran yang dikeluarkan dalam beberapa hari
         </p>
       </div>
 

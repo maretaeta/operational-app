@@ -33,8 +33,7 @@
           Data Toko
         </h3>
         <p class="text-gray-400 text-xs pl-3">
-          This is a list of stores that have purchased or had their goods
-          purchased
+          Berikut ini adalah daftar toko yang telah melakukan transaksi
         </p>
       </div>
 

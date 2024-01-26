@@ -118,7 +118,7 @@ export default {
         class="w-full flex items-center text-gray-800 h-10 pl-4 hover:bg-gray-30 rounded-lg cursor-pointer duration-150"
       >
         <font-awesome-icon icon="boxes-stacked" class="text-sm" />
-        <span class="text-gray-800 pl-2 text-sm">Product</span>
+        <span class="text-gray-800 pl-2 text-sm">Stok Produk</span>
       </div>
       <div class="w-full">
         <button
